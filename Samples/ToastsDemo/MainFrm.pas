@@ -32,10 +32,13 @@ type
     ColorComboBoxMessage: TComboColorBox;
     ColorComboBoxBackground: TComboColorBox;
     Button3: TButton;
-    Image2: TImage;
+    ListBoxItem9: TListBoxItem;
+    ListBoxItem10: TListBoxItem;
+    ListBoxGroupHeader4: TListBoxGroupHeader;
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
     procedure Button3Click(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
   public
@@ -64,7 +67,7 @@ begin
   Toast := TfgToast.Create(EditToastMessage.Text, TfgToastDuration(ComboBoxDurationType.ItemIndex));
   try
     if SwitchShowIcon.IsChecked then
-      Toast.Icon.Assign(Image1.Bitmap);
+      Toast.Icon := Image1.Bitmap;
     Toast.MessageColor := ColorComboBoxMessage.Color;
     Toast.BackgroundColor := ColorComboBoxBackground.Color;
     Toast.Show;
@@ -75,8 +78,14 @@ end;
 
 procedure TFormMain.Button3Click(Sender: TObject);
 begin
-  ColorComboBoxBackground.Color := $FF2A2A2A;
-  ColorComboBoxMessage.Color := TAlphaColorRec.White;
+  ColorComboBoxBackground.Color := TfgToast.DefaultBackgroundColor;
+  ColorComboBoxMessage.Color := TfgToast.DefaultMessageColor;
+end;
+
+procedure TFormMain.FormCreate(Sender: TObject);
+begin
+  ColorComboBoxMessage.Color := TfgToast.DefaultMessageColor;
+  ColorComboBoxBackground.Color := TfgToast.DefaultBackgroundColor;
 end;
 
 end.

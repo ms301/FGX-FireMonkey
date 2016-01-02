@@ -126,7 +126,7 @@
     <PropertyGroup Condition="'$(Base)'!=''">
         <DCC_DcpOutput>$(BDSLIB)\$(PLATFORM)\$(CONFIG)</DCC_DcpOutput>
         <DCC_DcuOutput>$(BDSLIB)\$(PLATFORM)\$(CONFIG)</DCC_DcuOutput>
-        <DCC_Description>FMX Extension Components (FGX - Run Time)</DCC_Description>
+        <DCC_Description>Extensions for FM (FireMonkey)</DCC_Description>
         <DllSuffix>230</DllSuffix>
         <SanitizedProjectName>fgx</SanitizedProjectName>
         <VerInfo_AutoGenVersion>true</VerInfo_AutoGenVersion>
@@ -249,7 +249,6 @@
         <VerInfo_Keys>CFBundleName=$(MSBuildProjectName);CFBundleDevelopmentRegion=en;CFBundleDisplayName=$(MSBuildProjectName);CFBundleIdentifier=$(MSBuildProjectName);CFBundleInfoDictionaryVersion=6.0;CFBundleVersion=1.0.0.0;CFBundlePackageType=APPL;CFBundleSignature=????;LSRequiresIPhoneOS=true;CFBundleAllowMixedLocalizations=YES;CFBundleExecutable=$(MSBuildProjectName);UIDeviceFamily=iPhone &amp; iPad;CFBundleResourceSpecification=ResourceRules.plist</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-        <DllSuffix>230</DllSuffix>
         <Debugger_HostApplication>D:\TP\trunk\bin\bds.exe</Debugger_HostApplication>
         <VerInfo_Locale>1033</VerInfo_Locale>
         <DCC_RemoteDebug>false</DCC_RemoteDebug>
@@ -291,8 +290,6 @@
         <VerInfo_Keys>CFBundleName=$(MSBuildProjectName);CFBundleDevelopmentRegion=en;CFBundleDisplayName=$(MSBuildProjectName);CFBundleIdentifier=$(MSBuildProjectName);CFBundleInfoDictionaryVersion=6.0;CFBundleVersion=1.0.0.0;CFBundlePackageType=APPL;CFBundleSignature=????;LSRequiresIPhoneOS=true;CFBundleAllowMixedLocalizations=YES;CFBundleExecutable=$(MSBuildProjectName);UIDeviceFamily=iPhone &amp; iPad;CFBundleResourceSpecification=ResourceRules.plist</VerInfo_Keys>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Cfg_2_Win32)'!=''">
-        <DCC_Description>Fire Gorilla</DCC_Description>
-        <DllSuffix>190</DllSuffix>
         <VerInfo_Locale>1033</VerInfo_Locale>
     </PropertyGroup>
     <ItemGroup>
@@ -312,7 +309,7 @@
         <DCCReference Include="FGX.Graphics.pas"/>
         <DCCReference Include="FGX.Helpers.pas"/>
         <DCCReference Include="FGX.BitBtn.pas"/>
-        <DCCReference Include="FGX.ToolBar.pas"/>
+        <DCCReference Include="FGX.Toolbar.pas"/>
         <DCCReference Include="FGX.ColorsPanel.pas"/>
         <DCCReference Include="FGX.Colors.Presets.pas"/>
         <DCCReference Include="FGX.Types.pas"/>
@@ -328,7 +325,6 @@
         <DCCReference Include="FGX.FlipView.Sliding.pas"/>
         <DCCReference Include="FGX.FlipView.Presentation.pas"/>
         <DCCReference Include="FGX.Toasts.pas"/>
-        <DCCReference Include="FGX.Toasts.Default.pas"/>
         <RcItem Include="..\Styles\TfgFlipView.style">
             <ContainerId>ResourceItem</ContainerId>
             <ResourceType>RCDATA</ResourceType>
@@ -414,11 +410,7 @@
                     <VersionInfoKeys Name="largeHeap"/>
                     <VersionInfoKeys Name="theme"/>
                 </VersionInfoKeys>
-                <Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\TeeUI9240.bpl">TeeChart User Interface Components</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\fgx230.bpl">File d:\tp\trunk\bin\fgx230.bpl not found</Excluded_Packages>
-                    <Excluded_Packages Name="$(BDSBIN)\dclfgx230.bpl">File d:\tp\trunk\bin\dclfgx230.bpl not found</Excluded_Packages>
-                </Excluded_Packages>
+                <Excluded_Packages/>
             </Delphi.Personality>
             <Deployment Version="2">
                 <DeployFile LocalName="D:\TP\trunk\bin\fgx210.bpl" Configuration="Debug" Class="ProjectOutput"/>
@@ -489,16 +481,19 @@
                     </Platform>
                 </DeployClass>
                 <DeployClass Required="true" Name="ProjectOutput">
-                    <Platform Name="Win32">
-                        <Operation>0</Operation>
-                    </Platform>
                     <Platform Name="iOSDevice64">
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="OSX32">
+                    <Platform Name="iOSDevice32">
                         <Operation>1</Operation>
                     </Platform>
-                    <Platform Name="iOSDevice32">
+                    <Platform Name="Win32">
+                        <Operation>0</Operation>
+                    </Platform>
+                    <Platform Name="Linux64">
+                        <Operation>1</Operation>
+                    </Platform>
+                    <Platform Name="OSX32">
                         <Operation>1</Operation>
                     </Platform>
                     <Platform Name="Android">
@@ -771,6 +766,7 @@
                 <ProjectRoot Platform="Win64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSDevice32" Name="$(PROJECTNAME).app"/>
                 <ProjectRoot Platform="Win32" Name="$(PROJECTNAME)"/>
+                <ProjectRoot Platform="Linux64" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="OSX32" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="Android" Name="$(PROJECTNAME)"/>
                 <ProjectRoot Platform="iOSSimulator" Name="$(PROJECTNAME).app"/>

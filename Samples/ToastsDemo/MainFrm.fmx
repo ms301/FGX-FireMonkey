@@ -3,49 +3,28 @@ object FormMain: TFormMain
   Top = 0
   Caption = 'Form11'
   ClientHeight = 601
-  ClientWidth = 324
+  ClientWidth = 297
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
-  DesignerMasterStyle = 3
-  object Button1: TButton
-    Align = Bottom
-    Margins.Left = 10.000000000000000000
-    Margins.Top = 10.000000000000000000
-    Margins.Right = 10.000000000000000000
-    Position.X = 10.000000000000000000
-    Position.Y = 495.000000000000000000
-    Size.Width = 304.000000000000000000
-    Size.Height = 43.000000000000000000
-    Size.PlatformDefault = False
-    TabOrder = 1
-    Text = 'Show Usual Toast'
-    OnClick = Button1Click
-    object ShadowEffect1: TShadowEffect
-      Distance = 10.000000000000000000
-      Direction = 45.000000000000000000
-      Softness = 0.300000011920929000
-      Opacity = 0.600000023841857900
-      ShadowColor = claBlack
-      Enabled = False
-    end
-  end
+  OnCreate = FormCreate
+  DesignerMasterStyle = 2
   object ListBox1: TListBox
     Align = Client
-    Size.Width = 324.000000000000000000
-    Size.Height = 444.000000000000000000
+    Size.Width = 297.000000000000000000
+    Size.Height = 601.000000000000000000
     Size.PlatformDefault = False
     StyleLookup = 'transparentlistboxstyle'
-    TabOrder = 3
+    TabOrder = 1
     DisableFocusEffect = True
     DefaultItemStyles.ItemStyle = ''
     DefaultItemStyles.GroupHeaderStyle = ''
     DefaultItemStyles.GroupFooterStyle = ''
     GroupingKind = Grouped
-    Viewport.Width = 324.000000000000000000
-    Viewport.Height = 444.000000000000000000
+    Viewport.Width = 297.000000000000000000
+    Viewport.Height = 601.000000000000000000
     object ListBoxGroupHeader2: TListBoxGroupHeader
-      Size.Width = 324.000000000000000000
+      Size.Width = 297.000000000000000000
       Size.Height = 56.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 3
@@ -61,11 +40,11 @@ object FormMain: TFormMain
         Align = Right
         TabOrder = 0
         Text = 'Toast'#39's message'
-        Position.X = 123.000000000000000000
-        Position.Y = 6.000000000000000000
+        Position.X = 96.000000000000000000
+        Position.Y = 7.000000000000000000
         Margins.Right = 10.000000000000000000
         Size.Width = 191.000000000000000000
-        Size.Height = 32.000000000000000000
+        Size.Height = 30.000000000000000000
         Size.PlatformDefault = False
       end
     end
@@ -78,10 +57,10 @@ object FormMain: TFormMain
         Align = Right
         ItemIndex = 0
         Margins.Right = 10.000000000000000000
-        Position.X = 122.000000000000000000
-        Position.Y = 6.000000000000000000
+        Position.X = 95.000000000000000000
+        Position.Y = 7.000000000000000000
         Size.Width = 192.000000000000000000
-        Size.Height = 32.000000000000000000
+        Size.Height = 30.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
         object ListBoxItem1: TListBoxItem
@@ -100,7 +79,7 @@ object FormMain: TFormMain
     end
     object ListBoxGroupHeader1: TListBoxGroupHeader
       Position.Y = 144.000000000000000000
-      Size.Width = 324.000000000000000000
+      Size.Width = 297.000000000000000000
       Size.Height = 56.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 1
@@ -115,10 +94,10 @@ object FormMain: TFormMain
         Align = Right
         IsChecked = True
         Margins.Right = 10.000000000000000000
-        Position.X = 270.000000000000000000
-        Position.Y = 9.000000000000000000
-        Size.Width = 44.000000000000000000
-        Size.Height = 26.000000000000000000
+        Position.X = 232.000000000000000000
+        Position.Y = 4.000000000000000000
+        Size.Width = 55.000000000000000000
+        Size.Height = 35.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
       end
@@ -216,7 +195,7 @@ object FormMain: TFormMain
           end>
         Align = Right
         Margins.Right = 10.000000000000000000
-        Position.X = 270.000000000000000000
+        Position.X = 243.000000000000000000
         Size.Width = 44.000000000000000000
         Size.Height = 44.000000000000000000
         Size.PlatformDefault = False
@@ -225,7 +204,7 @@ object FormMain: TFormMain
     end
     object ListBoxGroupHeader3: TListBoxGroupHeader
       Position.Y = 288.000000000000000000
-      Size.Width = 324.000000000000000000
+      Size.Width = 297.000000000000000000
       Size.Height = 56.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 6
@@ -234,11 +213,11 @@ object FormMain: TFormMain
         Align = Right
         Margins.Top = 15.000000000000000000
         Margins.Right = 10.000000000000000000
-        Margins.Bottom = 10.000000000000000000
-        Position.X = 184.000000000000000000
+        Margins.Bottom = 5.000000000000000000
+        Position.X = 157.000000000000000000
         Position.Y = 15.000000000000000000
         Size.Width = 130.000000000000000000
-        Size.Height = 31.000000000000000000
+        Size.Height = 36.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
         Text = 'Restore Default'
@@ -252,11 +231,11 @@ object FormMain: TFormMain
       Text = 'Background'
       object ColorComboBoxBackground: TComboColorBox
         Align = Right
-        Color = xFF2A2A2A
-        Position.X = 173.000000000000000000
-        Position.Y = 6.000000000000000000
+        Color = xCC2A2A2A
+        Position.X = 146.000000000000000000
+        Position.Y = 7.000000000000000000
         Size.Width = 151.000000000000000000
-        Size.Height = 32.000000000000000000
+        Size.Height = 30.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
       end
@@ -269,46 +248,78 @@ object FormMain: TFormMain
       object ColorComboBoxMessage: TComboColorBox
         Align = Right
         Color = claWhite
-        Position.X = 173.000000000000000000
-        Position.Y = 6.000000000000000000
+        Position.X = 146.000000000000000000
+        Position.Y = 7.000000000000000000
         Size.Width = 151.000000000000000000
-        Size.Height = 32.000000000000000000
+        Size.Height = 30.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
       end
     end
-  end
-  object Button2: TButton
-    Align = Bottom
-    Margins.Left = 10.000000000000000000
-    Margins.Top = 10.000000000000000000
-    Margins.Right = 10.000000000000000000
-    Margins.Bottom = 10.000000000000000000
-    Position.X = 10.000000000000000000
-    Position.Y = 548.000000000000000000
-    Size.Width = 304.000000000000000000
-    Size.Height = 43.000000000000000000
-    Size.PlatformDefault = False
-    TabOrder = 0
-    Text = 'Show Custom Toast'
-    OnClick = Button2Click
-    object ShadowEffect2: TShadowEffect
-      Distance = 10.000000000000000000
-      Direction = 45.000000000000000000
-      Softness = 0.300000011920929000
-      Opacity = 0.600000023841857900
-      ShadowColor = claBlack
-      Enabled = False
+    object ListBoxGroupHeader4: TListBoxGroupHeader
+      Position.Y = 432.000000000000000000
+      Size.Width = 297.000000000000000000
+      Size.Height = 56.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 11
+      Text = 'Actions'
     end
-  end
-  object Image2: TImage
-    MultiResBitmap = <
-      item
-      end>
-    Align = Bottom
-    Position.Y = 444.000000000000000000
-    Size.Width = 324.000000000000000000
-    Size.Height = 41.000000000000000000
-    Size.PlatformDefault = False
+    object ListBoxItem9: TListBoxItem
+      Selectable = False
+      Position.Y = 488.000000000000000000
+      TabOrder = 9
+      Text = 'Show Default Toast'
+      object Button1: TButton
+        Align = Right
+        Margins.Left = 10.000000000000000000
+        Margins.Top = 10.000000000000000000
+        Margins.Right = 10.000000000000000000
+        Position.X = 157.000000000000000000
+        Position.Y = 10.000000000000000000
+        Size.Width = 130.000000000000000000
+        Size.Height = 34.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Text = 'Execute'
+        OnClick = Button1Click
+        object ShadowEffect1: TShadowEffect
+          Distance = 10.000000000000000000
+          Direction = 45.000000000000000000
+          Softness = 0.300000011920929000
+          Opacity = 0.600000023841857900
+          ShadowColor = claBlack
+          Enabled = False
+        end
+      end
+    end
+    object ListBoxItem10: TListBoxItem
+      Selectable = False
+      Position.Y = 532.000000000000000000
+      TabOrder = 10
+      Text = 'Show Custom Toast'
+      object Button2: TButton
+        Align = Right
+        Margins.Left = 10.000000000000000000
+        Margins.Top = 10.000000000000000000
+        Margins.Right = 10.000000000000000000
+        Margins.Bottom = 10.000000000000000000
+        Position.X = 157.000000000000000000
+        Position.Y = 10.000000000000000000
+        Size.Width = 130.000000000000000000
+        Size.Height = 24.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Text = 'Execute'
+        OnClick = Button2Click
+        object ShadowEffect2: TShadowEffect
+          Distance = 10.000000000000000000
+          Direction = 45.000000000000000000
+          Softness = 0.300000011920929000
+          Opacity = 0.600000023841857900
+          ShadowColor = claBlack
+          Enabled = False
+        end
+      end
+    end
   end
 end

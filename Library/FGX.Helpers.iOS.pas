@@ -14,7 +14,7 @@ unit FGX.Helpers.iOS;
 interface
 
 uses
-  FMX.Types, iOSapi.UIKit, iOSapi.CoreGraphics, System.UITypes;
+  FMX.Types, Macapi.ObjCRuntime, iOSapi.UIKit, iOSapi.CoreGraphics, System.UITypes;
 
 const
   DEFAULT_ANIMATION_DURATION = 0.4;
@@ -45,13 +45,16 @@ type
 
 { Animation }
 
-  procedure FadeIn(AView: UIView; const ADuration: Single = DEFAULT_ANIMATION_DURATION);
-  procedure FadeOut(AView: UIView; const ADuration: Single = DEFAULT_ANIMATION_DURATION);
+  procedure FadeIn(AView: UIView; const ADuration: Single = DEFAULT_ANIMATION_DURATION); overload;
+  procedure FadeIn(const AView: UIView; const ADuration: Single; const ATargetObject: Pointer; const ASelector: string); overload;
+
+  procedure FadeOut(AView: UIView; const ADuration: Single = DEFAULT_ANIMATION_DURATION); overload;
+  procedure FadeOut(const AView: UIView; const ADuration: Single; const ATargetObject: Pointer; const ASelector: string); overload;
 
 implementation
 
 uses
-  iOSapi.CoreImage, FGX.Asserts;
+  System.SysUtils, iOSapi.CoreImage, FGX.Asserts;
 
 function InterfaceIdiom: TfgInterfaceIdiom;
 begin
@@ -114,6 +117,13 @@ end;
 
 procedure FadeIn(AView: UIView; const ADuration: Single);
 begin
+  FadeIn(AView, ADuration, nil, '');
+end;
+
+procedure FadeIn(const AView: UIView; const ADuration: Single; const ATargetObject: Pointer; const ASelector: string); overload;
+var
+  Selector: SEL;
+begin
   AssertIsNotNil(AView);
   Assert(ADuration >= 0);
 
@@ -125,6 +135,12 @@ begin
   TUIView.OCClass.beginAnimations(nil, nil);
   try
     TUIView.OCClass.setAnimationDuration(ADuration);
+    if (ATargetObject <> nil) and not ASelector.IsEmpty then
+    begin
+      TUIView.OCClass.setAnimationDelegate(ATargetObject);
+      Selector := sel_getUid(MarshaledAString(TMarshal.AsAnsi(ASelector)));
+      TUIView.OCClass.setAnimationDidStopSelector(Selector);
+    end;
     AView.setAlpha(1.0);
   finally
     TUIView.OCClass.commitAnimations;
@@ -132,6 +148,13 @@ begin
 end;
 
 procedure FadeOut(AView: UIView; const ADuration: Single);
+begin
+  FadeOut(AView, ADuration, nil, '');
+end;
+
+procedure FadeOut(const AView: UIView; const ADuration: Single; const ATargetObject: Pointer; const ASelector: string); overload;
+var
+  Selector: SEL;
 begin
   AssertIsNotNil(AView);
   Assert(ADuration >= 0);
@@ -144,6 +167,12 @@ begin
   TUIView.OCClass.beginAnimations(nil, nil);
   try
     TUIView.OCClass.setAnimationDuration(ADuration);
+    if (ATargetObject <> nil) and not ASelector.IsEmpty then
+    begin
+      TUIView.OCClass.setAnimationDelegate(ATargetObject);
+      Selector := sel_getUid(MarshaledAString(TMarshal.AsAnsi(ASelector)));
+      TUIView.OCClass.setAnimationDidStopSelector(Selector);
+    end;
     AView.setAlpha(0.0);
   finally
     TUIView.OCClass.commitAnimations;

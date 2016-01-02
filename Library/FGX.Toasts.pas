@@ -14,7 +14,7 @@ unit FGX.Toasts;
 interface
 
 uses
-  System.Classes, System.UITypes, FMX.Graphics;
+  System.Types, System.Classes, System.UITypes, FMX.Graphics;
 
 resourcestring
   SToastsIsNotSupported = 'Toast is not supported on current platform';
@@ -27,18 +27,25 @@ type
 
   TfgToastDuration = (Short, Long);
 
+  /// <summary>Service interface for working with Toasts</summary>
   IFGXToastService = interface
-  ['{0F0C46CD-6BAE-4D15-B14C-60FB622AE61E}']
+    ['{0F0C46CD-6BAE-4D15-B14C-60FB622AE61E}']
     { Creation }
+    /// <summary>Creates instance of Toast wit specified parameters</summary>
     function CreateToast(const AMessage: string; const ADuration: TfgToastDuration): TfgToast;
     { Manipulation }
+    /// <summary>Shows toast</summary>
     procedure Show(const AToast: TfgToast);
+    /// <summary>Hides toast</summary>
     procedure Cancel(const AToast: TfgToast);
   end;
 
   TfgToast = class abstract
   private class var
     FToastService: IFGXToastService;
+    FDefaultBackgroundColor: TAlphaColor;
+    FDefaultMessageColor: TAlphaColor;
+    FDefaultPadding: TRectF;
   private
     FMessage: string;
     FIcon: TBitmap;
@@ -53,6 +60,7 @@ type
     { Event handlers }
     procedure IconChangedHandler(Sender: TObject);
   private
+    class constructor Create;
     class destructor Destroy;
   protected
     procedure DoBackgroundColorChanged; virtual;
@@ -70,6 +78,14 @@ type
     class procedure Show(const AMessage: string; const ADuration: TfgToastDuration); overload;
     class procedure Show(const AMessage: string; const ADuration: TfgToastDuration; const AIcon: TBitmap); overload;
     class function Supported: Boolean;
+    { Default Settings }
+    /// <summary>Default background color. It will be used, if user doesn't specified <c>BackgroundColor</c></summary>
+    class property DefaultBackgroundColor: TAlphaColor read FDefaultBackgroundColor write FDefaultBackgroundColor;
+    /// <summary>Default message color. It will be used, if user doesn't specified <c>MessageColor</c></summary>
+    class property DefaultMessageColor: TAlphaColor read FDefaultMessageColor write FDefaultMessageColor;
+    /// <summary>Default internal padding between border and text</summary>
+    class property DefaultPadding: TRectF read FDefaultPadding write FDefaultPadding;
+  public
     procedure Show; overload;
     procedure Hide;
     function HasIcon: Boolean;
@@ -91,7 +107,14 @@ type
 implementation
 
 uses
-  FMX.Platform, System.SysUtils, FGX.Asserts {$IFDEF ANDROID}, FGX.Toasts.Android{$ENDIF};
+  FMX.Platform, System.SysUtils, FGX.Asserts
+{$IFDEF ANDROID}
+  , FGX.Toasts.Android
+{$ENDIF}
+{$IFDEF IOS}
+  , FGX.Toasts.iOS
+{$ENDIF}
+;
 
 { TfgCustomToast }
 
@@ -121,6 +144,19 @@ class destructor TfgToast.Destroy;
 begin
   FToastService := nil;
   inherited;
+end;
+
+class constructor TfgToast.Create;
+begin
+  FDefaultBackgroundColor := TAlphaColor($CC2A2A2A);
+{$IFDEF ANDROID}
+  FDefaultBackgroundColor := TAlphaColor($8A000000);
+{$ENDIF}
+  FDefaultMessageColor := TAlphaColorRec.White;
+  FDefaultPadding := TRectF.Create(10, 10, 10, 10);
+{$IFDEF ANDROID}
+  FDefaultPadding := TRectF.Create(20, 20, 20, 20);
+{$ENDIF}
 end;
 
 destructor TfgToast.Destroy;
@@ -155,6 +191,8 @@ end;
 
 function TfgToast.HasIcon: Boolean;
 begin
+  AssertIsNotNil(Icon);
+
   Result := (Icon.Width > 0) and (Icon.Height > 0);
 end;
 
@@ -270,11 +308,11 @@ begin
 end;
 
 initialization
-{$IFDEF ANDROID}
+{$IF Defined(ANDROID) OR Defined(IOS)}
   RegisterService;
 {$ENDIF}
 finalization
-{$IFDEF ANDROID}
+{$IF Defined(ANDROID) OR Defined(IOS)}
   UnregisterService;
 {$ENDIF}
 end.
