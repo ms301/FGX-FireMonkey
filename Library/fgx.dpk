@@ -10,6 +10,7 @@
 package fgx;
 
 {$R *.res}
+{$R *.dres}
 {$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
 {$ALIGN 8}
 {$ASSERTIONS ON}
@@ -35,7 +36,7 @@ package fgx;
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'Extensions for FM (FireMonkey)'}
-{$LIBSUFFIX '210'}
+{$LIBSUFFIX '220'}
 {$IMPLICITBUILD OFF}
 
 requires
@@ -50,6 +51,7 @@ contains
   FGX.VirtualKeyboard.Types in 'FGX.VirtualKeyboard.Types.pas',
   FGX.ProgressDialog in 'FGX.ProgressDialog.pas',
   FGX.ProgressDialog.Types in 'FGX.ProgressDialog.Types.pas',
+  FGX.GradientEdit in 'FGX.GradientEdit.pas',
   FGX.Graphics in 'FGX.Graphics.pas',
   FGX.Helpers in 'FGX.Helpers.pas',
   FGX.ColorsPanel in 'FGX.ColorsPanel.pas',
@@ -58,6 +60,13 @@ contains
   FGX.Items in 'FGX.Items.pas',
   FGX.Asserts in 'FGX.Asserts.pas',
   FGX.LinkedLabel in 'FGX.LinkedLabel.pas',
-  FGX.ApplicationEvents in 'FGX.ApplicationEvents.pas';
+  FGX.Images.Types in 'FGX.Images.Types.pas',
+  FGX.FlipView.Types in 'FGX.FlipView.Types.pas',
+  FGX.ApplicationEvents in 'FGX.ApplicationEvents.pas',
+  FGX.Animations in 'FGX.Animations.pas',
+  FGX.FlipView in 'FGX.FlipView.pas',
+  FGX.FlipView.Effect in 'FGX.FlipView.Effect.pas',
+  FGX.FlipView.Sliding in 'FGX.FlipView.Sliding.pas',
+  FGX.FlipView.Presentation in 'FGX.FlipView.Presentation.pas';
 
 end.

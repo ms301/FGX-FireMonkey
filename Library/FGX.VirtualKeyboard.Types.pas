@@ -37,7 +37,7 @@ type
 
   { TfgButtonsCollectionItem }
 
-  TfgButtonsCollectionItem = class (TCollectionItem)
+  TfgButtonsCollectionItem = class(TCollectionItem)
   public const
     DefaultVisible = True;
   private

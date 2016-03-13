@@ -14,7 +14,7 @@ unit FGX.LinkedLabel;
 interface
 
 uses
-  System.Classes, System.UITypes, FMX.StdCtrls, FMX.Controls, FMX.Objects, FMX.Types;
+  System.Classes, System.UITypes, FMX.StdCtrls, FMX.Controls, FMX.Objects, FMX.Types, FGX.Consts;
 
 type
 
@@ -64,7 +64,7 @@ type
     property VisitedColor: TAlphaColor index IndexVisitedColor read FVisitedColor write SetColor default DefaultColorVisited;
   end;
 
-  [ComponentPlatformsAttribute(pidWin32 or pidWin64 or pidOSX32 or pidAndroid or pidiOSDevice or pidiOSSimulator)]
+  [ComponentPlatformsAttribute(fgAllPlatform)]
   TfgLinkedLabel = class(TfgCustomLinkedLabel)
   published
     property Cursor;

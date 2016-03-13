@@ -14,7 +14,8 @@ unit FGX.GradientEdit;
 interface
 
 uses
-  System.UITypes, System.Types, FMX.Controls, FMX.Graphics, System.Classes;
+  System.UITypes, System.Types, FMX.Controls, FMX.Graphics, System.Classes,
+  FGX.Consts;
 
 type
 
@@ -95,7 +96,7 @@ type
     property OnChanged: TNotifyEvent read FOnChanged write FOnChanged;
   end;
 
-  [ComponentPlatformsAttribute(pidWin32 or pidWin64 or pidOSX32 or pidAndroid or pidiOSDevice or pidiOSSimulator)]
+  [ComponentPlatformsAttribute(fgAllPlatform)]
   TfgGradientEdit = class (TfgCustomGradientEdit)
   published
     property BorderColor;
@@ -127,6 +128,7 @@ type
     property RotationAngle;
     property RotationCenter;
     property Scale;
+    property Size;
     property TabOrder;
     property TouchTargetExpansion;
     property Visible default True;
@@ -157,7 +159,7 @@ type
 implementation
 
 uses
-  System.Math.Vectors, System.SysUtils, System.Math, FMX.Colors, FMX.Types, FGX.Graphics, FGX.Helpers, FGX.Consts;
+  System.Math.Vectors, System.SysUtils, System.Math, FMX.Colors, FMX.Types, FGX.Graphics, FGX.Helpers;
 
 { TfgCustomGradientEdit }
 

@@ -13,9 +13,18 @@ unit FGX.Consts;
 
 interface
 
+uses
+  System.Classes;
+
 const
   EPSILON_SINGLE = 1E-4;
   UNDEFINED = -1;
+
+  { Additional Component Platforms Attribute flags for using in [ComponentPlatformsAttribute] }
+  
+  fgDesktopPlatforms = pidWin32 or pidWin64 or pidOSX32 or pidLinux32 or pidLinux64;
+  fgMobilePlatforms = pidAndroid or pidiOSDevice32 or pidiOSDevice64 or pidiOSSimulator;
+  fgAllPlatform = fgDesktopPlatforms or fgMobilePlatforms;
 
 implementation
 

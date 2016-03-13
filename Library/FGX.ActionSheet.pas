@@ -16,7 +16,7 @@ interface
 {$SCOPEDENUMS ON}
 
 uses
-  System.Classes, FMX.Platform, FMX.Types, FGX.ActionSheet.Types;
+  System.Classes, FMX.Platform, FMX.Types, FGX.ActionSheet.Types, FGX.Consts;
 
 type
 
@@ -44,7 +44,7 @@ type
     property Title: string read FTitle write FTitle;
   end;
 
-  [ComponentPlatformsAttribute(pidAndroid or pidiOSDevice or pidiOSSimulator)]
+  [ComponentPlatformsAttribute(fgMobilePlatforms)]
   TfgActionSheet = class(TfgCustomActionSheet)
   published
     property Actions;

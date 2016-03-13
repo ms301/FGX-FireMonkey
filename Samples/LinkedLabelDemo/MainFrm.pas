@@ -16,7 +16,6 @@ type
     Label2: TLabel;
     edCaption: TEdit;
     cbVisited: TCheckBox;
-    StyleBook1: TStyleBook;
     fgLinkedLabel: TfgLinkedLabel;
     procedure edURIChangeTracking(Sender: TObject);
     procedure edCaptionChangeTracking(Sender: TObject);

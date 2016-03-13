@@ -14,7 +14,8 @@ unit FGX.VirtualKeyboard;
 interface
 
 uses
-  System.Classes,  System.Types, System.Messaging, FMX.VirtualKeyboard, FMX.Types, FGX.VirtualKeyboard.Types;
+  System.Classes,  System.Types, System.Messaging, FMX.VirtualKeyboard, FMX.Types, FGX.VirtualKeyboard.Types,
+  FGX.Consts;
 
 type
 
@@ -31,7 +32,7 @@ type
     FButtons: TfgButtonsCollection;
     FEnabled: Boolean;
     FKeyboardService: IFMXVirtualKeyboardToolbarService;
-    FVKLastState: TfgVirtualKeyboardVisible;
+    FLastState: TfgVirtualKeyboardVisible;
     FOnShow: TfgVirtualKeyboardEvent;
     FOnHide: TfgVirtualKeyboardEvent;
     FOnSizeChanged: TfgVirtualKeyboardEvent;
@@ -49,6 +50,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     function Supported: Boolean;
+    function Visible: Boolean;
   public
     property Buttons: TfgButtonsCollection read FButtons write SetButtons;
     property Enabled: Boolean read FEnabled write SetEnabled default DefaultEnabled;
@@ -57,8 +59,8 @@ type
     property OnSizeChanged: TfgVirtualKeyboardEvent read FOnSizeChanged write FOnSizeChanged;
   end;
 
-  [ComponentPlatformsAttribute(pidAndroid or pidiOSDevice or pidiOSSimulator)]
-  TfgVirtualKeyboard = class (TfgCustomVirtualKeyboard)
+  [ComponentPlatformsAttribute(fgMobilePlatforms)]
+  TfgVirtualKeyboard = class(TfgCustomVirtualKeyboard)
   published
     property Buttons;
     property Enabled;
@@ -79,9 +81,9 @@ begin
   inherited Create(AOwner);
   FButtons := TfgButtonsCollection.Create(Self, RefreshKeyboardButtons);
   FEnabled := DefaultEnabled;
-  FVKLastState := TfgVirtualKeyboardVisible.Unknow;
-  TPlatformServices.Current.SupportsPlatformService(IFMXVirtualKeyboardToolbarService, IInterface(FKeyboardService));
-  { Subriptions }
+  FLastState := TfgVirtualKeyboardVisible.Unknow;
+  TPlatformServices.Current.SupportsPlatformService(IFMXVirtualKeyboardToolbarService, FKeyboardService);
+  { Subscriptions }
   TMessageManager.DefaultManager.SubscribeToMessage(TVKStateChangeMessage, DoVirtualKeyboardChangeHandler);
 end;
 
@@ -118,7 +120,7 @@ begin
   AssertIsClass(AMessage, TVKStateChangeMessage);
 
   VKMessage := AMessage as TVKStateChangeMessage;
-  case FVKLastState of
+  case FLastState of
     Unknow:
       begin
         if VKMessage.KeyboardVisible then
@@ -143,9 +145,9 @@ begin
   end;
 
   if VKMessage.KeyboardVisible then
-    FVKLastState := TfgVirtualKeyboardVisible.Shown
+    FLastState := TfgVirtualKeyboardVisible.Shown
   else
-    FVKLastState := TfgVirtualKeyboardVisible.Hidden;
+    FLastState := TfgVirtualKeyboardVisible.Hidden;
 end;
 
 procedure TfgCustomVirtualKeyboard.RefreshKeyboardButtons;
@@ -184,6 +186,11 @@ end;
 function TfgCustomVirtualKeyboard.Supported: Boolean;
 begin
   Result := FKeyboardService <> nil;
+end;
+
+function TfgCustomVirtualKeyboard.Visible: Boolean;
+begin
+  Result := FLastState = TfgVirtualKeyboardVisible.Shown;
 end;
 
 initialization

@@ -14,7 +14,7 @@ unit FGX.ProgressDialog;
 interface
 
 uses
-  System.Classes, FGX.ProgressDialog.Types;
+  System.Classes, FGX.ProgressDialog.Types, FGX.Consts;
 
 type
 
@@ -71,7 +71,7 @@ type
   /// <summary>
   ///   Native Modal dialog with activity indicator, title and message
   /// </summary>
-  [ComponentPlatformsAttribute(pidAndroid or pidiOSDevice or pidiOSSimulator)]
+  [ComponentPlatformsAttribute(fgMobilePlatforms)]
   TfgActivityDialog = class(TfgCustomActivityDialog)
   published
     property Message;
@@ -123,7 +123,7 @@ type
   ///     </list>
   ///   </note>
   /// </summary>
-  [ComponentPlatformsAttribute(pidAndroid or pidiOSDevice or pidiOSSimulator)]
+  [ComponentPlatformsAttribute(fgMobilePlatforms)]
   TfgProgressDialog = class(TfgCustomProgressDialog)
   published
     property Kind;
@@ -137,7 +137,7 @@ type
 implementation
 
 uses
-  System.Math, System.SysUtils, FMX.Types, FMX.Platform, FGX.Helpers, FGX.Consts, FGX.Asserts
+  System.Math, System.SysUtils, FMX.Types, FMX.Platform, FGX.Helpers, FGX.Asserts
 {$IFDEF IOS}
    , FGX.ProgressDialog.iOS
 {$ENDIF}

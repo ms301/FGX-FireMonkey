@@ -23,17 +23,33 @@ procedure Register;
 implementation
 
 uses
-  System.Classes, DesignIntf,
+  System.Classes,
+  DesignIntf,
   FMX.Graphics, FMX.Styles.Objects, FMX.Styles.Switch,
   FGX.ActionSheet, FGX.VirtualKeyboard, FGX.ProgressDialog, FGX.GradientEdit, FGX.ColorsPanel, FGX.LinkedLabel,
-  FGX.ApplicationEvents,
+  FGX.FlipView, FGX.ApplicationEvents, FGX.Animations,
   FGX.Items, FGX.Consts;
 
 procedure Register;
 begin
   { Components Registration }
-  RegisterComponents(rsCategoryExtended, [TfgActionSheet, TfgVirtualKeyboard, TfgProgressDialog, TfgActivityDialog,
-    TfgGradientEdit, TfgColorsPanel, TfgLinkedLabel, TfgApplicationEvents]);
+  RegisterComponents(rsCategoryExtended, [
+    TfgActionSheet,
+    TfgActivityDialog,
+    TfgApplicationEvents,
+    TfgColorsPanel,
+    TfgFlipView,
+    TfgGradientEdit,
+    TfgLinkedLabel,
+    TfgProgressDialog,
+    TfgVirtualKeyboard
+    ]);
+
+  RegisterComponents(rsAnimations, [
+    TfgPositionAnimation,
+    TfgPosition3DAnimation,
+    TfgBitmapLinkAnimation
+    ]);
 
   RegisterComponents(rsStyleObjects, [TStyleObject, TSubImage, TActiveStyleObject, TTabStyleObject, TCheckStyleObject,
     TButtonStyleObject, TSystemButtonObject, TStyleTextObject, TStyleTextAnimation,

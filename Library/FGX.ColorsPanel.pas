@@ -16,7 +16,8 @@ interface
 {$SCOPEDENUMS ON}
 
 uses
-  System.Types, System.Classes, System.UITypes, FMX.Controls, FMX.Graphics, FMX.Types, FGX.Colors.Presets, FGX.Types;
+  System.Types, System.Classes, System.UITypes, FMX.Controls, FMX.Graphics, FMX.Types, FGX.Colors.Presets, FGX.Types,
+  FGX.Consts;
 
 type
 
@@ -85,7 +86,7 @@ type
 
   { TfgColorsPanel }
 
-  [ComponentPlatformsAttribute(pidWin32 or pidWin64 or pidOSX32 or pidAndroid or pidiOSDevice or pidiOSSimulator)]
+  [ComponentPlatformsAttribute(fgAllPlatform)]
   TfgColorsPanel = class(TfgCustomColorsPanel)
   published
     property Stroke;
@@ -115,6 +116,7 @@ type
     property RotationAngle;
     property RotationCenter;
     property Scale;
+    property Size;
     property TabOrder;
     property TouchTargetExpansion;
     property Visible default True;
@@ -145,7 +147,7 @@ type
 implementation
 
 uses
-  System.Math, System.SysUtils, System.UIConsts, System.TypInfo, FGX.Graphics, FGX.Consts, FGX.Asserts;
+  System.Math, System.SysUtils, System.UIConsts, System.TypInfo, FGX.Graphics, FGX.Asserts;
 
 { TfgCustomColorsPanel }
 

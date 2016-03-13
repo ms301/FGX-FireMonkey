@@ -12,6 +12,9 @@
         <Projects Include="Samples\ActionSheetDemo\ActionSheetDemo.dproj">
             <Dependencies/>
         </Projects>
+        <Projects Include="Samples\AnimationsDemo\AnimationsDemo.dproj">
+            <Dependencies/>
+        </Projects>
         <Projects Include="Samples\ApplicationEventsDemo\ApplicationEventsDemo.dproj">
             <Dependencies/>
         </Projects>
@@ -19,6 +22,9 @@
             <Dependencies/>
         </Projects>
         <Projects Include="Samples\ColorPanelDemo\ColorsPanelDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Samples\FlipViewDemo\FlipViewDemo.dproj">
             <Dependencies/>
         </Projects>
         <Projects Include="Samples\LinkedLabelDemo\LinkedLabelDemo.dproj">
@@ -65,6 +71,15 @@
     <Target Name="ActionSheetDemo:Make">
         <MSBuild Projects="Samples\ActionSheetDemo\ActionSheetDemo.dproj" Targets="Make"/>
     </Target>
+    <Target Name="AnimationsDemo">
+        <MSBuild Projects="Samples\AnimationsDemo\AnimationsDemo.dproj"/>
+    </Target>
+    <Target Name="AnimationsDemo:Clean">
+        <MSBuild Projects="Samples\AnimationsDemo\AnimationsDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="AnimationsDemo:Make">
+        <MSBuild Projects="Samples\AnimationsDemo\AnimationsDemo.dproj" Targets="Make"/>
+    </Target>
     <Target Name="ApplicationEventsDemo">
         <MSBuild Projects="Samples\ApplicationEventsDemo\ApplicationEventsDemo.dproj"/>
     </Target>
@@ -91,6 +106,15 @@
     </Target>
     <Target Name="ColorsPanelDemo:Make">
         <MSBuild Projects="Samples\ColorPanelDemo\ColorsPanelDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="FlipViewDemo">
+        <MSBuild Projects="Samples\FlipViewDemo\FlipViewDemo.dproj"/>
+    </Target>
+    <Target Name="FlipViewDemo:Clean">
+        <MSBuild Projects="Samples\FlipViewDemo\FlipViewDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="FlipViewDemo:Make">
+        <MSBuild Projects="Samples\FlipViewDemo\FlipViewDemo.dproj" Targets="Make"/>
     </Target>
     <Target Name="LinkedLabelDemo">
         <MSBuild Projects="Samples\LinkedLabelDemo\LinkedLabelDemo.dproj"/>
@@ -120,13 +144,13 @@
         <MSBuild Projects="Samples\VirtualKeyboardDemo\VirtualKeyboardDemo.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="fgx;dclfgx;ActionSheetDemo;ApplicationEventsDemo;GradientEditDemo;ColorsPanelDemo;LinkedLabelDemo;ProgressDialogDemo;VirtualKeyboardDemo"/>
+        <CallTarget Targets="fgx;dclfgx;ActionSheetDemo;AnimationsDemo;ApplicationEventsDemo;GradientEditDemo;ColorsPanelDemo;FlipViewDemo;LinkedLabelDemo;ProgressDialogDemo;VirtualKeyboardDemo"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="fgx:Clean;dclfgx:Clean;ActionSheetDemo:Clean;ApplicationEventsDemo:Clean;GradientEditDemo:Clean;ColorsPanelDemo:Clean;LinkedLabelDemo:Clean;ProgressDialogDemo:Clean;VirtualKeyboardDemo:Clean"/>
+        <CallTarget Targets="fgx:Clean;dclfgx:Clean;ActionSheetDemo:Clean;AnimationsDemo:Clean;ApplicationEventsDemo:Clean;GradientEditDemo:Clean;ColorsPanelDemo:Clean;FlipViewDemo:Clean;LinkedLabelDemo:Clean;ProgressDialogDemo:Clean;VirtualKeyboardDemo:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="fgx:Make;dclfgx:Make;ActionSheetDemo:Make;ApplicationEventsDemo:Make;GradientEditDemo:Make;ColorsPanelDemo:Make;LinkedLabelDemo:Make;ProgressDialogDemo:Make;VirtualKeyboardDemo:Make"/>
+        <CallTarget Targets="fgx:Make;dclfgx:Make;ActionSheetDemo:Make;AnimationsDemo:Make;ApplicationEventsDemo:Make;GradientEditDemo:Make;ColorsPanelDemo:Make;FlipViewDemo:Make;LinkedLabelDemo:Make;ProgressDialogDemo:Make;VirtualKeyboardDemo:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>

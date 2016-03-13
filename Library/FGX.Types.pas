@@ -14,15 +14,13 @@ unit FGX.Types;
 interface
 
 uses
-  System.Classes, System.SysUtils, System.Generics.Defaults, System.Generics.Collections;
+  System.SysUtils, System.Generics.Defaults, System.Generics.Collections, System.Classes;
 
 type
 
   { TfgPair }
 
-  /// <summary>
-  ///   Ўаблонный класс дл€ хранени€ в ресурсах двух однотипных значений (размеры, координаты точки и тд).
-  /// </summary>
+  /// <summary>Ўаблонный класс дл€ хранени€ в ресурсах двух однотипных значений (размеры, координаты точки и тд).</summary>
   TfgPair<T> = class(TPersistent)
   private
     FValue1: T;
@@ -43,7 +41,7 @@ type
     property OnChange: TNotifyEvent read FOnChange write FOnChange;
   end;
 
-  TfgSingleSize = class (TfgPair<Single>)
+  TfgSingleSize = class(TfgPair<Single>)
   published
     property Width: Single read GetValue1 write SetValue1;
     property Height: Single read GetValue2 write SetValue2;
@@ -51,20 +49,16 @@ type
 
   { Comparators }
 
-  /// <summary>
-  ///   Ќабор компараторов дл€ разых типов значений
-  /// </summary>
+  /// <summary>Ќабор компараторов дл€ разых типов значений</summary>
   TfgEqualityComparators = class
   public
-    /// <summary>
-    ///   ѕроверка равенства двух вещественных чисел типа Single
-    /// </summary>
+    /// <summary>ѕроверка равенства двух вещественных чисел типа Single</summary>
     class function SingleEquality(const Value1, Value2: Single): Boolean; static; inline;
   end;
 
 { TfgPersistent }
 
-  TfgPersistent = class (TPersistent)
+  TfgPersistent = class(TPersistent)
   private
     [Weak] FOwner: TComponent;
     FOnInternalChanged: TNotifyEvent;
@@ -77,6 +71,28 @@ type
     constructor Create(AOwner: TComponent; const AOnInternalChanged: TNotifyEvent); overload;
     destructor Destroy; override;
     function IsDefaultValues: Boolean; virtual;
+  end;
+
+{ TfgCollection }
+
+  TfgCollection = class;
+  TfgCollectionNotification = (Added, Extracting, Deleting, Updated);
+  TfgCollectionChanged = procedure (Collection: TfgCollection; Item: TCollectionItem; const Action: TfgCollectionNotification) of object;
+
+  TfgCollection = class(TCollection)
+  private
+    FOwner: TPersistent;
+    FOnInternalChanged: TfgCollectionChanged;
+  protected
+    procedure DoInternalChanged(Item: TCollectionItem; const Action: TfgCollectionNotification); virtual;
+    function CanInternalChange: Boolean;
+    { TCollection }
+    procedure Notify(Item: TCollectionItem; Action: TCollectionNotification); override;
+    procedure Update(Item: TCollectionItem); override;
+    function GetOwner: TPersistent; override;
+  public
+    constructor Create(AOwner: TPersistent; const ItemClass: TCollectionItemClass; const AOnInternalChanged: TfgCollectionChanged); overload;
+    constructor Create(ItemClass: TCollectionItemClass; const AOnInternalChanged: TfgCollectionChanged); overload;
   end;
 
 implementation
@@ -190,6 +206,63 @@ end;
 function TfgPersistent.IsDefaultValues: Boolean;
 begin
   Result := False;
+end;
+
+{ TfgCollection }
+
+constructor TfgCollection.Create(AOwner: TPersistent; const ItemClass: TCollectionItemClass;
+  const AOnInternalChanged: TfgCollectionChanged);
+begin
+  Create(ItemClass);
+  FOwner := AOwner;
+  FOnInternalChanged := AOnInternalChanged;
+end;
+
+function TfgCollection.CanInternalChange: Boolean;
+var
+  ForbiddenStates: TComponentState;
+begin
+  ForbiddenStates := [csLoading, csDestroying] * TComponent(Owner).ComponentState;
+  Result := (Owner = nil) or (Owner is TComponent) and (ForbiddenStates = []);
+end;
+
+constructor TfgCollection.Create(ItemClass: TCollectionItemClass; const AOnInternalChanged: TfgCollectionChanged);
+begin
+  Create(nil, ItemClass, AOnInternalChanged);
+end;
+
+procedure TfgCollection.DoInternalChanged(Item: TCollectionItem; const Action: TfgCollectionNotification);
+begin
+  if Assigned(FOnInternalChanged) and (Owner <> nil) then
+    FOnInternalChanged(Self, Item, Action);
+end;
+
+function TfgCollection.GetOwner: TPersistent;
+begin
+  Result := FOwner;
+end;
+
+procedure TfgCollection.Notify(Item: TCollectionItem; Action: TCollectionNotification);
+var
+  Notification: TfgCollectionNotification;
+begin
+  case Action of
+    cnAdded: Notification := TfgCollectionNotification.Added;
+    cnExtracting: Notification := TfgCollectionNotification.Extracting;
+    cnDeleting: Notification := TfgCollectionNotification.Deleting;
+  else
+    raise Exception.Create('Unknown value of [System.Classes.TCollectionNotification])');
+  end;
+  if CanInternalChange then
+    DoInternalChanged(Item, Notification);
+  inherited;
+end;
+
+procedure TfgCollection.Update(Item: TCollectionItem);
+begin
+  inherited;
+  if (Item <> nil) and CanInternalChange then
+    DoInternalChanged(Item, TfgCollectionNotification.Updated);
 end;
 
 end.

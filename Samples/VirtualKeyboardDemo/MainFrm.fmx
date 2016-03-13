@@ -30,14 +30,17 @@ object FormMain: TFormMain
     end
     object MemoLog: TMemo
       Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+      DataDetectorTypes = []
+      StyledSettings = [Style, FontColor]
+      TextSettings.Font.Family = 'Courier New'
+      TextSettings.Font.Size = 10.000000000000000000
       Align = Client
       Size.Width = 354.000000000000000000
       Size.Height = 505.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 1
-      TextSettings.Font.Family = 'Courier New'
-      TextSettings.Font.Size = 10.000000000000000000
-      StyledSettings = [Style, FontColor]
+      Viewport.Width = 346.000000000000000000
+      Viewport.Height = 497.000000000000000000
     end
   end
   object fgVirtualKeyboard: TfgVirtualKeyboard

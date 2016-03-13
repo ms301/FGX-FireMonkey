@@ -32,8 +32,6 @@ var
 begin
   Uri := StrToJURI(AUrl);
   OpenLinkIntent := TJIntent.JavaClass.init(TJIntent.JavaClass.ACTION_VIEW, Uri);
-  OpenLinkIntent.setType(StringToJString('text/html'));
-  OpenLinkIntent.addCategory(TJIntent.JavaClass.CATEGORY_BROWSABLE);
   SharedActivity.startActivity(OpenLinkIntent);
   Result := True;
 end;
