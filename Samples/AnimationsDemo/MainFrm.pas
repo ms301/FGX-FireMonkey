@@ -9,7 +9,7 @@ uses
   FMX.Types3D, FMX.MaterialSources, FMX.Styles.Objects;
 
 type
-  TForm9 = class(TForm)
+  TFormMain = class(TForm)
     Image1: TImage;
     GroupBox1: TGroupBox;
     fgPositionAnimation1: TfgPositionAnimation;
@@ -30,7 +30,7 @@ type
   end;
 
 var
-  Form9: TForm9;
+  FormMain: TFormMain;
 
 implementation
 

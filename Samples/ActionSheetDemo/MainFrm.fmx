@@ -1,7 +1,7 @@
 object FormMain: TFormMain
   Left = 0
   Top = 0
-  Caption = 'FormMain'
+  Caption = 'TfgActionSheet: Demo'
   ClientHeight = 567
   ClientWidth = 384
   Padding.Left = 10.000000000000000000
@@ -12,7 +12,7 @@ object FormMain: TFormMain
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
   OnCreate = FormCreate
-  DesignerMasterStyle = 3
+  DesignerMasterStyle = 2
   object Button1: TButton
     Align = Horizontal
     Position.X = 10.000000000000000000
@@ -30,7 +30,7 @@ object FormMain: TFormMain
     Position.X = 10.000000000000000000
     Position.Y = 60.000000000000000000
     Size.Width = 364.000000000000000000
-    Size.Height = 96.000000000000000000
+    Size.Height = 91.000000000000000000
     Size.PlatformDefault = False
     StyleLookup = 'embossedlabel'
     TextSettings.VertAlign = Leading
@@ -59,10 +59,10 @@ object FormMain: TFormMain
     object SwitchUseUIGuildline: TSwitch
       Align = Right
       IsChecked = True
-      Position.X = 320.000000000000000000
-      Position.Y = 12.000000000000000000
-      Size.Width = 44.000000000000000000
-      Size.Height = 26.000000000000000000
+      Position.X = 309.000000000000000000
+      Position.Y = 8.000000000000000000
+      Size.Width = 55.000000000000000000
+      Size.Height = 35.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 1
     end
@@ -84,7 +84,7 @@ object FormMain: TFormMain
     Align = Top
     Margins.Top = 10.000000000000000000
     Position.X = 10.000000000000000000
-    Position.Y = 166.000000000000000000
+    Position.Y = 161.000000000000000000
     Size.Width = 364.000000000000000000
     Size.Height = 33.000000000000000000
     Size.PlatformDefault = False
@@ -116,11 +116,14 @@ object FormMain: TFormMain
       item
         Action = ActionToSpam
         Caption = 'To Spam'
-        OnClick = fgActionSheetActions0Click
       end
       item
         Action = TakePhotoFromLibraryAction1
-        Visible = False
+        Caption = 'Choose Photo'
+      end
+      item
+        Action = TakePhotoFromCameraAction1
+        Caption = 'Take Photo'
       end
       item
         Action = EditVirtualKeyboard1
@@ -130,30 +133,21 @@ object FormMain: TFormMain
     Left = 116
     Top = 208
   end
-  object Button2: TButton
-    Action = TakePhotoFromLibraryAction1
-    Enabled = True
-    ImageIndex = -1
-    Position.X = 112.000000000000000000
-    Position.Y = 304.000000000000000000
-    TabOrder = 5
-    Visible = False
-  end
   object ActionList: TActionList
     Left = 200
     Top = 208
     object ActionToSpam: TAction
       Text = 'To Spam'
-      OnExecute = fgActionSheetActions0Click
     end
     object TakePhotoFromCameraAction1: TTakePhotoFromCameraAction
+      CustomText = 'Take Photo'
     end
     object TakePhotoFromLibraryAction1: TTakePhotoFromLibraryAction
-      Visible = False
+      CustomText = 'Choose Photo'
     end
     object EditVirtualKeyboard1: TVirtualKeyboard
       Text = 'On-Screen Keyboard'
-      FmxObject = Button2
+      FmxObject = Button1
     end
   end
 end

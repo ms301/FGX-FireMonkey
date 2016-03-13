@@ -27,10 +27,13 @@ uses
 
   function BitmapToJBitmap(const ABitmap: TBitmap): JBitmap;
 
+  function GetNativeTheme(const AOwner: TObject): Integer;
+
 implementation
 
 uses
-  FMX.Helpers.Android, FMX.Platform.Android, FMX.Surfaces, FGX.Asserts;
+  System.Classes, FMX.Helpers.Android, FMX.Platform.Android, FMX.Surfaces, FMX.Forms, FMX.Styles, FMX.Controls,
+  FGX.Asserts, System.SysUtils;
 
 procedure ShowDialog(ADialog: JDialog; const ADialogID: Integer);
 begin
@@ -71,6 +74,60 @@ begin
   finally
     BitmapSurface.Free;
   end;
+end;
+
+function FindForm(const AOwner: TObject): TCommonCustomForm;
+var
+  OwnerTmp: TComponent;
+begin
+  Result := nil;
+  if AOwner is TComponent then
+  begin
+    OwnerTmp := TComponent(AOwner);
+    while not (OwnerTmp is TCommonCustomForm) and (OwnerTmp <> nil) do
+      OwnerTmp := OwnerTmp.Owner;
+    if OwnerTmp is TCommonCustomForm then
+      Result := TCommonCustomForm(OwnerTmp);
+  end;
+end;
+
+const
+  ANDROID_LIGHT_THEME = '[LIGHTSTYLE]';
+  ANDROID_DARK_THEME = '[DARKSTYLE]';
+
+function IsGingerbreadDevice: Boolean;
+begin
+  Result := TOSVersion.Major = 2;
+end;
+
+function GetThemeFromDescriptor(ADescriptor: TStyleDescription): Integer;
+begin
+  Result := 0;
+  if ADescriptor <> nil then
+  begin
+    if ADescriptor.PlatformTarget.Contains(ANDROID_LIGHT_THEME) then
+      Result := TJAlertDialog.JavaClass.THEME_HOLO_LIGHT;
+    if ADescriptor.PlatformTarget.Contains(ANDROID_DARK_THEME) then
+      Result := TJAlertDialog.JavaClass.THEME_HOLO_DARK;
+  end;
+end;
+
+function GetNativeTheme(const AOwner: TObject): Integer;
+var
+  Form: TCommonCustomForm;
+  LStyleDescriptor: TStyleDescription;
+begin
+  Form := FindForm(AOwner);
+  if Form <> nil then
+  begin
+    if Form.StyleBook <> nil then
+      LStyleDescriptor := TStyleManager.FindStyleDescriptor(Form.StyleBook.Style)
+    else
+      LStyleDescriptor := TStyleManager.FindStyleDescriptor(TStyleManager.ActiveStyleForScene(Form as IScene));
+    Result := GetThemeFromDescriptor(LStyleDescriptor);
+  end
+  else
+    Result := TJAlertDialog.JavaClass.THEME_HOLO_LIGHT;
 end;
 
 end.

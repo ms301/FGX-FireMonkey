@@ -14,7 +14,7 @@ unit FGX.FlipView.Sliding;
 interface
 
 uses
-  FMX.Presentation.Style, FMX.Controls.Presentation, FMX.Ani, FMX.Graphics, FMX.Objects, FMX.Controls,
+  FMX.Presentation.Style, FMX.Controls.Presentation, FMX.Ani, FMX.Graphics, FMX.Objects, FMX.Controls, FMX.Types,
   FMX.Presentation.Messages, FGX.FlipView, FGX.FlipView.Presentation, FGX.FlipView.Types;
 
 type
@@ -39,22 +39,10 @@ type
     procedure ShowNextImage(const ANewItemIndex: Integer; const ADirection: TfgDirection; const AAnimate: Boolean); override;
   end;
 
-  TfgFlipViewSlidingPresentationProxy = class(TPresentationProxy)
-  protected
-    function CreateReceiver: TObject; override;
-  end;
-
 implementation
 
 uses
-  FMX.Types, FMX.Presentation.Factory, System.Types, System.Classes, FGX.Asserts;
-
-{ TfgFlipViewSlidingPresentationProxy }
-
-function TfgFlipViewSlidingPresentationProxy.CreateReceiver: TObject;
-begin
-  Result := TfgFlipViewSlidingPresentation.Create(nil);
-end;
+  System.Classes, System.Types, FMX.Presentation.Factory, FGX.Asserts;
 
 { TfgFlipViewSlidingPresentation }
 
@@ -215,7 +203,7 @@ begin
 end;
 
 initialization
-  TPresentationProxyFactory.Current.Register('fgFlipView-Sliding',  TfgFlipViewSlidingPresentationProxy);
+  TPresentationProxyFactory.Current.Register('fgFlipView-Sliding',  TStyledPresentationProxy<TfgFlipViewSlidingPresentation>);
 finalization
-  TPresentationProxyFactory.Current.Unregister('fgFlipView-Sliding',  TfgFlipViewSlidingPresentationProxy);
+  TPresentationProxyFactory.Current.Unregister('fgFlipView-Sliding',  TStyledPresentationProxy<TfgFlipViewSlidingPresentation>);
 end.

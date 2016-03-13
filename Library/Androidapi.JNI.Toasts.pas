@@ -5,7 +5,7 @@
 {                                                       }
 {*******************************************************}
 
-unit AndroidApi.JNI.Toasts;
+unit Androidapi.JNI.Toasts;
 
 interface
 

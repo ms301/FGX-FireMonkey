@@ -32,7 +32,6 @@ type
     ActionToSpam: TAction;
     TakePhotoFromCameraAction1: TTakePhotoFromCameraAction;
     TakePhotoFromLibraryAction1: TTakePhotoFromLibraryAction;
-    Button2: TButton;
     EditVirtualKeyboard1: TVirtualKeyboard;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);

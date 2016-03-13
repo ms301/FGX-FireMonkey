@@ -52,7 +52,7 @@ type
   public
     constructor Create(const AOwner: TPersistent);
     /// <summary>
-    ///   Return Index of first "destructive" action (action with style as acDestructive)
+    ///   Return Index of first "destructive" action (action with style as acDestructive).
     ///   If action is not found, return -1
     /// </summary>
     function IndexOfDestructiveButton: Integer;
@@ -112,7 +112,7 @@ type
 implementation
 
 uses
-  System.SysUtils, System.Math, System.Actions, System.RTLConsts, FGX.Asserts;
+  System.SysUtils, System.Math, System.Actions, System.RTLConsts, FMX.StdActns, FGX.Asserts;
 
 type
 
@@ -230,7 +230,14 @@ begin
   if Sender is TCustomAction then
   begin
     if not CheckDefaults or not Caption.IsEmpty then
-      Caption := TCustomAction(Sender).Caption;
+    begin
+      if Sender is TSysCommonAction then
+        Caption := TSysCommonAction(Sender).CustomText
+      else
+        Caption := TCustomAction(Sender).Caption;
+      if Caption.IsEmpty then
+        Caption := Sender.Name;
+    end;
     Visible := TCustomAction(Sender).Visible;
     OnClick := TCustomAction(Sender).OnExecute;
   end;

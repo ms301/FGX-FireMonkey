@@ -31,13 +31,12 @@ type
     FTitle: string;
     FActionSheetService: IFGXActionSheetService;
     procedure SetActions(const Value: TfgActionsCollections);
-  protected
-    property ActionSheetService: IFGXActionSheetService read FActionSheetService;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure Show; virtual;
     function Supported: Boolean;
+    property ActionSheetService: IFGXActionSheetService read FActionSheetService;
   public
     property Actions: TfgActionsCollections read FActions write SetActions;
     property UseUIGuidline: Boolean read FUseUIGuidline write FUseUIGuidline default DefaultUseUIGuidline;
@@ -71,7 +70,7 @@ begin
   inherited Create(AOwner);
   FActions := TfgActionsCollections.Create(Self);
   FUseUIGuidline := DefaultUseUIGuidline;
-  TPlatformServices.Current.SupportsPlatformService(IFGXActionSheetService, IInterface(FActionSheetService));
+  TPlatformServices.Current.SupportsPlatformService(IFGXActionSheetService, FActionSheetService);
 end;
 
 destructor TfgCustomActionSheet.Destroy;

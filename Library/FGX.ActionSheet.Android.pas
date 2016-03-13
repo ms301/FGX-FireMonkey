@@ -58,7 +58,7 @@ implementation
 
 uses
   System.Classes, System.Math, System.SysUtils, Androidapi.Helpers, FMX.Platform, FMX.Platform.Android,
-  FMX.Helpers.Android, FMX.Types, FMX.Controls, FMX.Dialogs, FGX.Helpers.Android, FGX.Asserts;
+  FMX.Types, FMX.Controls, FMX.Dialogs, FGX.Helpers.Android, FMX.Helpers.Android, FGX.Asserts;
 
 procedure RegisterService;
 begin
@@ -94,7 +94,7 @@ begin
     Action := VisibleActions.Items[AButtonIndex];
     if Assigned(Action.OnClick) then
       Action.OnClick(Action)
-    else
+    else if Action.Action <> nil then
       Action.Action.ExecuteTarget(nil);
   end;
 end;
@@ -139,9 +139,9 @@ begin
 
   { Create Alert Dialog }
   if TOSVersion.Major <= 2 then
-    DialogBuilder := TJAlertDialog_Builder.JavaClass.init(SharedActivityContext)
+    DialogBuilder := TJAlertDialog_Builder.JavaClass.init(TAndroidHelper.Context)
   else
-    DialogBuilder := TJAlertDialog_Builder.JavaClass.init(SharedActivityContext, GetNativeTheme);
+    DialogBuilder := TJAlertDialog_Builder.JavaClass.init(TAndroidHelper.Context, GetNativeTheme);
 
   { Forming  Action List }
   Items := ItemsToJavaArray;

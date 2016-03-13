@@ -28,7 +28,8 @@ type
     MM_EFFECT_OPTIONS_CHANGED = MM_USER + 2;
     MM_SLIDE_OPTIONS_CHANGED = MM_USER + 3;
     MM_SLIDESHOW_OPTIONS_CHANGED = MM_USER + 4;
-    MM_FLIPVIEW_USER = MM_USER + 5;
+    MM_SHOW_NAVIGATION_BUTTONS_CHANGED = MM_USER + 5;
+    MM_FLIPVIEW_USER = MM_USER + 6;
     { Control messages }
     PM_GO_TO_IMAGE = PM_USER + 1;
     PM_FLIPVIEW_USER = PM_USER + 2;
@@ -42,7 +43,13 @@ type
     Direction: TfgDirection;
   end;
 
+  TfgCustomFlipView = class;
+
+  TfgImageClickEvent = procedure (Sender: TObject; const AFlipView: TfgCustomFlipView; const AImageIndex: Integer) of object;
+
   TfgFlipViewModel = class(TDataModel)
+  public const
+    DefaultShowNavigationButtons = True;
   private
     FFlipViewEvents: IfgFlipViewNotifications;
     FImages: TfgImageCollection;
@@ -51,13 +58,16 @@ type
     FSlidingOptions: TfgFlipViewSlideOptions;
     FEffectOptions: TfgFlipViewEffectOptions;
     FIsSliding: Boolean;
+    FShowNavigationButtons: Boolean;
     FOnStartChanging: TfgChangingImageEvent;
     FOnFinishChanging: TNotifyEvent;
+    FOnImageClick: TfgImageClickEvent;
     procedure SetEffectOptions(const Value: TfgFlipViewEffectOptions);
     procedure SetImages(const Value: TfgImageCollection);
     procedure SetItemIndex(const Value: Integer);
     procedure SetSlideShowOptions(const Value: TfgFlipViewSlideShowOptions);
     procedure SetSlidingOptions(const Value: TfgFlipViewSlideOptions);
+    procedure SetShowNavigationButtons(const Value: Boolean);
     function GetCurrentImage: TBitmap;
     function GetImageCount: Integer;
     procedure HandlerOptionsChanged(Sender: TObject);
@@ -81,8 +91,10 @@ type
     property ItemIndex: Integer read FItemIndex write SetItemIndex default -1;
     property SlideOptions: TfgFlipViewSlideOptions read FSlidingOptions write SetSlidingOptions;
     property SlideShowOptions: TfgFlipViewSlideShowOptions read FSlideShowOptions write SetSlideShowOptions;
+    property ShowNavigationButtons: Boolean read FShowNavigationButtons write SetShowNavigationButtons;
     property OnStartChanging: TfgChangingImageEvent read FOnStartChanging write FOnStartChanging;
     property OnFinishChanging: TNotifyEvent read FOnFinishChanging write FOnFinishChanging;
+    property OnImageClick: TfgImageClickEvent read FOnImageClick write FOnImageClick;
   end;
 
   TfgCustomFlipView = class(TPresentedControl, IfgFlipViewNotifications)
@@ -97,6 +109,10 @@ type
     function GetItemIndex: Integer;
     function GetSlideShowOptions: TfgFlipViewSlideShowOptions;
     function GetSlidingOptions: TfgFlipViewSlideOptions;
+    function GetShowNavigationButtons: Boolean;
+    function GetOnFinishChanging: TNotifyEvent;
+    function GetOnStartChanging: TfgChangingImageEvent;
+    function GetOnImageClick: TfgImageClickEvent;
     function IsEffectOptionsStored: Boolean;
     function IsSlideOptionsStored: Boolean;
     function IsSlideShowOptionsStored: Boolean;
@@ -105,13 +121,14 @@ type
     procedure SetItemIndex(const Value: Integer);
     procedure SetSlideShowOptions(const Value: TfgFlipViewSlideShowOptions);
     procedure SetSlidingOptions(const Value: TfgFlipViewSlideOptions);
+    procedure SetShowNavigationButtons(const Value: Boolean);
     procedure SetMode(const Value: TfgFlipViewMode);
-    function GetOnFinishChanging: TNotifyEvent;
-    function GetOnStartChanging: TfgChangingImageEvent;
     procedure SetOnFinishChanging(const Value: TNotifyEvent);
     procedure SetOnStartChanging(const Value: TfgChangingImageEvent);
+    procedure SetOnImageClick(const Value: TfgImageClickEvent);
   protected
     procedure HandlerTimer(Sender: TObject); virtual;
+    procedure UpdateTimer;
     { IfgFlipViewEvents }
     procedure StartChanging;
     procedure FinishChanging;
@@ -133,13 +150,16 @@ type
       stored IsEffectOptionsStored;
     property Images: TfgImageCollection read GetImages write SetImages;
     property ItemIndex: Integer read GetItemIndex write SetItemIndex default -1;
-    property Mode: TfgFlipViewMode read FMode write SetMode;
+    property Mode: TfgFlipViewMode read FMode write SetMode default DefaultMode;
     property SlideOptions: TfgFlipViewSlideOptions read GetSlidingOptions write SetSlidingOptions
       stored IsSlideOptionsStored;
     property SlideShowOptions: TfgFlipViewSlideShowOptions read GetSlideShowOptions write SetSlideShowOptions
       stored IsSlideShowOptionsStored;
+    property ShowNavigationButtons: Boolean read GetShowNavigationButtons write SetShowNavigationButtons
+      default TfgFlipViewModel.DefaultShowNavigationButtons;
     property OnStartChanging: TfgChangingImageEvent read GetOnStartChanging write SetOnStartChanging;
     property OnFinishChanging: TNotifyEvent read GetOnFinishChanging write SetOnFinishChanging;
+    property OnImageClick: TfgImageClickEvent read GetOnImageClick write SetOnImageClick;
   end;
 
   /// <summary>
@@ -177,8 +197,10 @@ type
     property EffectOptions;
     property SlideOptions;
     property SlideShowOptions;
+    property ShowNavigationButtons;
     property OnStartChanging;
     property OnFinishChanging;
+    property OnImageClick;
     { inherited }
     property Align;
     property Anchors;
@@ -250,9 +272,12 @@ begin
   FMode := DefaultMode;
   FSlideShowTimer := TTimer.Create(nil);
   FSlideShowTimer.Stored := False;
-  FSlideShowTimer.Interval := SlideShowOptions.Duration * MSecsPerSec;
-  FSlideShowTimer.Enabled := CanSlideShow;
+  UpdateTimer;
   FSlideShowTimer.OnTimer := HandlerTimer;
+  Touch.InteractiveGestures := Touch.InteractiveGestures + [TInteractiveGesture.Pan];
+  Touch.DefaultInteractiveGestures := Touch.DefaultInteractiveGestures + [TInteractiveGesture.Pan];
+  Touch.StandardGestures := Touch.StandardGestures + [TStandardGesture.sgLeft, TStandardGesture.sgRight,
+    TStandardGesture.sgUp, TStandardGesture.sgDown];
 end;
 
 function TfgCustomFlipView.DefineModelClass: TDataModelClass;
@@ -318,11 +343,21 @@ begin
   Result := Model.OnFinishChanging;
 end;
 
+function TfgCustomFlipView.GetOnImageClick: TfgImageClickEvent;
+begin
+  Result := Model.OnImageClick;
+end;
+
 function TfgCustomFlipView.GetOnStartChanging: TfgChangingImageEvent;
 begin
   AssertIsNotNil(Model);
 
   Result := Model.OnStartChanging;
+end;
+
+function TfgCustomFlipView.GetShowNavigationButtons: Boolean;
+begin
+  Result := Model.ShowNavigationButtons;
 end;
 
 function TfgCustomFlipView.GetSlideShowOptions: TfgFlipViewSlideShowOptions;
@@ -438,11 +473,21 @@ begin
   Model.OnFinishChanging := Value;
 end;
 
+procedure TfgCustomFlipView.SetOnImageClick(const Value: TfgImageClickEvent);
+begin
+  Model.OnImageClick := Value;
+end;
+
 procedure TfgCustomFlipView.SetOnStartChanging(const Value: TfgChangingImageEvent);
 begin
   AssertIsNotNil(Model);
 
   Model.OnStartChanging := Value;
+end;
+
+procedure TfgCustomFlipView.SetShowNavigationButtons(const Value: Boolean);
+begin
+  Model.ShowNavigationButtons := Value;
 end;
 
 procedure TfgCustomFlipView.SetSlideShowOptions(const Value: TfgFlipViewSlideShowOptions);
@@ -468,6 +513,12 @@ begin
   AssertIsNotNil(FSlideShowTimer);
 
   FSlideShowTimer.Enabled := False;
+end;
+
+procedure TfgCustomFlipView.UpdateTimer;
+begin
+  FSlideShowTimer.Interval := SlideShowOptions.Duration * MSecsPerSec;
+  FSlideShowTimer.Enabled := CanSlideShow;
 end;
 
 procedure TfgCustomFlipView.FinishChanging;
@@ -502,6 +553,7 @@ begin
   FSlideShowOptions := TfgFlipViewSlideShowOptions.Create(Owner, HandlerSlideShowOptionsChanged);
   FSlidingOptions := TfgFlipViewSlideOptions.Create(Owner, HandlerOptionsChanged);
   FEffectOptions := TfgFlipViewEffectOptions.Create(Owner, HandlerEffectOptionsChanged);
+  FShowNavigationButtons := DefaultShowNavigationButtons;
   Supports(Owner, IfgFlipViewNotifications, FFlipViewEvents);
 end;
 
@@ -567,6 +619,8 @@ end;
 procedure TfgFlipViewModel.HandlerSlideShowOptionsChanged(Sender: TObject);
 begin
   SendMessage(TfgFlipViewMessages.MM_SLIDESHOW_OPTIONS_CHANGED);
+  if Owner is TfgCustomFlipView then
+    TfgCustomFlipView(Owner).UpdateTimer;
 end;
 
 function TfgFlipViewModel.IsFirstImage: Boolean;
@@ -599,6 +653,15 @@ begin
   begin
     FItemIndex := EnsureRange(Value, -1, ImagesCount - 1);
     SendMessage<Integer>(TfgFlipViewMessages.MM_ITEM_INDEX_CHANGED, FItemIndex);
+  end;
+end;
+
+procedure TfgFlipViewModel.SetShowNavigationButtons(const Value: Boolean);
+begin
+  if FShowNavigationButtons <> Value then
+  begin
+    FShowNavigationButtons := Value;
+    SendMessage<Boolean>(TfgFlipViewMessages.MM_SHOW_NAVIGATION_BUTTONS_CHANGED, FShowNavigationButtons);
   end;
 end;
 

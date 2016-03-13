@@ -19,9 +19,9 @@ uses
 
 type
 
-{ TFlipViewEffectPresentation }
+{ TfgFlipViewEffectPresentation }
 
-  TFlipViewEffectPresentation = class(TfgStyledFlipViewBasePresentation)
+  TfgFlipViewEffectPresentation = class(TfgStyledFlipViewBasePresentation)
   private
     [Weak] FNextImage: TBitmap;
     FTransitionEffect: TImageFXEffect;
@@ -40,27 +40,15 @@ type
     procedure ShowNextImage(const ANewItemIndex: Integer; const ADirection: TfgDirection; const AAnimate: Boolean); override;
   end;
 
-  TFlipViewEffectPresentationProxy = class(TPresentationProxy)
-  protected
-    function CreateReceiver: TObject; override;
-  end;
-
 implementation
 
 uses
   System.Types, System.SysUtils, System.Rtti, FMX.Presentation.Factory, FMX.Types, FGX.Asserts,
   System.Classes, System.Math;
 
-{ TFlipViewEffectPresentationProxy }
+{ TfgFlipViewEffectPresentation }
 
-function TFlipViewEffectPresentationProxy.CreateReceiver: TObject;
-begin
-  Result := TFlipViewEffectPresentation.Create(nil);
-end;
-
-{ TFlipViewEffectPresentation }
-
-procedure TFlipViewEffectPresentation.ApplyStyle;
+procedure TfgFlipViewEffectPresentation.ApplyStyle;
 var
   NewImage: TBitmap;
 begin
@@ -90,14 +78,14 @@ begin
   end;
 end;
 
-procedure TFlipViewEffectPresentation.FreeStyle;
+procedure TfgFlipViewEffectPresentation.FreeStyle;
 begin
   FTransitionEffect := nil;
   FTransitionAnimaton := nil;
   inherited FreeStyle;
 end;
 
-procedure TFlipViewEffectPresentation.HandlerFinishAnimation(Sender: TObject);
+procedure TfgFlipViewEffectPresentation.HandlerFinishAnimation(Sender: TObject);
 begin
   try
     if (FNextImage <> nil) and (ImageContainer <> nil) then
@@ -109,13 +97,13 @@ begin
   end;
 end;
 
-procedure TFlipViewEffectPresentation.MMEffectOptionsChanged(var AMessage: TDispatchMessage);
+procedure TfgFlipViewEffectPresentation.MMEffectOptionsChanged(var AMessage: TDispatchMessage);
 begin
   RecreateEffect;
   FTransitionAnimaton.Duration := Model.EffectOptions.Duration;
 end;
 
-procedure TFlipViewEffectPresentation.RecreateEffect;
+procedure TfgFlipViewEffectPresentation.RecreateEffect;
 var
   EffectClass: TfgImageFXEffectClass;
 begin
@@ -149,7 +137,7 @@ begin
   FTransitionAnimaton.OnFinish := HandlerFinishAnimation;
 end;
 
-procedure TFlipViewEffectPresentation.ShowNextImage(const ANewItemIndex: Integer; const ADirection: TfgDirection;
+procedure TfgFlipViewEffectPresentation.ShowNextImage(const ANewItemIndex: Integer; const ADirection: TfgDirection;
   const AAnimate: Boolean);
 var
   RttiCtx: TRttiContext;
@@ -191,7 +179,7 @@ begin
 end;
 
 initialization
-  TPresentationProxyFactory.Current.Register('fgFlipView-Effect',  TFlipViewEffectPresentationProxy);
+  TPresentationProxyFactory.Current.Register('fgFlipView-Effect', TStyledPresentationProxy<TfgFlipViewEffectPresentation>);
 finalization
-  TPresentationProxyFactory.Current.Unregister('fgFlipView-Effect',  TFlipViewEffectPresentationProxy);
+  TPresentationProxyFactory.Current.Unregister('fgFlipView-Effect',  TStyledPresentationProxy<TfgFlipViewEffectPresentation>);
 end.

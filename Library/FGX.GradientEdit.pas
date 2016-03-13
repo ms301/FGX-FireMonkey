@@ -127,8 +127,8 @@ type
     property Position;
     property RotationAngle;
     property RotationCenter;
-    property Scale;
     property Size;
+    property Scale;
     property TabOrder;
     property TouchTargetExpansion;
     property Visible default True;

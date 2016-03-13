@@ -25,18 +25,22 @@ type
   /// </summary>
   TfgNativeDialog = class abstract
   private
-    [weak] FOwner: TObject;
+    [Weak] FOwner: TObject;
     FTitle: string;
     FMessage: string;
     FIsShown: Boolean;
+    FCancellable: Boolean;
     FOnShow: TNotifyEvent;
     FOnHide: TNotifyEvent;
     FOnCancel: TNotifyEvent;
     procedure SetMessage(const Value: string);
     procedure SetTitle(const Value: string);
+    procedure SetCancellable(const Value: Boolean);
   protected
+    procedure CancellableChanged; virtual;
     procedure MessageChanged; virtual;
     procedure TitleChanged; virtual;
+    function GetIsShown: Boolean; virtual;
     procedure DoShow;
     procedure DoHide;
   public
@@ -45,9 +49,10 @@ type
     procedure Hide; virtual;
   public
     property Owner: TObject read FOwner;
+    property Cancellable: Boolean read FCancellable write SetCancellable;
     property Message: string read FMessage write SetMessage;
     property Title: string read FTitle write SetTitle;
-    property IsShown: Boolean read FIsShown;
+    property IsShown: Boolean read GetIsShown;
     property OnCancel: TNotifyEvent read FOnCancel write FOnCancel;
     property OnShow: TNotifyEvent read FOnShow write FOnShow;
     property OnHide: TNotifyEvent read FOnHide write FOnHide;
@@ -84,15 +89,19 @@ type
   private
     FKind: TfgProgressDialogKind;
     FProgress: Single;
+    FMax: Single;
     procedure SetKind(const AValue: TfgProgressDialogKind);
     procedure SetProgress(const AValue: Single);
+    procedure SetMax(const AValue: Single);
   protected
     procedure ProgressChanged; virtual;
     procedure KindChanged; virtual;
+    procedure RangeChanged; virtual;
   public
     procedure ResetProgress; virtual;
   public
     property Kind: TfgProgressDialogKind read FKind write SetKind default TfgProgressDialogKind.Undeterminated;
+    property Max: Single read FMax write SetMax;
     property Progress: Single read FProgress write SetProgress;
   end;
 
@@ -114,6 +123,11 @@ uses
 
 { TfgNativeDialog }
 
+procedure TfgNativeDialog.CancellableChanged;
+begin
+  // Nothing
+end;
+
 constructor TfgNativeDialog.Create(const AOwner: TObject);
 begin
   FOwner := AOwner;
@@ -132,6 +146,11 @@ begin
     FOnShow(FOwner);
 end;
 
+function TfgNativeDialog.GetIsShown: Boolean;
+begin
+  Result := FIsShown;
+end;
+
 procedure TfgNativeDialog.Hide;
 begin
   FIsShown := False;
@@ -140,6 +159,15 @@ end;
 procedure TfgNativeDialog.MessageChanged;
 begin
   // Nothing
+end;
+
+procedure TfgNativeDialog.SetCancellable(const Value: Boolean);
+begin
+  if Cancellable <> Value then
+  begin
+    FCancellable := Value;
+    CancellableChanged;
+  end;
 end;
 
 procedure TfgNativeDialog.SetMessage(const Value: string);
@@ -182,6 +210,11 @@ begin
   // Nothing
 end;
 
+procedure TfgNativeProgressDialog.RangeChanged;
+begin
+  // Nothing
+end;
+
 procedure TfgNativeProgressDialog.SetKind(const AValue: TfgProgressDialogKind);
 begin
   if Kind <> AValue then
@@ -191,13 +224,24 @@ begin
   end;
 end;
 
+procedure TfgNativeProgressDialog.SetMax(const AValue: Single);
+begin
+  AssertMoreThan(AValue, 0);
+
+  if not SameValue(AValue, Max, EPSILON_SINGLE) then
+  begin
+    FMax := AValue;
+    RangeChanged;
+  end;
+end;
+
 procedure TfgNativeProgressDialog.SetProgress(const AValue: Single);
 begin
-  AssertInRange(AValue, 0, 100, 'Progress value must be in range [0..100]');
+  AssertInRange(AValue, 0, Max, 'Progress value must be in range [Min..Max]');
 
   if not SameValue(Progress, AValue, EPSILON_SINGLE) then
   begin
-    FProgress := EnsureRange(AValue, 0, 100);
+    FProgress := EnsureRange(AValue, 0, Max);
     ProgressChanged;
   end;
 end;

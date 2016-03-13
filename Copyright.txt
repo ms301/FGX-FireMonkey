@@ -1,3 +1,0 @@
-This package uses:
-1. Open source images Fatcow Hosting icons
-2. Uses National Geographics photo

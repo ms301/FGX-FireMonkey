@@ -14,8 +14,8 @@ unit FGX.ActionSheet.iOS;
 interface
 
 uses
-  System.Classes, System.Generics.Collections, Macapi.ObjectiveC, iOSapi.CocoaTypes, iOSapi.UIKit, FMX.Helpers.iOS,
-  FGX.ActionSheet, FGX.ActionSheet.Types;
+  System.Classes, System.Generics.Collections, System.TypInfo, Macapi.ObjectiveC, iOSapi.CocoaTypes, iOSapi.UIKit,
+  iOSapi.Foundation, FMX.Helpers.iOS, FGX.ActionSheet, FGX.ActionSheet.Types;
 
 type
 
@@ -42,11 +42,30 @@ type
 
   TNotifyButtonClicked = procedure (const AButtonIndex: Integer) of object;
 
+  IFGXDelayedQueueMessages = interface(NSObject)
+  ['{E75C798C-C506-4ED5-B643-11C3E25417EA}']
+    procedure Invoke; cdecl;
+  end;
+
+  TfgDelayedQueueMessages = class(TOCLocal)
+  protected
+    FButtonIndex: Integer;
+    FOnInovoke: TNotifyButtonClicked;
+    function GetObjectiveCClass: PTypeInfo; override;
+  public
+    procedure Invoke; cdecl;
+  public
+    property ButtonIndex: Integer read FButtonIndex write FButtonIndex;
+    property OnInovoke: TNotifyButtonClicked read FOnInovoke write FOnInovoke;
+  end;
+
   TiOSActionSheetDelegate = class(TOCLocal, UIActionSheetDelegate)
   private
+    FQueue: TfgDelayedQueueMessages;
     FOnButtonClicked: TNotifyButtonClicked;
   public
     constructor Create(const AOnButtonClicked: TNotifyButtonClicked);
+    destructor Destroy; override;
     { UIActionSheetDelegate }
     procedure actionSheet(actionSheet: UIActionSheet; clickedButtonAtIndex: NSInteger); cdecl;
     procedure actionSheetCancel(actionSheet: UIActionSheet); cdecl;
@@ -59,7 +78,8 @@ procedure RegisterService;
 implementation
 
 uses
-  System.SysUtils, System.Devices, Macapi.Helpers, FMX.Platform, FGX.Helpers.iOS, FGX.Asserts;
+  System.SysUtils, System.Devices, Macapi.Helpers, FMX.Platform, FGX.Helpers.iOS, FGX.Asserts,
+  Macapi.ObjCRuntime;
 
 procedure RegisterService;
 begin
@@ -101,6 +121,8 @@ var
   Index: Integer;
 begin
   AssertIsNotNil(FActions);
+  AssertIsNotNil(FActionsLinks);
+  AssertIsNotNil(FActionSheet);
 
   FActionsLinks.Clear;
   if AUseUIGuidline then
@@ -181,7 +203,7 @@ begin
   begin
     if Assigned(Action.OnClick) then
       Action.OnClick(Action)
-    else
+    else if Action.Action <> nil then
       Action.Action.ExecuteTarget(nil);
   end;
 end;
@@ -198,7 +220,13 @@ begin
   if FActionSheet <> nil then
     FActionSheet.release;
   FActionSheet := TUIActionSheet.Alloc;
-  FActionSheet.initWithTitle(StrToNSStr(Title), (FDelegate as ILocalObject).GetObjectID, nil, nil, nil);
+  if Title.IsEmpty then
+  begin
+    FActionSheet.init;
+    FActionSheet.setDelegate((FDelegate as ILocalObject).GetObjectID);
+  end
+  else
+    FActionSheet.initWithTitle(StrToNSStr(Title), (FDelegate as ILocalObject).GetObjectID, nil, nil, nil);
 
   CreateSheetActions(UseUIGuidline);
 
@@ -210,8 +238,9 @@ end;
 
 procedure TiOSActionSheetDelegate.actionSheet(actionSheet: UIActionSheet; clickedButtonAtIndex: NSInteger);
 begin
-  if Assigned(FOnButtonClicked) then
-    FOnButtonClicked(clickedButtonAtIndex);
+  FQueue.ButtonIndex := clickedButtonAtIndex;
+  FQueue.OnInovoke := FOnButtonClicked;
+  NSObject(FQueue.Super).performSelector(sel_getUid('Invoke'), FQueue.GetObjectID, 1);
 end;
 
 procedure TiOSActionSheetDelegate.actionSheetCancel(actionSheet: UIActionSheet);
@@ -221,7 +250,14 @@ end;
 constructor TiOSActionSheetDelegate.Create(const AOnButtonClicked: TNotifyButtonClicked);
 begin
   inherited Create;
+  FQueue := TfgDelayedQueueMessages.Create;
   FOnButtonClicked := AOnButtonClicked;
+end;
+
+destructor TiOSActionSheetDelegate.Destroy;
+begin
+  FreeAndNil(FQueue);
+  inherited;
 end;
 
 procedure TiOSActionSheetDelegate.didPresentActionSheet(actionSheet: UIActionSheet);
@@ -230,6 +266,19 @@ end;
 
 procedure TiOSActionSheetDelegate.willPresentActionSheet(actionSheet: UIActionSheet);
 begin
+end;
+
+{ TiOSQueue }
+
+function TfgDelayedQueueMessages.GetObjectiveCClass: PTypeInfo;
+begin
+  Result := TypeInfo(IFGXDelayedQueueMessages);
+end;
+
+procedure TfgDelayedQueueMessages.Invoke;
+begin
+  if Assigned(OnInovoke) then
+    OnInovoke(FButtonIndex);
 end;
 
 end.

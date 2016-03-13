@@ -23,16 +23,20 @@ type
   ///   Each dialog has Message and Title and holds instance of wrapper native dialog.
   /// </summary>
   TfgCustomDialog<T: TfgNativeDialog> = class abstract(TComponent)
+  public const
+    DefaultCancellable = False;
   private
-    FNativeProgressDialog: T;
+    FNativeDialog: T;
     FTitle: string;
     FMessage: string;
+    FCancellable: Boolean;
     FOnShow: TNotifyEvent;
     FOnHide: TNotifyEvent;
-    FOnCancel: TNotifyEvent;  // Reserved on future;
+    FOnCancel: TNotifyEvent;
+    procedure SetCancellabel(const Value: Boolean);
     procedure SetMessage(const Value: string);
     procedure SetTitle(const Value: string);
-    procedure SetOnCancel(const Value: TNotifyEvent); { TODO -oBrovin Y.D. -cFeatures : Implement OnCancel event for Progress Dialogs }
+    procedure SetOnCancel(const Value: TNotifyEvent);
     procedure SetOnHide(const Value: TNotifyEvent);
     procedure SetOnShow(const Value: TNotifyEvent);
   protected
@@ -53,10 +57,13 @@ type
     function Supported: Boolean;
     procedure Show; virtual;
     procedure Hide; virtual;
-    property NativeDialog: T read FNativeProgressDialog;
+    function IsShown: Boolean;
+    property NativeDialog: T read FNativeDialog;
   public
+    property Cancellable: Boolean read FCancellable write SetCancellabel default DefaultCancellable;
     property Message: string read FMessage write SetMessage;
     property Title: string read FTitle write SetTitle;
+    property OnCancel: TNotifyEvent read FOnCancel write SetOnCancel;
     property OnShow: TNotifyEvent read FOnShow write SetOnShow;
     property OnHide: TNotifyEvent read FOnHide write SetOnHide;
   end;
@@ -74,8 +81,10 @@ type
   [ComponentPlatformsAttribute(fgMobilePlatforms)]
   TfgActivityDialog = class(TfgCustomActivityDialog)
   published
+    property Cancellable;
     property Message;
     property Title;
+    property OnCancel;
     property OnShow;
     property OnHide;
   end;
@@ -85,10 +94,13 @@ type
   TfgCustomProgressDialog = class(TfgCustomDialog<TfgNativeProgressDialog>)
   public const
     DefaultKind = TfgProgressDialogKind.Determinated;
+    DefaultMax = 100;
   private
     FKind: TfgProgressDialogKind;
     FProgress: Single;
+    FMax: Single;
     procedure SetKind(const Value: TfgProgressDialogKind);
+    procedure SetMax(const Value: Single);
     procedure SetProgress(const Value: Single);
   protected
     { inherited }
@@ -99,6 +111,7 @@ type
     procedure ResetProgress;
   public
     property Kind: TfgProgressDialogKind read FKind write SetKind default DefaultKind;
+    property Max: Single read FMax write SetMax;
     /// <summary>
     ///    Current progress value of dialog in range [0..100]. When dialog is displayed, progress will set with animation
     /// </summary>
@@ -126,10 +139,13 @@ type
   [ComponentPlatformsAttribute(fgMobilePlatforms)]
   TfgProgressDialog = class(TfgCustomProgressDialog)
   published
+    property Cancellable;
     property Kind;
     property Message;
+    property Max;
     property Progress;
     property Title;
+    property OnCancel;
     property OnShow;
     property OnHide;
   end;
@@ -151,29 +167,50 @@ uses
 constructor TfgCustomDialog<T>.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  FNativeProgressDialog := CreateNativeDialog;
+  FNativeDialog := CreateNativeDialog;
+  FCancellable := DefaultCancellable;
 end;
 
 destructor TfgCustomDialog<T>.Destroy;
 begin
-  FreeAndNil(FNativeProgressDialog);
+  FreeAndNil(FNativeDialog);
   inherited Destroy;
 end;
 
 procedure TfgCustomDialog<T>.DoInitDialog;
 begin
-  AssertIsNotNil(FNativeProgressDialog);
+  AssertIsNotNil(FNativeDialog);
 
-  FNativeProgressDialog.Message := Message;
-  FNativeProgressDialog.Title := Title;
-  FNativeProgressDialog.OnShow := OnShow;
-  FNativeProgressDialog.OnHide := OnHide;
+  FNativeDialog.Cancellable := Cancellable;
+  FNativeDialog.Message := Message;
+  FNativeDialog.Title := Title;
+  FNativeDialog.OnCancel := OnCancel;
+  FNativeDialog.OnShow := OnShow;
+  FNativeDialog.OnHide := OnHide;
 end;
 
 procedure TfgCustomDialog<T>.Hide;
 begin
   if Supported then
-    FNativeProgressDialog.Hide;
+    FNativeDialog.Hide;
+end;
+
+function TfgCustomDialog<T>.IsShown: Boolean;
+begin
+  if Supported then
+    Result := NativeDialog.IsShown
+  else
+    Result := False;
+end;
+
+procedure TfgCustomDialog<T>.SetCancellabel(const Value: Boolean);
+begin
+  if Cancellable <> Value then
+  begin
+    FCancellable := Value;
+    if Supported then
+      FNativeDialog.Cancellable := Cancellable;
+  end;
 end;
 
 procedure TfgCustomDialog<T>.SetMessage(const Value: string);
@@ -182,7 +219,7 @@ begin
   begin
     FMessage := Value;
     if Supported then
-      FNativeProgressDialog.Message := Message;
+      FNativeDialog.Message := Message;
   end;
 end;
 
@@ -190,21 +227,21 @@ procedure TfgCustomDialog<T>.SetOnCancel(const Value: TNotifyEvent);
 begin
   FOnCancel := Value;
   if Supported then
-    FNativeProgressDialog.OnCancel := FOnCancel;
+    FNativeDialog.OnCancel := FOnCancel;
 end;
 
 procedure TfgCustomDialog<T>.SetOnHide(const Value: TNotifyEvent);
 begin
   FOnHide := Value;
   if Supported then
-    FNativeProgressDialog.OnHide := FOnHide;
+    FNativeDialog.OnHide := FOnHide;
 end;
 
 procedure TfgCustomDialog<T>.SetOnShow(const Value: TNotifyEvent);
 begin
   FOnShow := Value;
   if Supported then
-    FNativeProgressDialog.OnShow := FOnShow;
+    FNativeDialog.OnShow := FOnShow;
 end;
 
 procedure TfgCustomDialog<T>.SetTitle(const Value: string);
@@ -213,7 +250,7 @@ begin
   begin
     FTitle := Value;
     if Supported then
-      FNativeProgressDialog.Title := Title;
+      FNativeDialog.Title := Title;
   end;
 end;
 
@@ -222,13 +259,13 @@ begin
   if Supported then
   begin
     DoInitDialog;
-    FNativeProgressDialog.Show;
+    FNativeDialog.Show;
   end;
 end;
 
 function TfgCustomDialog<T>.Supported: Boolean;
 begin
-  Result := FNativeProgressDialog <> nil;
+  Result := FNativeDialog <> nil;
 end;
 
 { TfgCustomActivityDialog }
@@ -249,6 +286,7 @@ constructor TfgCustomProgressDialog.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   FKind := DefaultKind;
+  FMax := DefaultMax;
 end;
 
 function TfgCustomProgressDialog.CreateNativeDialog: TfgNativeProgressDialog;
@@ -264,8 +302,9 @@ end;
 procedure TfgCustomProgressDialog.DoInitDialog;
 begin
   inherited DoInitDialog;
-  FNativeProgressDialog.Kind := Kind;
-  FNativeProgressDialog.Progress := Progress;
+  FNativeDialog.Kind := Kind;
+  FNativeDialog.Progress := Progress;
+  FNativeDialog.Max := Max;
 end;
 
 procedure TfgCustomProgressDialog.SetKind(const Value: TfgProgressDialogKind);
@@ -278,13 +317,26 @@ begin
   end;
 end;
 
+procedure TfgCustomProgressDialog.SetMax(const Value: Single);
+begin
+  AssertMoreThan(Value, 0, 'Max Value cannot be less than 0');
+
+  if not SameValue(Max, Value, EPSILON_SINGLE) then
+  begin
+    FMax := Value;
+    if Supported then
+      NativeDialog.Max := Max;
+    Progress := EnsureRange(Progress, 0, Max);
+  end;
+end;
+
 procedure TfgCustomProgressDialog.SetProgress(const Value: Single);
 begin
-  AssertInRange(Value, 0, 100, 'Progress value must be in range [0..100]');
+  AssertInRange(Value, 0, Max, 'Progress value must be in range [0..Max]');
 
   if not SameValue(Progress, Value, EPSILON_SINGLE) then
   begin
-    FProgress := EnsureRange(Value, 0, 100);
+    FProgress := EnsureRange(Value, 0, Max);
     if Supported then
       NativeDialog.Progress := Progress;
   end;
@@ -302,5 +354,9 @@ initialization
 
 {$IF Defined(ANDROID) OR Defined(IOS)}
   RegisterService;
+{$ENDIF}
+finalization
+{$IF Defined(ANDROID) OR Defined(IOS)}
+  UnregisterService;
 {$ENDIF}
 end.

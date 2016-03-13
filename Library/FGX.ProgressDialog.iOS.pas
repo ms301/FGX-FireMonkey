@@ -14,13 +14,13 @@ unit FGX.ProgressDialog.iOS;
 interface
 
 uses
-  System.UITypes, System.UIConsts, System.Messaging, iOSapi.UIKit, FGX.ProgressDialog, FGX.ProgressDialog.Types,
-  FGX.Asserts;
+  System.UITypes, System.UIConsts, System.Messaging, System.TypInfo, Macapi.ObjectiveC, iOSapi.UIKit, iOSapi.Foundation,
+  FGX.ProgressDialog, FGX.ProgressDialog.Types, FGX.Asserts;
 
 const
   SHADOW_ALPHA       = 180;
   MESSAGE_FONT_SIZE  = 15;
-  MESSAGE_MARGIN     = 5;
+  MESSAGE_MARGINS     = 5;
   MESSAGE_HEIGHT     = 20;
   INDICATOR_MARGIN   = 5;
   PROGRESSBAR_WIDTH  = 200;
@@ -37,12 +37,31 @@ type
     function CreateNativeActivityDialog(const AOwner: TObject): TfgNativeActivityDialog;
   end;
 
+  IiOSShadow = interface(NSObject)
+  ['{5E0B5363-01B8-4670-A90A-107EDD428029}']
+    procedure tap; cdecl;
+  end;
+
+  TiOSDelegate = class(TOCLocal)
+  private
+    [Weak] FNativeDialog: TfgNativeDialog;
+  protected
+    function GetObjectiveCClass: PTypeInfo; override;
+  public
+    constructor Create(const ADialog: TfgNativeDialog);
+    { UIView }
+    procedure tap; cdecl;
+  end;
+
   TiOSNativeActivityDialog = class(TfgNativeActivityDialog)
   private
     FActivityIndicator: UIActivityIndicatorView;
+    FShadow: TiOSDelegate;
     FShadowColor: TAlphaColor;
     FShadowView: UIView;
     FMessageLabel: UILabel;
+    FDelegate: TiOSDelegate;
+    FTapRecognizer: UITapGestureRecognizer;
     procedure DoOrientationChanged(const Sender: TObject; const M: TMessage);
   protected
     procedure MessageChanged; override;
@@ -56,6 +75,8 @@ type
 
   TiOSNativeProgressDialog = class(TfgNativeProgressDialog)
   private
+    FDelegate: TiOSDelegate;
+    FTapRecognizer: UITapGestureRecognizer;
     FProgressView: UIProgressView;
     FShadowColor: TAlphaColor;
     FShadowView: UIView;
@@ -74,16 +95,22 @@ type
   end;
 
 procedure RegisterService;
+procedure UnregisterService;
 
 implementation
 
 uses
-  System.Types, System.Math, iOSapi.CoreGraphics, iOSapi.Foundation, Macapi.Helpers,
+  System.Types, System.Math, System.SysUtils, iOSapi.CoreGraphics, Macapi.ObjCRuntime, Macapi.Helpers,
   FMX.Platform, FMX.Platform.iOS, FMX.Forms, FMX.Helpers.iOS, FGX.Helpers.iOS;
 
 procedure RegisterService;
 begin
   TPlatformServices.Current.AddPlatformService(IFGXProgressDialogService, TIOSProgressDialogService.Create);
+end;
+
+procedure UnregisterService;
+begin
+  TPlatformServices.Current.RemovePlatformService(IFGXProgressDialogService);
 end;
 
 { TIOSProgressDialogService }
@@ -110,21 +137,29 @@ begin
   inherited Create(AOwner);
   FShadowColor := MakeColor(0, 0, 0, SHADOW_ALPHA);
 
+  FDelegate := TiOSDelegate.Create(Self);
+  FTapRecognizer := TUITapGestureRecognizer.Create;
+  FTapRecognizer.setNumberOfTapsRequired(1);
+  FTapRecognizer.addTarget(FDelegate.GetObjectID, sel_getUid('tap'));
+
   // Shadow
   FShadowView := TUIView.Create;
   FShadowView.setUserInteractionEnabled(True);
   FShadowView.setHidden(True);
   FShadowView.setAutoresizingMask(UIViewAutoresizingFlexibleWidth or UIViewAutoresizingFlexibleHeight);
   FShadowView.setBackgroundColor(TUIColor.MakeColor(FShadowColor));
+  FShadowView.addGestureRecognizer(FTapRecognizer);
 
   // Creating Ani indicator
   FActivityIndicator := TUIActivityIndicatorView.Alloc;
   FActivityIndicator.initWithActivityIndicatorStyle(UIActivityIndicatorViewStyleWhite);
+  FActivityIndicator.setUserInteractionEnabled(False);
   FActivityIndicator.startAnimating;
   FActivityIndicator.setAutoresizingMask(UIViewAutoresizingFlexibleLeftMargin or UIViewAutoresizingFlexibleRightMargin);
 
   // Creating message label
   FMessageLabel := TUILabel.Create;
+  FMessageLabel.setUserInteractionEnabled(False);
   FMessageLabel.setTextColor(TUIColor.whiteColor);
   FMessageLabel.setBackgroundColor(TUIColor.clearColor);
   FMessageLabel.setFont(FMessageLabel.font.fontWithSize(MESSAGE_FONT_SIZE));
@@ -145,6 +180,7 @@ end;
 destructor TiOSNativeActivityDialog.Destroy;
 begin
   TMessageManager.DefaultManager.Unsubscribe(TOrientationChangedMessage, DoOrientationChanged);
+  FreeAndNil(FShadow);
   FActivityIndicator.removeFromSuperview;
   FActivityIndicator.release;
   FActivityIndicator := nil;
@@ -193,7 +229,7 @@ begin
   CenterPoint := FShadowView.center;
   FActivityIndicator.setCenter(CGPointMake(CenterPoint.X, CenterPoint.Y - FActivityIndicator.bounds.height - INDICATOR_MARGIN));
   FMessageLabel.setBounds(CGRect.Create(FShadowView.bounds.width, 25));
-  FMessageLabel.setCenter(CGPointMake(CenterPoint.X, CenterPoint.Y + MESSAGE_MARGIN));
+  FMessageLabel.setCenter(CGPointMake(CenterPoint.X, CenterPoint.Y + MESSAGE_MARGINS));
 end;
 
 procedure TiOSNativeActivityDialog.Show;
@@ -214,8 +250,18 @@ end;
 
 constructor TiOSNativeProgressDialog.Create(const AOwner: TObject);
 begin
+  AssertIsNotNil(MainScreen);
+  AssertIsNotNil(SharedApplication.keyWindow);
+  AssertIsNotNil(SharedApplication.keyWindow.rootViewController);
+  AssertIsNotNil(SharedApplication.keyWindow.rootViewController.view);
+
   inherited Create(AOwner);
   FShadowColor := MakeColor(0, 0, 0, SHADOW_ALPHA);
+
+  FDelegate := TiOSDelegate.Create(Self);
+  FTapRecognizer := TUITapGestureRecognizer.Create;
+  FTapRecognizer.setNumberOfTapsRequired(1);
+  FTapRecognizer.addTarget(FDelegate.GetObjectID, sel_getUid('tap'));
 
   // Shadow
   FShadowView := TUIView.Create;
@@ -223,6 +269,7 @@ begin
   FShadowView.setHidden(True);
   FShadowView.setAutoresizingMask(UIViewAutoresizingFlexibleWidth or UIViewAutoresizingFlexibleHeight);
   FShadowView.setBackgroundColor(TUIColor.MakeColor(FShadowColor));
+  FShadowView.addGestureRecognizer(FTapRecognizer);
 
   // Creating message label
   FMessageLabel := TUILabel.Create;
@@ -250,6 +297,7 @@ end;
 destructor TiOSNativeProgressDialog.Destroy;
 begin
   TMessageManager.DefaultManager.Unsubscribe(TOrientationChangedMessage, DoOrientationChanged);
+  FreeAndNil(FDelegate);
   FProgressView.removeFromSuperview;
   FProgressView.release;
   FProgressView := nil;
@@ -291,10 +339,12 @@ end;
 procedure TiOSNativeProgressDialog.ProgressChanged;
 begin
   AssertIsNotNil(FProgressView);
-  AssertInRange(Progress, 0, 100);
+  AssertInRange(Progress, 0, Max);
 
-  FProgressView.setProgress(Progress / 100, True);
-
+  if Max > 0 then
+    FProgressView.setProgress(Progress / Max, True)
+  else
+    FProgressView.setProgress(0);
 
   // We should call it once for starting animation
   if IsShown then
@@ -335,5 +385,33 @@ begin
   // We should call it once for starting animation
   Application.ProcessMessages;
 end;
+
+{ TiOSShadow }
+
+constructor TiOSDelegate.Create(const ADialog: TfgNativeDialog);
+begin
+  AssertIsNotNil(ADialog);
+
+  inherited Create;
+  FNativeDialog := ADialog;
+end;
+
+function TiOSDelegate.GetObjectiveCClass: PTypeInfo;
+begin
+  Result := TypeInfo(IiOSShadow);
+end;
+
+procedure TiOSDelegate.tap;
+begin
+  AssertIsNotNil(FNativeDialog);
+
+  if FNativeDialog.Cancellable then
+  begin
+    FNativeDialog.Hide;
+    if Assigned(FNativeDialog.OnCancel) then
+      FNativeDialog.OnCancel(FNativeDialog.Owner);
+  end;
+end;
+
 
 end.

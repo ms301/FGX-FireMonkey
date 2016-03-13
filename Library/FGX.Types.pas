@@ -66,6 +66,7 @@ type
     function GetOwner: TPersistent; override;
     procedure DoInternalChanged; virtual;
     property Owner: TComponent read FOwner;
+    property OnInternalChanged: TNotifyEvent read FOnInternalChanged;
   public
     constructor Create(AOwner: TComponent); overload; virtual;
     constructor Create(AOwner: TComponent; const AOnInternalChanged: TNotifyEvent); overload;
@@ -182,8 +183,8 @@ end;
 
 constructor TfgPersistent.Create(AOwner: TComponent; const AOnInternalChanged: TNotifyEvent);
 begin
-  Create(AOwner);
   FOnInternalChanged := AOnInternalChanged;
+  Create(AOwner);
 end;
 
 destructor TfgPersistent.Destroy;

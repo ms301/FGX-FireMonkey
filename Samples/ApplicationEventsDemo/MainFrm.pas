@@ -50,6 +50,8 @@ type
       const ANewCaption: string);
     procedure fgApplicationEventsStyleChanged(Sender: TObject; const AScene: IScene; const AStyleBook: TStyleBook);
     procedure Button4Click(Sender: TObject);
+    procedure MultiViewPresenterChanging(Sender: TObject; var PresenterClass: TMultiViewPresentationClass);
+    procedure FormShow(Sender: TObject);
   private
     procedure Log(const AFormat: string; Args: array of const); overload;
     procedure Log(const AFormat: string); overload;
@@ -64,7 +66,7 @@ implementation
 
 {$R *.fmx}
 
-uses ChildFrm;
+uses ChildFrm, FMX.MultiView.Presentations;
 
 procedure TFormMain.BtnClearLogClick(Sender: TObject);
 begin
@@ -217,6 +219,11 @@ begin
   end;
 end;
 
+procedure TFormMain.FormShow(Sender: TObject);
+begin
+  MultiView.Mode := TMultiViewMode.PlatformBehaviour;
+end;
+
 procedure TFormMain.Log(const AFormat: string);
 begin
   mmLog.Lines.Add(Format('%s: ' + AFormat, [TimeToStr(Now)]));
@@ -225,6 +232,12 @@ end;
 procedure TFormMain.Log(const AFormat: string; Args: array of const);
 begin
   mmLog.Lines.Add(TimeToStr(Now) + Format(': ' + AFormat, Args));
+end;
+
+procedure TFormMain.MultiViewPresenterChanging(Sender: TObject; var PresenterClass: TMultiViewPresentationClass);
+begin
+  if PresenterClass = TMultiViewNavigationPanePresentation then
+    PresenterClass := TMultiViewDockedPanelPresentation;
 end;
 
 end.

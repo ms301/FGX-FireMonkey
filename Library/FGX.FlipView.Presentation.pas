@@ -14,8 +14,8 @@ unit FGX.FlipView.Presentation;
 interface
 
 uses
-  FMX.Presentation.Style, FMX.Graphics,  FMX.Types, FMX.Controls.Model, FMX.Presentation.Messages, FMX.Objects,
-  FMX.Controls, FGX.FlipView, FGX.FlipView.Types;
+  System.Classes, System.Types, FMX.Presentation.Style, FMX.Graphics,  FMX.Types, FMX.Controls.Model,
+  FMX.Presentation.Messages, FMX.Objects, FMX.Controls, FGX.FlipView, FGX.FlipView.Types;
 
 type
 
@@ -27,21 +27,30 @@ type
     [Weak] FImageContainer: TImage;
     [Weak] FPreviousButton: TControl;
     [Weak] FNextButton: TControl;
+    FSavedTapLocation: TPointF;
+    FIsGestureStarted: Boolean;
     function GetModel: TfgFlipViewModel;
     procedure HandlerNextButtonClick(Sender: TObject);
     procedure HandlerPreviousButtonClick(Sender: TObject);
+    procedure HandlerCurrentSlideClick(Sender: TObject);
   protected
     { Messages from PresentationProxy }
     procedure PMGoToImage(var Message: TDispatchMessageWithValue<TfgShowImageInfo>); message TfgFlipViewMessages.PM_GO_TO_IMAGE;
     { Messages From Model}
     procedure MMItemIndexChanged(var AMessage: TDispatchMessageWithValue<Integer>); message TfgFlipViewMessages.MM_ITEM_INDEX_CHANGED;
+    procedure MMShowNavigationButtons(var AMessage: TDispatchMessageWithValue<Boolean>); message TfgFlipViewMessages.MM_SHOW_NAVIGATION_BUTTONS_CHANGED;
   protected
     function DefineModelClass: TDataModelClass; override;
+    procedure UpdateNavigationButtonsVisible;
     { Styles }
     procedure ApplyStyle; override;
     procedure FreeStyle; override;
     function GetStyleObject: TFmxObject; override;
+    { Gesture }
+    procedure CMGesture(var EventInfo: TGestureEventInfo); override;
   public
+    constructor Create(AOwner: TComponent); override;
+    /// <summary>Show next slide</summary>
     procedure ShowNextImage(const ANewItemIndex: Integer; const ADirection: TfgDirection; const AAnimate: Boolean); virtual;
     /// <summary>Returns link on style object <c>"image"</c>. Can be nil, if style doesn't have it.</summary>
     property ImageContainer: TImage read FImageContainer;
@@ -56,7 +65,7 @@ type
 implementation
 
 uses
-  System.Types, System.SysUtils, System.Math, FMX.Styles, FGX.Asserts;
+  System.SysUtils, System.Math, System.UITypes, FMX.Styles, FGX.Asserts;
 
 { TfgStyledFlipViewBasePresentation }
 
@@ -88,7 +97,44 @@ begin
   begin
     FImageContainer := TImage(StyleObject);
     FImageContainer.Visible := True;
+    FImageContainer.Cursor := crHandPoint;
+    FImageContainer.OnClick := HandlerCurrentSlideClick;
   end;
+
+  UpdateNavigationButtonsVisible;
+end;
+
+procedure TfgStyledFlipViewBasePresentation.CMGesture(var EventInfo: TGestureEventInfo);
+var
+  Vector: TPointF;
+begin
+  inherited;
+
+  if EventInfo.GestureID = igiPan then
+  begin
+    if TInteractiveGestureFlag.gfBegin in EventInfo.Flags then
+    begin
+      FSavedTapLocation := EventInfo.Location;
+      FIsGestureStarted := True;
+    end;
+    if TInteractiveGestureFlag.gfEnd in EventInfo.Flags then
+    begin
+      Vector := EventInfo.Location - FSavedTapLocation;
+      if Vector.X < 0 then
+        ShowNextImage(IfThen(Model.IsLastImage, 0, Model.ItemIndex + 1), TfgDirection.Forward, True)
+      else
+        ShowNextImage(IfThen(Model.IsFirstImage, Model.ImagesCount - 1, Model.ItemIndex - 1), TfgDirection.Backward, True);
+    end;
+  end;
+end;
+
+constructor TfgStyledFlipViewBasePresentation.Create(AOwner: TComponent);
+begin
+  inherited;
+  FIsGestureStarted := False;
+  Touch.InteractiveGestures := Touch.InteractiveGestures + [TInteractiveGesture.Pan];
+  Touch.StandardGestures := Touch.StandardGestures + [TStandardGesture.sgLeft, TStandardGesture.sgRight,
+    TStandardGesture.sgUp, TStandardGesture.sgDown];
 end;
 
 function TfgStyledFlipViewBasePresentation.DefineModelClass: TDataModelClass;
@@ -132,6 +178,18 @@ begin
     Result := inherited GetStyleObject;
 end;
 
+procedure TfgStyledFlipViewBasePresentation.HandlerCurrentSlideClick(Sender: TObject);
+begin
+  AssertIsClass(PresentedControl, TfgCustomFlipView);
+
+  if not FIsGestureStarted and Assigned(Model.OnImageClick) and (PresentedControl is TfgCustomFlipView) and (Model.ItemIndex <> -1) then
+    Model.OnImageClick(PresentedControl, TfgCustomFlipView(PresentedControl), Model.ItemIndex);
+
+  // FireMonkey invoke Click, even if fmx recognized a gesture. So we use this way for notify, that we shouldn't invoke
+  // OnImageClick.
+  FIsGestureStarted := False;
+end;
+
 procedure TfgStyledFlipViewBasePresentation.HandlerNextButtonClick(Sender: TObject);
 begin
   AssertIsNotNil(Model);
@@ -143,7 +201,7 @@ procedure TfgStyledFlipViewBasePresentation.HandlerPreviousButtonClick(Sender: T
 begin
   AssertIsNotNil(Model);
 
-  ShowNextImage(IfThen(Model.IsLastImage, 0, Model.ItemIndex + 1), TfgDirection.Backward, True);
+  ShowNextImage(IfThen(Model.IsFirstImage, Model.ImagesCount - 1, Model.ItemIndex - 1), TfgDirection.Backward, True);
 end;
 
 procedure TfgStyledFlipViewBasePresentation.MMItemIndexChanged(var AMessage: TDispatchMessageWithValue<Integer>);
@@ -152,6 +210,11 @@ begin
 
   if ImageContainer <> nil then
     ImageContainer.Bitmap.Assign(Model.CurrentImage);
+end;
+
+procedure TfgStyledFlipViewBasePresentation.MMShowNavigationButtons(var AMessage: TDispatchMessageWithValue<Boolean>);
+begin
+  UpdateNavigationButtonsVisible;
 end;
 
 procedure TfgStyledFlipViewBasePresentation.PMGoToImage(var Message: TDispatchMessageWithValue<TfgShowImageInfo>);
@@ -171,6 +234,14 @@ begin
   finally
     Model.EnableNotify;
   end;
+end;
+
+procedure TfgStyledFlipViewBasePresentation.UpdateNavigationButtonsVisible;
+begin
+  if NextButton <> nil then
+    NextButton.Visible := Model.ShowNavigationButtons;
+  if PreviousButton <> nil then
+    PreviousButton.Visible := Model.ShowNavigationButtons;
 end;
 
 end.

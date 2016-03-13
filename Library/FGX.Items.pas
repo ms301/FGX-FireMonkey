@@ -23,7 +23,8 @@ type
   TfgItemInformation = record
     ItemClass: TFmxObjectClass;
     Description: string;
-    constructor Create(const AItemClass: TFmxObjectClass); overload;
+    AcceptsChildItems: Boolean;
+    constructor Create(const AItemClass: TFmxObjectClass; const AAcceptsChildItems: Boolean = False); overload;
     constructor Create(const AItemClass: TFmxObjectClass; const ADescription: string); overload;
   end;
 
@@ -42,7 +43,8 @@ type
     class destructor Destroy;
   public
     class procedure RegisterItem(const AComponentClass: TFmxObjectClass; const AItemInformation: TfgItemInformation);
-    class procedure RegisterItems(const AComponentClass: TFmxObjectClass; const AItemsInformations: array of TfgItemInformation);
+    class procedure RegisterItems(const AComponentClass: TFmxObjectClass; const AItemsInformations: array of TfgItemInformation); overload;
+    class procedure RegisterItems(const AComponentClass: TFmxObjectClass; const AItemsClasses: array of TFmxObjectClass); overload;
     class procedure UnregisterItem(const AComponentClass: TFmxObjectClass; const AItemInformation: TfgItemInformation);
     class procedure UnregisterItems(const AComponentClass: TFmxObjectClass; const AItemsInformations: array of TfgItemInformation);
     class function GetListByComponentClass(const AComponentClass: TFmxObjectClass): TList<TfgItemInformation>;
@@ -55,11 +57,12 @@ uses
 
 { TfgItemInformation }
 
-constructor TfgItemInformation.Create(const AItemClass: TFmxObjectClass);
+constructor TfgItemInformation.Create(const AItemClass: TFmxObjectClass; const AAcceptsChildItems: Boolean = False);
 begin
   AssertIsNotNil(AItemClass, 'Класс итема обязательно должен быть указан');
 
   Self.ItemClass := AItemClass;
+  Self.AcceptsChildItems := AAcceptsChildItems;
 end;
 
 constructor TfgItemInformation.Create(const AItemClass: TFmxObjectClass; const ADescription: string);
@@ -91,6 +94,17 @@ begin
 end;
 
 class procedure TfgItemsManager.RegisterItem(const AComponentClass: TFmxObjectClass; const AItemInformation: TfgItemInformation);
+
+  function AlreadyRegisteredIn(const AList: TList<TfgItemInformation>): Boolean;
+  var
+    I: Integer;
+  begin
+    Result := False;
+    for I := 0 to AList.Count - 1 do
+      if AList[I].ItemClass = AItemInformation.ItemClass then
+        Exit(True);
+  end;
+
 var
   List: TList<TfgItemInformation>;
 begin
@@ -98,13 +112,28 @@ begin
   AssertIsNotNil(AComponentClass);
 
   if FDictionary.TryGetValue(AComponentClass, List) then
-    List.Add(AItemInformation)
+  begin
+    if not AlreadyRegisteredIn(List) then
+      List.Add(AItemInformation);
+  end
   else
   begin
     List := TList<TfgItemInformation>.Create;
     List.Add(AItemInformation);
     FDictionary.Add(AComponentClass, List);
   end;
+end;
+
+class procedure TfgItemsManager.RegisterItems(const AComponentClass: TFmxObjectClass;
+  const AItemsClasses: array of TFmxObjectClass);
+var
+  ItemClass: TFmxObjectClass;
+begin
+  AssertIsNotNil(FDictionary);
+  AssertIsNotNil(AComponentClass);
+
+  for ItemClass in AItemsClasses do
+    RegisterItem(AComponentClass, TfgItemInformation.Create(ItemClass));
 end;
 
 class procedure TfgItemsManager.RegisterItems(const AComponentClass: TFmxObjectClass; const AItemsInformations: array of TfgItemInformation);
