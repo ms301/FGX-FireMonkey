@@ -1,0 +1,257 @@
+object TStyleContainer
+  object TLayout
+    StyleName = 'fgtoolbarbuttonstyle'
+    Position.X = 322.000000000000000000
+    Position.Y = 385.000000000000000000
+    Size.Width = 50.000000000000000000
+    Size.Height = 50.000000000000000000
+    Size.PlatformDefault = False
+    Visible = False
+    TabOrder = 0
+    object TRectangle
+      StyleName = 'background'
+      Align = Client
+      Fill.Color = claNull
+      HitTest = False
+      Padding.Left = 3.000000000000000000
+      Padding.Top = 4.000000000000000000
+      Padding.Right = 3.000000000000000000
+      Padding.Bottom = 4.000000000000000000
+      Size.Width = 50.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Color = claNull
+      object TColorAnimation
+        Duration = 0.000000000000000000
+        PropertyName = 'Fill.Color'
+        StartValue = xFFFEFEFE
+        StopValue = xFF007ACC
+        Trigger = 'IsMouseOver=true;IsMousePressed=true'
+        TriggerInverse = 'IsMouseOver=true;IsMousePressed=false'
+      end
+      object TColorAnimation
+        Duration = 0.000000000000000000
+        PropertyName = 'Fill.Color'
+        StartValue = claNull
+        StopValue = xFFFEFEFE
+        Trigger = 'IsMouseOver=true;'
+        TriggerInverse = 'IsMouseOver=false;'
+      end
+      object TColorAnimation
+        Duration = 0.000000000000000000
+        PropertyName = 'Stroke.Color'
+        StartValue = claNull
+        StopValue = xFF007ACC
+        Trigger = 'IsPressed=true;'
+        TriggerInverse = 'IsPressed=false;'
+      end
+      object TText
+        StyleName = 'text'
+        Align = Bottom
+        HitTest = False
+        Position.X = 3.000000000000000000
+        Position.Y = 36.000000000000000000
+        Size.Width = 44.000000000000000000
+        Size.Height = 10.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'caption'
+        TextSettings.Trimming = Character
+      end
+      object TGlyph
+        StyleName = 'glyphstyle'
+        Align = Center
+        Size.Width = 26.000000000000000000
+        Size.Height = 26.000000000000000000
+        Size.PlatformDefault = False
+      end
+    end
+  end
+  object TLayout
+    StyleName = 'fgtoolbarseparatorstyle'
+    Position.X = 360.000000000000000000
+    Position.Y = 385.000000000000000000
+    Size.Width = 50.000000000000000000
+    Size.Height = 50.000000000000000000
+    Size.PlatformDefault = False
+    Visible = False
+    TabOrder = 1
+    object TRectangle
+      StyleName = 'Rectangle1'
+      Align = HorzCenter
+      Fill.Bitmap.Bitmap.PNG = {
+        89504E470D0A1A0A0000000D4948445200000002000000010806000000F4227F
+        8A000000017352474200AECE1CE90000000467414D410000B18F0BFC61050000
+        0012494441541857633873EEF6FF6FDFBEFD07001FCD075692451D0C00000000
+        49454E44AE426082}
+      Fill.Bitmap.WrapMode = TileStretch
+      Fill.Kind = Bitmap
+      HitTest = False
+      Margins.Top = 2.000000000000000000
+      Margins.Bottom = 2.000000000000000000
+      Position.X = 24.000000000000000000
+      Position.Y = 2.000000000000000000
+      Size.Width = 2.000000000000000000
+      Size.Height = 46.000000000000000000
+      Size.PlatformDefault = False
+      Stroke.Kind = None
+    end
+  end
+  object TLayout
+    StyleName = 'fgToolBarPopupButtonstyle'
+    Position.X = 322.000000000000000000
+    Position.Y = 385.000000000000000000
+    Size.Width = 50.000000000000000000
+    Size.Height = 50.000000000000000000
+    Size.PlatformDefault = False
+    Visible = False
+    TabOrder = 2
+    object TLayout
+      StyleName = 'dropdown-button'
+      Align = Right
+      Position.X = 40.000000000000000000
+      Size.Width = 10.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      object TRectangle
+        StyleName = 'drop_down_btn'
+        Align = Client
+        Fill.Color = claNull
+        HitTest = False
+        Size.Width = 10.000000000000000000
+        Size.Height = 50.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Color = claNull
+        object TColorAnimation
+          Duration = 0.000000000000000000
+          PropertyName = 'Fill.Color'
+          StartValue = claNull
+          StopValue = xFFFEFEFE
+          Trigger = 'IsMouseOver=true;IsPressed=False;IsDropDown=false'
+          TriggerInverse = 'IsMouseOver=false;IsPressed=False;IsDropDown=false'
+        end
+        object TPath
+          StyleName = 'triangle'
+          Align = Center
+          Data.Path = {
+            04000000000000000000000000000000010000000000803F0000000001000000
+            0000003F0000003F030000000000000000000000}
+          Fill.Color = xFF999999
+          HitTest = False
+          Size.Width = 6.000000000000000000
+          Size.Height = 3.000000000000000000
+          Size.PlatformDefault = False
+          Stroke.Kind = None
+          object TColorAnimation
+            Duration = 0.000000000000000000
+            PropertyName = 'Fill.Color'
+            StartValue = xFF999999
+            StopValue = xFF3399FF
+            Trigger = 'IsMouseOver=true;IsPressed=False;IsDropDown=false'
+            TriggerInverse = 'IsMouseOver=false;IsPressed=False;IsDropDown=false'
+          end
+          object TColorAnimation
+            Duration = 0.000000000000000000
+            PropertyName = 'Fill.Color'
+            StartValue = xFF3399FF
+            StopValue = claWhite
+            Trigger = 'IsMouseOver=true;IsPressed=True'
+          end
+          object TColorAnimation
+            Duration = 0.000000000000000000
+            PropertyName = 'Fill.Color'
+            StartValue = xFF3399FF
+            StopValue = claWhite
+            Trigger = 'IsDropDown=true'
+            TriggerInverse = 'IsDropDown=false'
+          end
+        end
+        object TColorAnimation
+          Duration = 0.000000000000000000
+          PropertyName = 'Fill.Color'
+          StartValue = xFFFEFEFE
+          StopValue = xFF007ACC
+          Trigger = 'IsMouseOver=true;IsPressed=True'
+        end
+        object TColorAnimation
+          Duration = 0.000000000000000000
+          PropertyName = 'Fill.Color'
+          StartValue = claNull
+          StopValue = xFF007ACC
+          Trigger = 'IsDropDown=true'
+          TriggerInverse = 'IsDropDown=false'
+        end
+      end
+    end
+    object TLayout
+      StyleName = 'button'
+      Align = Client
+      Size.Width = 40.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      object TRectangle
+        StyleName = 'background'
+        Align = Client
+        Fill.Color = claNull
+        HitTest = False
+        Padding.Left = 3.000000000000000000
+        Padding.Top = 4.000000000000000000
+        Padding.Right = 3.000000000000000000
+        Padding.Bottom = 4.000000000000000000
+        Sides = [Top, Left, Bottom]
+        Size.Width = 40.000000000000000000
+        Size.Height = 50.000000000000000000
+        Size.PlatformDefault = False
+        Stroke.Color = claNull
+        object TColorAnimation
+          Duration = 0.000000000000000000
+          PropertyName = 'Fill.Color'
+          StartValue = claNull
+          StopValue = xFFFEFEFE
+          Trigger = 'IsMouseOver=true;IsPressed=false;IsDropDown=false'
+          TriggerInverse = 'IsMouseOver=false;IsPressed=False;IsDropDown=false'
+        end
+        object TColorAnimation
+          Duration = 0.000000000000000000
+          PropertyName = 'Fill.Color'
+          StartValue = xFFFEFEFE
+          StopValue = xFF007ACC
+          Trigger = 'IsMouseOver=true;IsPressed=True'
+        end
+        object TColorAnimation
+          Duration = 0.000000000000000000
+          PropertyName = 'Fill.Color'
+          StartValue = claNull
+          StopValue = xFF007ACC
+          Trigger = 'IsDropDown=True'
+          TriggerInverse = 'IsDropDown=false'
+        end
+        object TText
+          StyleName = 'text'
+          Align = Bottom
+          HitTest = False
+          Margins.Top = 2.000000000000000000
+          Position.X = 3.000000000000000000
+          Position.Y = 36.000000000000000000
+          Size.Width = 34.000000000000000000
+          Size.Height = 10.000000000000000000
+          Size.PlatformDefault = False
+          TextSettings.Trimming = Character
+        end
+        object TLayout
+          Align = Client
+          Size.Width = 34.000000000000000000
+          Size.Height = 30.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          object TGlyph
+            StyleName = 'glyphstyle'
+            Align = Center
+            Size.Width = 26.000000000000000000
+            Size.Height = 26.000000000000000000
+            Size.PlatformDefault = False
+          end
+        end
+      end
+    end
+  end
+end
