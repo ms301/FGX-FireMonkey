@@ -1,0 +1,96 @@
+object Form1: TForm1
+  Left = 0
+  Top = 0
+  Caption = 'TfgLinkedLabel: Linked label Demo'
+  ClientHeight = 174
+  ClientWidth = 505
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop, iPhone, iPad]
+  DesignerMasterStyle = 0
+  object PanelSettings: TPanel
+    Align = Left
+    Padding.Left = 5.000000000000000000
+    Padding.Top = 5.000000000000000000
+    Padding.Right = 5.000000000000000000
+    Padding.Bottom = 5.000000000000000000
+    Size.Width = 193.000000000000000000
+    Size.Height = 174.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    object gbCommonSettings: TGroupBox
+      Align = Top
+      StyledSettings = [Family, Size, FontColor, Other]
+      Position.X = 5.000000000000000000
+      Position.Y = 5.000000000000000000
+      Size.Width = 183.000000000000000000
+      Size.Height = 161.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Common Settings'
+      TextSettings.Font.Style = [fsBold]
+      TabOrder = 0
+      object Label1: TLabel
+        Position.X = 15.000000000000000000
+        Position.Y = 25.000000000000000000
+        Size.Width = 120.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'URI'
+      end
+      object edURI: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 1
+        Text = 'http://fire-monkey.ru'
+        Position.X = 15.000000000000000000
+        Position.Y = 45.000000000000000000
+        Size.Width = 156.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        OnChangeTracking = edURIChangeTracking
+      end
+      object Label2: TLabel
+        Position.X = 15.000000000000000000
+        Position.Y = 75.000000000000000000
+        Size.Width = 120.000000000000000000
+        Size.Height = 17.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Caption'
+      end
+      object edCaption: TEdit
+        Touch.InteractiveGestures = [LongTap, DoubleTap]
+        TabOrder = 4
+        Text = 'http://fire-monkey.ru'
+        Position.X = 15.000000000000000000
+        Position.Y = 95.000000000000000000
+        Size.Width = 156.000000000000000000
+        Size.Height = 22.000000000000000000
+        Size.PlatformDefault = False
+        OnChangeTracking = edCaptionChangeTracking
+      end
+      object cbVisited: TCheckBox
+        Position.X = 15.000000000000000000
+        Position.Y = 130.000000000000000000
+        Size.Width = 120.000000000000000000
+        Size.Height = 19.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 5
+        Text = 'Visited'
+        OnChange = cbVisitedChange
+      end
+    end
+  end
+  object fgLinkedLabel: TfgLinkedLabel
+    Align = Center
+    AutoSize = True
+    StyledSettings = []
+    HitTest = True
+    Size.Width = 239.000000000000000000
+    Size.Height = 34.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.Font.Size = 25.000000000000000000
+    TextSettings.Font.Style = [fsUnderline]
+    TextSettings.WordWrap = False
+    Text = 'http://fire-monkey.ru'
+    Url = 'http://fire-monkey.ru'
+  end
+end

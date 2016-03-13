@@ -22,8 +22,6 @@ type
 { TfgAndroidToast }
 
   TfgAndroidToast = class(TfgToast)
-  public const
-    DefaultBackgroundColor = TAlphaColor($FF2A2A2A);
   private
     FToast: JToast;
     FBackgroundView: JView;
@@ -68,8 +66,8 @@ procedure UnregisterService;
 implementation
 
 uses
-  System.SysUtils, System.Types, System.IOUtils,  AndroidApi.Helpers, Androidapi.JNIBridge, Androidapi.JNI.JavaTypes,
-  FMX.Platform, FMX.Helpers.Android, FMX.Graphics, FMX.Surfaces, FMX.Types, FGX.Helpers.Android, FGX.Graphics,
+  System.SysUtils, System.Types, System.IOUtils, Androidapi.Helpers, Androidapi.JNIBridge,
+  Androidapi.JNI.JavaTypes, FMX.Platform, FMX.Helpers.Android, FMX.Graphics, FMX.Surfaces, FMX.Types, FGX.Helpers.Android, FGX.Graphics,
   FGX.Asserts;
 
 procedure RegisterService;
@@ -113,7 +111,6 @@ procedure TfgAndroidToast.CreateCustomView;
 const
   CENTER_VERTICAL = 16;
   IMAGE_MARGIN_RIGHT = 10;
-  BACKGROUND_PADDING = 20;
 var
   Layout: JLinearLayout;
   DestBitmap: JBitmap;
@@ -124,10 +121,11 @@ begin
   { Background }
   Layout := TJLinearLayout.JavaClass.init(TAndroidHelper.Context);
   Layout.setOrientation(TJLinearLayout.JavaClass.HORIZONTAL);
-  Layout.setPadding(BACKGROUND_PADDING, BACKGROUND_PADDING, BACKGROUND_PADDING, BACKGROUND_PADDING);
+  Layout.setPadding(Round(TfgToast.DefaultPadding.Left), Round(TfgToast.DefaultPadding.Top),
+                    Round(TfgToast.DefaultPadding.Right), Round(TfgToast.DefaultPadding.Bottom));
   Layout.setGravity(CENTER_VERTICAL);
-  Layout.setBackgroundColor(AlphaColorToJColor(DefaultBackgroundColor));
-  Params := TJViewGroup_LayoutParams.JavaClass.init(TJViewGroup_LayoutParams.JavaClass.FILL_PARENT, TJViewGroup_LayoutParams.JavaClass.WRAP_CONTENT);
+  Layout.setBackgroundColor(AlphaColorToJColor(TfgToast.DefaultBackgroundColor));
+  Params := TJViewGroup_LayoutParams.JavaClass.init(TJViewGroup_LayoutParams.JavaClass.WRAP_CONTENT, TJViewGroup_LayoutParams.JavaClass.WRAP_CONTENT);
   Layout.setLayoutParams(Params);
   FBackgroundView := Layout;
 
@@ -172,7 +170,9 @@ procedure TfgAndroidToast.DoBackgroundColorChanged;
 begin
   inherited;
   if FBackgroundView <> nil then
-    FBackgroundView.setBackgroundColor(AlphaColorToJColor(BackgroundColor));
+    FBackgroundView.setBackgroundColor(AlphaColorToJColor(BackgroundColor))
+  else
+    Toast.getView.setBackgroundColor(AlphaColorToJColor(BackgroundColor));
 end;
 
 procedure TfgAndroidToast.DoDurationChanged;
@@ -217,10 +217,24 @@ begin
 end;
 
 procedure TfgAndroidToast.DoMessageColorChanged;
+const
+  TJR_idmessage = 16908299;
+var
+  LMessageView: JView;
+  TextView: JTextView;
 begin
   inherited;
   if FMessageView <> nil then
-    FMessageView.setTextColor(AlphaColorToJColor(MessageColor));
+    FMessageView.setTextColor(AlphaColorToJColor(MessageColor))
+  else
+  begin
+    LMessageView := Toast.getView.findViewById(TJR_idmessage);
+    if LMessageView <> nil then
+    begin
+      TextView := TJTextView.Wrap((LMessageView as ILocalObject).GetObjectID);
+      TextView.setTextColor(AlphaColorToJColor(MessageColor));
+    end;
+  end;
 end;
 
 procedure TfgAndroidToast.RemoveCustomView;

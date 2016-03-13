@@ -1,0 +1,288 @@
+object FormMain: TFormMain
+  Left = 0
+  Top = 0
+  Caption = 'TfgColorsPanel: Colors panel Demo'
+  ClientHeight = 442
+  ClientWidth = 689
+  Fill.Kind = Solid
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop, iPhone, iPad]
+  OnCreate = FormCreate
+  OnShow = FormShow
+  DesignerMasterStyle = 0
+  object fgColorsPanel: TfgColorsPanel
+    BorderRadius = 5.000000000000000000
+    PresetKind = X11
+    OnGetColor = fgColorsPanelGetColor
+    OnColorSelected = fgColorsPanelColorSelected
+    OnPaintCell = fgColorsPanelPaintCell
+    Align = Client
+    Margins.Left = 5.000000000000000000
+    Margins.Top = 5.000000000000000000
+    Margins.Right = 5.000000000000000000
+    Margins.Bottom = 5.000000000000000000
+    Size.Width = 463.000000000000000000
+    Size.Height = 432.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+  end
+  object MultiView1: TMultiView
+    Mode = Panel
+    OnPresenterChanging = MultiView1PresenterChanging
+    Size.Width = 216.000000000000000000
+    Size.Height = 442.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    object ListBox1: TListBox
+      Align = Top
+      Size.Width = 215.000000000000000000
+      Size.Height = 360.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      DisableFocusEffect = True
+      ItemHeight = 35.000000000000000000
+      DefaultItemStyles.ItemStyle = ''
+      DefaultItemStyles.GroupHeaderStyle = ''
+      DefaultItemStyles.GroupFooterStyle = ''
+      Viewport.Width = 211.000000000000000000
+      Viewport.Height = 356.000000000000000000
+      object ListBoxGroupHeader1: TListBoxGroupHeader
+        TextSettings.Font.Style = [fsBold]
+        StyledSettings = [Family, Size, FontColor, Other]
+        Size.Width = 211.000000000000000000
+        Size.Height = 35.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 7
+        Text = 'View Settings'
+      end
+      object ListBoxItem4: TListBoxItem
+        Position.Y = 35.000000000000000000
+        Size.Width = 211.000000000000000000
+        Size.Height = 35.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Text = 'Cell width'
+        object nbCellSizeWidth: TNumberBox
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Align = Right
+          TabOrder = 0
+          Cursor = crIBeam
+          Min = 5.000000000000000000
+          Value = 18.000000000000000000
+          Position.X = 162.000000000000000000
+          Position.Y = 6.000000000000000000
+          VertIncrement = 2.000000000000000000
+          Margins.Top = 6.000000000000000000
+          Margins.Right = 5.000000000000000000
+          Margins.Bottom = 6.000000000000000000
+          Size.Width = 44.000000000000000000
+          Size.Height = 23.000000000000000000
+          Size.PlatformDefault = False
+          OnChange = nbCellSizeWidthChangeTracking
+        end
+      end
+      object ListBoxItem5: TListBoxItem
+        Position.Y = 70.000000000000000000
+        Size.Width = 211.000000000000000000
+        Size.Height = 35.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        Text = 'Cell height'
+        object nbCellSizeHeight: TNumberBox
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Align = Right
+          TabOrder = 0
+          Cursor = crIBeam
+          Min = 5.000000000000000000
+          Value = 18.000000000000000000
+          Position.X = 162.000000000000000000
+          Position.Y = 6.000000000000000000
+          VertIncrement = 2.000000000000000000
+          Margins.Top = 6.000000000000000000
+          Margins.Right = 5.000000000000000000
+          Margins.Bottom = 6.000000000000000000
+          Size.Width = 44.000000000000000000
+          Size.Height = 23.000000000000000000
+          Size.PlatformDefault = False
+          OnChange = nbCellSizeWidthChangeTracking
+        end
+      end
+      object ListBoxItem6: TListBoxItem
+        Position.Y = 105.000000000000000000
+        Size.Width = 211.000000000000000000
+        Size.Height = 35.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        Text = 'Border Radius'
+        object nbBorderRadius: TNumberBox
+          Touch.InteractiveGestures = [LongTap, DoubleTap]
+          Align = Right
+          TabOrder = 0
+          Cursor = crIBeam
+          Value = 5.000000000000000000
+          Position.X = 162.000000000000000000
+          Position.Y = 6.000000000000000000
+          VertIncrement = 2.000000000000000000
+          Margins.Top = 6.000000000000000000
+          Margins.Right = 5.000000000000000000
+          Margins.Bottom = 6.000000000000000000
+          Size.Width = 44.000000000000000000
+          Size.Height = 23.000000000000000000
+          Size.PlatformDefault = False
+          OnChange = nbBorderRadiusChangeTracking
+        end
+      end
+      object ListBoxItem7: TListBoxItem
+        Position.Y = 140.000000000000000000
+        Size.Width = 211.000000000000000000
+        Size.Height = 35.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        Text = 'Stroke Color'
+        object cbStrokeColor: TComboColorBox
+          Align = Right
+          Color = claWhite
+          Margins.Top = 6.000000000000000000
+          Margins.Right = 5.000000000000000000
+          Margins.Bottom = 6.000000000000000000
+          Position.X = 162.000000000000000000
+          Position.Y = 6.000000000000000000
+          Size.Width = 44.000000000000000000
+          Size.Height = 23.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          OnChange = cbStrokeColorChange
+        end
+      end
+      object ListBoxGroupHeader2: TListBoxGroupHeader
+        TextSettings.Font.Style = [fsBold]
+        StyledSettings = [Family, Size, FontColor, Other]
+        Position.Y = 175.000000000000000000
+        Size.Width = 211.000000000000000000
+        Size.Height = 35.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 8
+        Text = 'Kind settings'
+      end
+      object ListBoxItem8: TListBoxItem
+        Position.Y = 210.000000000000000000
+        Size.Width = 211.000000000000000000
+        Size.Height = 35.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 4
+        Text = 'Preset Kind'
+        object cbPresetKind: TComboBox
+          Align = Right
+          DisableFocusEffect = False
+          ItemIndex = 1
+          Margins.Top = 6.000000000000000000
+          Margins.Right = 5.000000000000000000
+          Margins.Bottom = 6.000000000000000000
+          Position.X = 120.000000000000000000
+          Position.Y = 6.000000000000000000
+          Size.Width = 86.000000000000000000
+          Size.Height = 23.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          OnChange = cbPresetKindChange
+          object ListBoxItem1: TListBoxItem
+            Size.Width = 19.000000000000000000
+            Size.Height = 19.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 0
+            Text = 'Web Safe'
+          end
+          object ListBoxItem2: TListBoxItem
+            Size.Width = 19.000000000000000000
+            Size.Height = 19.000000000000000000
+            Size.PlatformDefault = False
+            TabOrder = 1
+            Text = 'X11'
+          end
+          object ListBoxItem3: TListBoxItem
+            TabOrder = 2
+            Text = 'Custom'
+          end
+        end
+      end
+      object ListBoxGroupHeader3: TListBoxGroupHeader
+        TextSettings.Font.Style = [fsBold]
+        StyledSettings = [Family, Size, FontColor, Other]
+        Position.Y = 245.000000000000000000
+        Size.Width = 211.000000000000000000
+        Size.Height = 35.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 9
+        Text = 'Event settings'
+      end
+      object ListBoxItem9: TListBoxItem
+        Position.Y = 280.000000000000000000
+        Size.Width = 211.000000000000000000
+        Size.Height = 35.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 5
+        Text = 'Custom painting'
+        object swUserPainting: TSwitch
+          Align = Right
+          IsChecked = False
+          Margins.Top = 6.000000000000000000
+          Margins.Right = 5.000000000000000000
+          Margins.Bottom = 6.000000000000000000
+          Position.X = 162.000000000000000000
+          Position.Y = 6.000000000000000000
+          Size.Width = 44.000000000000000000
+          Size.Height = 23.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          OnSwitch = swUserPaintingSwitch
+        end
+      end
+      object ListBoxItem10: TListBoxItem
+        Position.Y = 315.000000000000000000
+        Size.Width = 211.000000000000000000
+        Size.Height = 35.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 6
+        Text = 'Get user'#39's colors'
+        object swUsersColors: TSwitch
+          Align = Right
+          IsChecked = False
+          Margins.Top = 6.000000000000000000
+          Margins.Right = 5.000000000000000000
+          Margins.Bottom = 6.000000000000000000
+          Position.X = 162.000000000000000000
+          Position.Y = 6.000000000000000000
+          Size.Width = 44.000000000000000000
+          Size.Height = 23.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          OnSwitch = swUsersColorsSwitch
+        end
+      end
+    end
+    object ColorBox: TColorBox
+      Align = Client
+      Color = claNull
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Size.Width = 205.000000000000000000
+      Size.Height = 55.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+    end
+    object lSelectedColor: TLabel
+      Align = Top
+      Margins.Left = 5.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Position.X = 5.000000000000000000
+      Position.Y = 360.000000000000000000
+      Size.Width = 205.000000000000000000
+      Size.Height = 17.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Selected Color: Null'
+    end
+  end
+end

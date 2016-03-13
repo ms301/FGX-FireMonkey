@@ -1,0 +1,116 @@
+object TStyleContainer
+  object TRectangle
+    StyleName = 'fgFlipViewStyle'
+    Fill.Kind = None
+    Padding.Left = 1.000000000000000000
+    Padding.Top = 1.000000000000000000
+    Padding.Right = 1.000000000000000000
+    Padding.Bottom = 1.000000000000000000
+    Position.X = 235.000000000000000000
+    Position.Y = 218.000000000000000000
+    Size.Width = 300.000000000000000000
+    Size.Height = 200.000000000000000000
+    Size.PlatformDefault = False
+    Stroke.Color = xFFAAAAAA
+    object TLayout
+      StyleName = 'content'
+      Align = Client
+      ClipChildren = True
+      Margins.Left = 1.000000000000000000
+      Margins.Top = 1.000000000000000000
+      Margins.Right = 1.000000000000000000
+      Margins.Bottom = 1.000000000000000000
+      Size.Width = 296.000000000000000000
+      Size.Height = 196.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 2
+      object TImage
+        StyleName = 'image'
+        MultiResBitmap = <
+          item
+          end>
+        Align = Contents
+        Size.Width = 296.000000000000000000
+        Size.Height = 196.000000000000000000
+        Size.PlatformDefault = False
+        WrapMode = Stretch
+      end
+      object TImage
+        StyleName = 'image-next'
+        MultiResBitmap = <
+          item
+          end>
+        Align = Contents
+        Size.Width = 50.000000000000000000
+        Size.Height = 50.000000000000000000
+        Size.PlatformDefault = False
+        Visible = False
+        WrapMode = Stretch
+      end
+      object TLayout
+        StyleName = 'left-container'
+        Align = Left
+        Margins.Left = 1.000000000000000000
+        Margins.Top = 1.000000000000000000
+        Margins.Bottom = 1.000000000000000000
+        Position.X = 1.000000000000000000
+        Position.Y = 1.000000000000000000
+        Size.Width = 70.000000000000000000
+        Size.Height = 194.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        object TButton
+          StyleName = 'prev-button'
+          Align = Client
+          Opacity = 0.000000000000000000
+          Size.Width = 70.000000000000000000
+          Size.Height = 194.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'spinleftbutton'
+          TabOrder = 0
+          Text = '<<'
+          object TFloatAnimation
+            Duration = 0.200000002980232200
+            PropertyName = 'Opacity'
+            StartValue = 0.000000000000000000
+            StopValue = 0.200000002980232200
+            Trigger = 'IsMouseOver=true'
+            TriggerInverse = 'IsMouseOver=false'
+          end
+        end
+      end
+      object TLayout
+        StyleName = 'right-container'
+        Align = Right
+        Margins.Top = 1.000000000000000000
+        Margins.Right = 1.000000000000000000
+        Margins.Bottom = 1.000000000000000000
+        Position.X = 225.000000000000000000
+        Position.Y = 1.000000000000000000
+        Size.Width = 70.000000000000000000
+        Size.Height = 194.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        object TButton
+          StyleName = 'next-button'
+          Align = Client
+          Opacity = 0.000000000000000000
+          Size.Width = 70.000000000000000000
+          Size.Height = 194.000000000000000000
+          Size.PlatformDefault = False
+          StyleLookup = 'spinrightbutton'
+          TabOrder = 0
+          Text = '>>'
+          object TFloatAnimation
+            Duration = 0.200000002980232200
+            PropertyName = 'Opacity'
+            StartValue = 0.000000000000000000
+            StopValue = 0.200000002980232200
+            Trigger = 'IsMouseOver=true'
+            TriggerInverse = 'IsMouseOver=false'
+          end
+        end
+      end
+    end
+  end
+end

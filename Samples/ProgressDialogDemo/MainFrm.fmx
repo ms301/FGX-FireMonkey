@@ -1,0 +1,89 @@
+object FormMain: TFormMain
+  Left = 0
+  Top = 0
+  Caption = 'FormMain'
+  ClientHeight = 548
+  ClientWidth = 320
+  Padding.Left = 10.000000000000000000
+  Padding.Top = 10.000000000000000000
+  Padding.Right = 10.000000000000000000
+  Padding.Bottom = 10.000000000000000000
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 3
+  object LayoutButtons: TLayout
+    Align = Center
+    Size.Width = 222.000000000000000000
+    Size.Height = 95.000000000000000000
+    Size.PlatformDefault = False
+    object btnProgressDialog: TButton
+      Align = Top
+      Size.Width = 222.000000000000000000
+      Size.Height = 44.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+      Text = 'Show Progress Dialog'
+      OnClick = btnProgressDialogClick
+    end
+    object btnActivityDialog: TButton
+      Align = Top
+      Margins.Top = 5.000000000000000000
+      Position.Y = 49.000000000000000000
+      Size.Width = 222.000000000000000000
+      Size.Height = 44.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'Show Activity Dialog'
+      OnClick = btnActivityDialogClick
+    end
+  end
+  object Layout1: TLayout
+    Align = Top
+    Position.X = 10.000000000000000000
+    Position.Y = 10.000000000000000000
+    Size.Width = 300.000000000000000000
+    Size.Height = 39.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    object Label1: TLabel
+      Align = Left
+      AutoSize = True
+      Size.Width = 100.000000000000000000
+      Size.Height = 39.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.WordWrap = False
+      Text = 'Cancellable:'
+    end
+    object SwitchCancellable: TSwitch
+      Align = Right
+      IsChecked = False
+      Position.X = 256.000000000000000000
+      Position.Y = 6.000000000000000000
+      Size.Width = 44.000000000000000000
+      Size.Height = 26.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      OnSwitch = SwitchCancellableSwitch
+    end
+  end
+  object fgProgressDialog: TfgProgressDialog
+    Message = 'Downloading...'
+    Max = 1000.000000000000000000
+    Title = 'Please, Wait'
+    OnCancel = fgProgressDialogCancel
+    OnShow = fgProgressDialogShow
+    OnHide = fgProgressDialogHide
+    Left = 64
+    Top = 120
+  end
+  object fgActivityDialog: TfgActivityDialog
+    Message = 'Please, Wait'
+    Title = 'Downloading content'
+    OnCancel = fgActivityDialogCancel
+    OnShow = fgProgressDialogShow
+    OnHide = fgProgressDialogHide
+    Left = 216
+    Top = 120
+  end
+end
