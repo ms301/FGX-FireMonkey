@@ -1,0 +1,132 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{132290DB-3110-415C-8A04-2B577981568B}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Library\fgx.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Design\dclfgx.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Samples\ActionSheetDemo\ActionSheetDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Samples\ApplicationEventsDemo\ApplicationEventsDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Samples\GradientEditDemo\GradientEditDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Samples\ColorPanelDemo\ColorsPanelDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Samples\LinkedLabelDemo\LinkedLabelDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Samples\ProgressDialogDemo\ProgressDialogDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Samples\VirtualKeyboardDemo\VirtualKeyboardDemo.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="fgx">
+        <MSBuild Projects="Library\fgx.dproj"/>
+    </Target>
+    <Target Name="fgx:Clean">
+        <MSBuild Projects="Library\fgx.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="fgx:Make">
+        <MSBuild Projects="Library\fgx.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="dclfgx">
+        <MSBuild Projects="Design\dclfgx.dproj"/>
+    </Target>
+    <Target Name="dclfgx:Clean">
+        <MSBuild Projects="Design\dclfgx.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="dclfgx:Make">
+        <MSBuild Projects="Design\dclfgx.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ActionSheetDemo">
+        <MSBuild Projects="Samples\ActionSheetDemo\ActionSheetDemo.dproj"/>
+    </Target>
+    <Target Name="ActionSheetDemo:Clean">
+        <MSBuild Projects="Samples\ActionSheetDemo\ActionSheetDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ActionSheetDemo:Make">
+        <MSBuild Projects="Samples\ActionSheetDemo\ActionSheetDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ApplicationEventsDemo">
+        <MSBuild Projects="Samples\ApplicationEventsDemo\ApplicationEventsDemo.dproj"/>
+    </Target>
+    <Target Name="ApplicationEventsDemo:Clean">
+        <MSBuild Projects="Samples\ApplicationEventsDemo\ApplicationEventsDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ApplicationEventsDemo:Make">
+        <MSBuild Projects="Samples\ApplicationEventsDemo\ApplicationEventsDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="GradientEditDemo">
+        <MSBuild Projects="Samples\GradientEditDemo\GradientEditDemo.dproj"/>
+    </Target>
+    <Target Name="GradientEditDemo:Clean">
+        <MSBuild Projects="Samples\GradientEditDemo\GradientEditDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="GradientEditDemo:Make">
+        <MSBuild Projects="Samples\GradientEditDemo\GradientEditDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ColorsPanelDemo">
+        <MSBuild Projects="Samples\ColorPanelDemo\ColorsPanelDemo.dproj"/>
+    </Target>
+    <Target Name="ColorsPanelDemo:Clean">
+        <MSBuild Projects="Samples\ColorPanelDemo\ColorsPanelDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ColorsPanelDemo:Make">
+        <MSBuild Projects="Samples\ColorPanelDemo\ColorsPanelDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="LinkedLabelDemo">
+        <MSBuild Projects="Samples\LinkedLabelDemo\LinkedLabelDemo.dproj"/>
+    </Target>
+    <Target Name="LinkedLabelDemo:Clean">
+        <MSBuild Projects="Samples\LinkedLabelDemo\LinkedLabelDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="LinkedLabelDemo:Make">
+        <MSBuild Projects="Samples\LinkedLabelDemo\LinkedLabelDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ProgressDialogDemo">
+        <MSBuild Projects="Samples\ProgressDialogDemo\ProgressDialogDemo.dproj"/>
+    </Target>
+    <Target Name="ProgressDialogDemo:Clean">
+        <MSBuild Projects="Samples\ProgressDialogDemo\ProgressDialogDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ProgressDialogDemo:Make">
+        <MSBuild Projects="Samples\ProgressDialogDemo\ProgressDialogDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="VirtualKeyboardDemo">
+        <MSBuild Projects="Samples\VirtualKeyboardDemo\VirtualKeyboardDemo.dproj"/>
+    </Target>
+    <Target Name="VirtualKeyboardDemo:Clean">
+        <MSBuild Projects="Samples\VirtualKeyboardDemo\VirtualKeyboardDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VirtualKeyboardDemo:Make">
+        <MSBuild Projects="Samples\VirtualKeyboardDemo\VirtualKeyboardDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="fgx;dclfgx;ActionSheetDemo;ApplicationEventsDemo;GradientEditDemo;ColorsPanelDemo;LinkedLabelDemo;ProgressDialogDemo;VirtualKeyboardDemo"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="fgx:Clean;dclfgx:Clean;ActionSheetDemo:Clean;ApplicationEventsDemo:Clean;GradientEditDemo:Clean;ColorsPanelDemo:Clean;LinkedLabelDemo:Clean;ProgressDialogDemo:Clean;VirtualKeyboardDemo:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="fgx:Make;dclfgx:Make;ActionSheetDemo:Make;ApplicationEventsDemo:Make;GradientEditDemo:Make;ColorsPanelDemo:Make;LinkedLabelDemo:Make;ProgressDialogDemo:Make;VirtualKeyboardDemo:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

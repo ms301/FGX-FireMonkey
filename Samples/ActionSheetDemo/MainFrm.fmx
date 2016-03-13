@@ -1,0 +1,159 @@
+object FormMain: TFormMain
+  Left = 0
+  Top = 0
+  Caption = 'FormMain'
+  ClientHeight = 567
+  ClientWidth = 384
+  Padding.Left = 10.000000000000000000
+  Padding.Top = 10.000000000000000000
+  Padding.Right = 10.000000000000000000
+  Padding.Bottom = 10.000000000000000000
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  OnCreate = FormCreate
+  DesignerMasterStyle = 3
+  object Button1: TButton
+    Align = Horizontal
+    Position.X = 10.000000000000000000
+    Position.Y = 251.000000000000000000
+    Size.Width = 364.000000000000000000
+    Size.Height = 44.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 0
+    Text = 'Move Mail To...'
+    OnClick = Button1Click
+  end
+  object Label2: TLabel
+    Align = Top
+    AutoSize = True
+    Position.X = 10.000000000000000000
+    Position.Y = 60.000000000000000000
+    Size.Width = 364.000000000000000000
+    Size.Height = 96.000000000000000000
+    Size.PlatformDefault = False
+    StyleLookup = 'embossedlabel'
+    TextSettings.VertAlign = Leading
+    Text = 
+      'This feature allows to show about observance of the accepted sta' +
+      'ndards. For Example: On iOS button Cancel and Destruction will a' +
+      'ppear on bottom of menu.'
+  end
+  object Layout1: TLayout
+    Align = Top
+    Position.X = 10.000000000000000000
+    Position.Y = 10.000000000000000000
+    Size.Width = 364.000000000000000000
+    Size.Height = 50.000000000000000000
+    Size.PlatformDefault = False
+    object Label1: TLabel
+      Align = Left
+      StyledSettings = [Family, Size, FontColor]
+      Size.Width = 241.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'listboxitemlabel'
+      TextSettings.Font.Style = [fsBold]
+      Text = 'Use OS specific UI Guidline:'
+    end
+    object SwitchUseUIGuildline: TSwitch
+      Align = Right
+      IsChecked = True
+      Position.X = 288.000000000000000000
+      Position.Y = 12.000000000000000000
+      Size.Width = 76.000000000000000000
+      Size.Height = 26.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+    end
+  end
+  object LabelError: TLabel
+    Align = Bottom
+    StyledSettings = [Family, Size, Style]
+    Position.X = 10.000000000000000000
+    Position.Y = 491.000000000000000000
+    Size.Width = 364.000000000000000000
+    Size.Height = 66.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.FontColor = claRed
+    TextSettings.HorzAlign = Center
+    Text = 'Action Sheet is not supported on current platform'
+    Visible = False
+  end
+  object LabelLog: TLabel
+    Align = Top
+    Margins.Top = 10.000000000000000000
+    Position.X = 10.000000000000000000
+    Position.Y = 166.000000000000000000
+    Size.Width = 364.000000000000000000
+    Size.Height = 33.000000000000000000
+    Size.PlatformDefault = False
+  end
+  object fgActionSheet: TfgActionSheet
+    Actions = <
+      item
+        Caption = 'To Inbox'
+        OnClick = fgActionSheetActions0Click
+      end
+      item
+        Caption = 'Cancel'
+        Style = Cancel
+        OnClick = fgActionSheetActions0Click
+      end
+      item
+        Caption = 'To Archive'
+        OnClick = fgActionSheetActions0Click
+      end
+      item
+        Caption = 'To Trash'
+        Style = Destructive
+        OnClick = fgActionSheetActions0Click
+      end
+      item
+        Visible = False
+        OnClick = fgActionSheetActions0Click
+      end
+      item
+        Action = ActionToSpam
+        Caption = 'To Spam'
+        OnClick = fgActionSheetActions0Click
+      end
+      item
+        Action = TakePhotoFromLibraryAction1
+        Caption = 'Photo Library'
+        Visible = False
+      end
+      item
+        Action = EditVirtualKeyboard1
+        Caption = 'On-Screen Keyboard'
+      end>
+    Title = 'Move E-mail to..'
+    Left = 116
+    Top = 208
+  end
+  object Button2: TButton
+    Action = TakePhotoFromLibraryAction1
+    Enabled = True
+    Position.X = 112.000000000000000000
+    Position.Y = 304.000000000000000000
+    TabOrder = 5
+    Visible = False
+  end
+  object ActionList: TActionList
+    Left = 200
+    Top = 208
+    object ActionToSpam: TAction
+      Text = 'To Spam'
+      OnExecute = fgActionSheetActions0Click
+    end
+    object TakePhotoFromCameraAction1: TTakePhotoFromCameraAction
+    end
+    object TakePhotoFromLibraryAction1: TTakePhotoFromLibraryAction
+      Visible = False
+    end
+    object EditVirtualKeyboard1: TVirtualKeyboard
+      Text = 'On-Screen Keyboard'
+      FmxObject = Button2
+    end
+  end
+end

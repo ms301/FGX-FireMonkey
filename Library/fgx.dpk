@@ -1,0 +1,63 @@
+{*********************************************************************
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * Autor: Brovin Y.D.
+ * E-mail: y.brovin@gmail.com
+ ********************************************************************}
+
+package fgx;
+
+{$R *.res}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'Extensions for FM (FireMonkey)'}
+{$LIBSUFFIX '210'}
+{$IMPLICITBUILD OFF}
+
+requires
+  rtl,
+  fmx;
+
+contains
+  FGX.ActionSheet in 'FGX.ActionSheet.pas',
+  FGX.Consts in 'FGX.Consts.pas',
+  FGX.ActionSheet.Types in 'FGX.ActionSheet.Types.pas',
+  FGX.VirtualKeyboard in 'FGX.VirtualKeyboard.pas',
+  FGX.VirtualKeyboard.Types in 'FGX.VirtualKeyboard.Types.pas',
+  FGX.ProgressDialog in 'FGX.ProgressDialog.pas',
+  FGX.ProgressDialog.Types in 'FGX.ProgressDialog.Types.pas',
+  FGX.Graphics in 'FGX.Graphics.pas',
+  FGX.Helpers in 'FGX.Helpers.pas',
+  FGX.ColorsPanel in 'FGX.ColorsPanel.pas',
+  FGX.Colors.Presets in 'FGX.Colors.Presets.pas',
+  FGX.Types in 'FGX.Types.pas',
+  FGX.Items in 'FGX.Items.pas',
+  FGX.Asserts in 'FGX.Asserts.pas',
+  FGX.LinkedLabel in 'FGX.LinkedLabel.pas',
+  FGX.ApplicationEvents in 'FGX.ApplicationEvents.pas';
+
+end.

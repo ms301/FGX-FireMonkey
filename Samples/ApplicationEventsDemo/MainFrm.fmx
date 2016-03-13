@@ -1,0 +1,122 @@
+object FormMain: TFormMain
+  Left = 0
+  Top = 0
+  Caption = 'TfgApplicationEvents: Application events Demo'
+  ClientHeight = 287
+  ClientWidth = 435
+  FormFactor.Width = 320
+  FormFactor.Height = 480
+  FormFactor.Devices = [Desktop]
+  DesignerMasterStyle = 0
+  object mmLog: TMemo
+    Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+    Align = Client
+    Size.Width = 234.000000000000000000
+    Size.Height = 287.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+  end
+  object fgApplicationEvents: TfgApplicationEvents
+    OnActionExecute = fgApplicationEventsActionExecute
+    OnActionUpdate = fgApplicationEventsActionUpdate
+    OnException = fgApplicationEventsException
+    OnIdle = fgApplicationEventsIdle
+    OnStateChanged = fgApplicationEventsStateChange
+    OnOrientationChanged = fgApplicationEventsOrientationChanged
+    Left = 288
+    Top = 16
+  end
+  object MultiView: TMultiView
+    Size.Width = 201.000000000000000000
+    Size.Height = 287.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 5
+    object GroupBox: TGroupBox
+      Align = Top
+      StyledSettings = [Family, Size, FontColor, Other]
+      Margins.Left = 5.000000000000000000
+      Margins.Top = 5.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Margins.Bottom = 5.000000000000000000
+      Position.X = 5.000000000000000000
+      Position.Y = 5.000000000000000000
+      Size.Width = 190.000000000000000000
+      Size.Height = 172.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Tracking:'
+      TextSettings.Font.Style = [fsBold]
+      TabOrder = 0
+      object cbOnIdle: TCheckBox
+        Position.X = 16.000000000000000000
+        Position.Y = 97.000000000000000000
+        Size.Width = 99.000000000000000000
+        Size.Height = 19.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Text = 'OnIdle'
+      end
+      object cbOnActionExecute: TCheckBox
+        IsChecked = True
+        Position.X = 16.000000000000000000
+        Position.Y = 24.000000000000000000
+        Size.Width = 189.000000000000000000
+        Size.Height = 19.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 1
+        Text = 'OnActionExecute'
+      end
+      object cbOnActionUpdate: TCheckBox
+        IsChecked = True
+        Position.X = 16.000000000000000000
+        Position.Y = 48.000000000000000000
+        Size.Width = 192.000000000000000000
+        Size.Height = 19.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 2
+        Text = 'OnActionUpdate'
+      end
+      object cbOnException: TCheckBox
+        IsChecked = True
+        Position.X = 16.000000000000000000
+        Position.Y = 72.000000000000000000
+        TabOrder = 3
+        Text = 'OnException'
+      end
+      object cbOnOrientationChanged: TCheckBox
+        IsChecked = True
+        Position.X = 16.000000000000000000
+        Position.Y = 120.000000000000000000
+        Size.Width = 191.000000000000000000
+        Size.Height = 19.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 5
+        Text = 'OnOrientationChanged'
+      end
+      object cbOnStateChanged: TCheckBox
+        IsChecked = True
+        Position.X = 16.000000000000000000
+        Position.Y = 144.000000000000000000
+        Size.Width = 191.000000000000000000
+        Size.Height = 19.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 4
+        Text = 'OnStateChanged'
+      end
+    end
+    object BtnClearLog: TButton
+      Align = Bottom
+      Margins.Left = 5.000000000000000000
+      Margins.Right = 5.000000000000000000
+      Margins.Bottom = 10.000000000000000000
+      Position.X = 5.000000000000000000
+      Position.Y = 255.000000000000000000
+      Size.Width = 190.000000000000000000
+      Size.Height = 22.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'deletetoolbutton'
+      TabOrder = 1
+      Text = #1054#1095#1080#1089#1090#1080#1090#1100' '#1083#1086#1075
+      OnClick = BtnClearLogClick
+    end
+  end
+end
