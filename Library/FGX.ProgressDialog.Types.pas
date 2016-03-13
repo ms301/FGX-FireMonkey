@@ -28,6 +28,7 @@ type
     [weak] FOwner: TObject;
     FTitle: string;
     FMessage: string;
+    FIsShown: Boolean;
     FOnShow: TNotifyEvent;
     FOnHide: TNotifyEvent;
     FOnCancel: TNotifyEvent;
@@ -40,12 +41,13 @@ type
     procedure DoHide;
   public
     constructor Create(const AOwner: TObject); virtual;
-    procedure Show; virtual; abstract;
-    procedure Hide; virtual; abstract;
+    procedure Show; virtual;
+    procedure Hide; virtual;
   public
     property Owner: TObject read FOwner;
     property Message: string read FMessage write SetMessage;
     property Title: string read FTitle write SetTitle;
+    property IsShown: Boolean read FIsShown;
     property OnCancel: TNotifyEvent read FOnCancel write FOnCancel;
     property OnShow: TNotifyEvent read FOnShow write FOnShow;
     property OnHide: TNotifyEvent read FOnHide write FOnHide;
@@ -78,7 +80,7 @@ type
   /// <summary>
   ///   Base class for implementation native progress dialogs
   /// </summary>
-  TfgNativeProgressDialog = class abstract (TfgNativeDialog)
+  TfgNativeProgressDialog = class abstract(TfgNativeDialog)
   private
     FKind: TfgProgressDialogKind;
     FProgress: Single;
@@ -115,6 +117,7 @@ uses
 constructor TfgNativeDialog.Create(const AOwner: TObject);
 begin
   FOwner := AOwner;
+  FIsShown := False;
 end;
 
 procedure TfgNativeDialog.DoHide;
@@ -127,6 +130,11 @@ procedure TfgNativeDialog.DoShow;
 begin
   if Assigned(FOnShow) then
     FOnShow(FOwner);
+end;
+
+procedure TfgNativeDialog.Hide;
+begin
+  FIsShown := False;
 end;
 
 procedure TfgNativeDialog.MessageChanged;
@@ -150,6 +158,11 @@ begin
     FTitle := Value;
     TitleChanged;
   end;
+end;
+
+procedure TfgNativeDialog.Show;
+begin
+  FIsShown := True;
 end;
 
 procedure TfgNativeDialog.TitleChanged;

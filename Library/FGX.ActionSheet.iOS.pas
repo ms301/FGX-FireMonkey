@@ -25,7 +25,7 @@ type
 
   TiOSActionSheetService = class(TInterfacedObject, IFGXActionSheetService)
   private
-    [weak] FActions: TfgActionsCollections;
+    [Weak] FActions: TfgActionsCollections;
     FActionsLinks: TDictionary<NSInteger, TfgActionCollectionItem>;
     FActionSheet: UIActionSheet;
     FDelegate: TiOSActionSheetDelegate;
@@ -152,17 +152,38 @@ begin
 end;
 
 procedure TiOSActionSheetService.DoButtonClicked(const AButtonIndex: Integer);
+
+  function TryFindCancelAction: TfgActionCollectionItem;
+  var
+    IndexOfCancelButton: Integer;
+  begin
+    IndexOfCancelButton := FActions.IndexOfCancelButton;
+    if IndexOfCancelButton = -1 then
+      Result := nil
+    else
+      Result := FActions[IndexOfCancelButton];
+  end;
+
 var
   Action: TfgActionCollectionItem;
 begin
   AssertIsNotNil(FActions);
   AssertIsNotNil(FActionsLinks);
+  AssertInRange(AButtonIndex, -1, FActionsLinks.Count - 1);
 
-  Action := FActionsLinks.Items[AButtonIndex];
-  if Assigned(Action.OnClick) then
-    Action.OnClick(Action)
+  // iPad doesn't show Cancel button, so ipad AButtonIndex can be -1. It means, that user cancels actions.
+  if AButtonIndex = -1 then
+    Action := TryFindCancelAction
   else
-    Action.Action.ExecuteTarget(nil);
+    Action := FActionsLinks.Items[AButtonIndex];
+
+  if Action <> nil then
+  begin
+    if Assigned(Action.OnClick) then
+      Action.OnClick(Action)
+    else
+      Action.Action.ExecuteTarget(nil);
+  end;
 end;
 
 procedure TiOSActionSheetService.Show(const Title: string; Actions: TfgActionsCollections; const UseUIGuidline: Boolean);

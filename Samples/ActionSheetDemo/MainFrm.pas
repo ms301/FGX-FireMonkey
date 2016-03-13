@@ -16,7 +16,7 @@ interface
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FGX.ActionSheet, FGX.ActionSheet.Types, FMX.StdCtrls,
-  FMX.Layouts, System.Actions, FMX.ActnList, FMX.StdActns, FMX.MediaLibrary.Actions;
+  FMX.Layouts, System.Actions, FMX.ActnList, FMX.StdActns, FMX.MediaLibrary.Actions, FMX.Controls.Presentation;
 
 type
   TFormMain = class(TForm)

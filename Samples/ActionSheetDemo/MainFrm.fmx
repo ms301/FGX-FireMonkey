@@ -59,9 +59,9 @@ object FormMain: TFormMain
     object SwitchUseUIGuildline: TSwitch
       Align = Right
       IsChecked = True
-      Position.X = 288.000000000000000000
+      Position.X = 320.000000000000000000
       Position.Y = 12.000000000000000000
-      Size.Width = 76.000000000000000000
+      Size.Width = 44.000000000000000000
       Size.Height = 26.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 1
@@ -120,7 +120,6 @@ object FormMain: TFormMain
       end
       item
         Action = TakePhotoFromLibraryAction1
-        Caption = 'Photo Library'
         Visible = False
       end
       item
@@ -134,6 +133,7 @@ object FormMain: TFormMain
   object Button2: TButton
     Action = TakePhotoFromLibraryAction1
     Enabled = True
+    ImageIndex = -1
     Position.X = 112.000000000000000000
     Position.Y = 304.000000000000000000
     TabOrder = 5

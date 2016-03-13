@@ -10,7 +10,8 @@ object FormMain: TFormMain
   Padding.Bottom = 10.000000000000000000
   FormFactor.Width = 320
   FormFactor.Height = 480
-  FormFactor.Devices = [Desktop]
+  FormFactor.Orientations = [Portrait, Landscape, InvertedPortrait, InvertedLandscape]
+  FormFactor.Devices = [Desktop, iPhone, iPad]
   DesignerMasterStyle = 2
   object LayoutButtons: TLayout
     Align = Center

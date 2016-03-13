@@ -54,7 +54,7 @@ type
     procedure Realign;
   end;
 
-  TiOSNativeProgressDialog = class (TfgNativeProgressDialog)
+  TiOSNativeProgressDialog = class(TfgNativeProgressDialog)
   private
     FProgressView: UIProgressView;
     FShadowColor: TAlphaColor;
@@ -166,6 +166,8 @@ procedure TiOSNativeActivityDialog.Hide;
 begin
   AssertIsNotNil(FShadowView);
 
+  inherited;
+
   FadeOut(FShadowView, DEFAULT_ANIMATION_DURATION);
   DoHide;
 end;
@@ -177,7 +179,8 @@ begin
   FMessageLabel.setText(StrToNSStr(Message));
 
   // We should call it once for starting animation
-  Application.ProcessMessages;
+  if IsShown then
+    Application.ProcessMessages;
 end;
 
 procedure TiOSNativeActivityDialog.Realign;
@@ -197,6 +200,8 @@ procedure TiOSNativeActivityDialog.Show;
 begin
   AssertIsNotNil(FShadowView);
   AssertIsNotNil(FMessageLabel);
+
+  inherited;
 
   FadeIn(FShadowView, DEFAULT_ANIMATION_DURATION);
   DoShow;
@@ -266,6 +271,8 @@ procedure TiOSNativeProgressDialog.Hide;
 begin
   AssertIsNotNil(FShadowView);
 
+  inherited;
+
   FadeOut(FShadowView, DEFAULT_ANIMATION_DURATION);
   DoHide;
 end;
@@ -277,7 +284,8 @@ begin
   FMessageLabel.setText(StrToNSStr(Message));
 
   // We should call it once for starting animation
-  Application.ProcessMessages;
+  if IsShown then
+    Application.ProcessMessages;
 end;
 
 procedure TiOSNativeProgressDialog.ProgressChanged;
@@ -287,8 +295,10 @@ begin
 
   FProgressView.setProgress(Progress / 100, True);
 
+
   // We should call it once for starting animation
-  Application.ProcessMessages;
+  if IsShown then
+    Application.ProcessMessages;
 end;
 
 procedure TiOSNativeProgressDialog.Realign;
@@ -316,6 +326,8 @@ end;
 procedure TiOSNativeProgressDialog.Show;
 begin
   AssertIsNotNil(FShadowView);
+
+  inherited;
 
   FadeIn(FShadowView, DEFAULT_ANIMATION_DURATION);
   DoShow;

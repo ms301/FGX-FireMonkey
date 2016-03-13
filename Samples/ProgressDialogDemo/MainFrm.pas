@@ -16,7 +16,7 @@ interface
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FGX.ProgressDialog, FGX.ProgressDialog.Types,
-  FMX.StdCtrls, FMX.Layouts;
+  FMX.StdCtrls, FMX.Layouts, FMX.Controls.Presentation;
 
 type
   TFormMain = class(TForm)
@@ -30,7 +30,6 @@ type
     procedure fgProgressDialogHide(Sender: TObject);
     procedure fgProgressDialogShow(Sender: TObject);
   public
-    FNativeStyle: TFmxObject;
   end;
 
 var

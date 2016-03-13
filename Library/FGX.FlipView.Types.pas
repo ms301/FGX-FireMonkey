@@ -101,7 +101,7 @@ type
 
   TfgFlipViewSlideShowOptions = class(TfgPersistent)
   public const
-    DefaultEnabled = True;
+    DefaultEnabled = False;
     DefaultDuration = 4;
   private
     FEnabled: Boolean;

@@ -112,7 +112,9 @@ procedure TAndroidNativeActivityDialog.Hide;
 begin
   AssertIsNotNil(FNativeDialog);
 
+  inherited;
   DoHide;
+
   CallInUIThread(procedure begin
     HideDialog(FNativeDialog, FID);
   end);
@@ -142,6 +144,7 @@ procedure TAndroidNativeActivityDialog.Show;
 begin
   AssertIsNotNil(FNativeDialog);
 
+  inherited;
   CallInUIThread(procedure begin
     InitNativeDialog;
     ShowDialog(FNativeDialog, FID);
@@ -179,6 +182,7 @@ procedure TAndroidNativeProgressDialog.Hide;
 begin
   AssertIsNotNil(FNativeDialog);
 
+  inherited;
   DoHide;
   CallInUIThread(procedure begin
     HideDialog(FNativeDialog, FID);
@@ -245,6 +249,7 @@ procedure TAndroidNativeProgressDialog.Show;
 begin
   AssertIsNotNil(FNativeDialog);
 
+  inherited;
   CallInUIThread(procedure begin
     InitNativeDialog;
     ShowDialog(FNativeDialog, FID);
