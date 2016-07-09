@@ -1,7 +1,7 @@
 object FormMain: TFormMain
   Left = 0
   Top = 0
-  Caption = 'Form11'
+  Caption = 'TfgToast: Using shot quick messages'
   ClientHeight = 601
   ClientWidth = 297
   FormFactor.Width = 320
@@ -42,7 +42,9 @@ object FormMain: TFormMain
         Text = 'Toast'#39's message'
         Position.X = 96.000000000000000000
         Position.Y = 7.000000000000000000
+        Margins.Top = 5.000000000000000000
         Margins.Right = 10.000000000000000000
+        Margins.Bottom = 5.000000000000000000
         Size.Width = 191.000000000000000000
         Size.Height = 30.000000000000000000
         Size.PlatformDefault = False
@@ -56,7 +58,9 @@ object FormMain: TFormMain
       object ComboBoxDurationType: TComboBox
         Align = Right
         ItemIndex = 0
+        Margins.Top = 5.000000000000000000
         Margins.Right = 10.000000000000000000
+        Margins.Bottom = 5.000000000000000000
         Position.X = 95.000000000000000000
         Position.Y = 7.000000000000000000
         Size.Width = 192.000000000000000000
@@ -93,9 +97,11 @@ object FormMain: TFormMain
       object SwitchShowIcon: TSwitch
         Align = Right
         IsChecked = True
+        Margins.Top = 5.000000000000000000
         Margins.Right = 10.000000000000000000
+        Margins.Bottom = 5.000000000000000000
         Position.X = 232.000000000000000000
-        Position.Y = 4.000000000000000000
+        Position.Y = 5.000000000000000000
         Size.Width = 55.000000000000000000
         Size.Height = 35.000000000000000000
         Size.PlatformDefault = False
@@ -272,24 +278,17 @@ object FormMain: TFormMain
       object Button1: TButton
         Align = Right
         Margins.Left = 10.000000000000000000
-        Margins.Top = 10.000000000000000000
+        Margins.Top = 5.000000000000000000
         Margins.Right = 10.000000000000000000
+        Margins.Bottom = 5.000000000000000000
         Position.X = 157.000000000000000000
-        Position.Y = 10.000000000000000000
+        Position.Y = 5.000000000000000000
         Size.Width = 130.000000000000000000
         Size.Height = 34.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
         Text = 'Execute'
         OnClick = Button1Click
-        object ShadowEffect1: TShadowEffect
-          Distance = 10.000000000000000000
-          Direction = 45.000000000000000000
-          Softness = 0.300000011920929000
-          Opacity = 0.600000023841857900
-          ShadowColor = claBlack
-          Enabled = False
-        end
       end
     end
     object ListBoxItem10: TListBoxItem
@@ -300,25 +299,17 @@ object FormMain: TFormMain
       object Button2: TButton
         Align = Right
         Margins.Left = 10.000000000000000000
-        Margins.Top = 10.000000000000000000
+        Margins.Top = 5.000000000000000000
         Margins.Right = 10.000000000000000000
-        Margins.Bottom = 10.000000000000000000
+        Margins.Bottom = 5.000000000000000000
         Position.X = 157.000000000000000000
-        Position.Y = 10.000000000000000000
+        Position.Y = 5.000000000000000000
         Size.Width = 130.000000000000000000
-        Size.Height = 24.000000000000000000
+        Size.Height = 34.000000000000000000
         Size.PlatformDefault = False
         TabOrder = 0
         Text = 'Execute'
         OnClick = Button2Click
-        object ShadowEffect2: TShadowEffect
-          Distance = 10.000000000000000000
-          Direction = 45.000000000000000000
-          Softness = 0.300000011920929000
-          Opacity = 0.600000023841857900
-          ShadowColor = claBlack
-          Enabled = False
-        end
       end
     end
   end

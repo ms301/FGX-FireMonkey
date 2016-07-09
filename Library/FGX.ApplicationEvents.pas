@@ -16,35 +16,56 @@ interface
 {$SCOPEDENUMS ON}
 
 uses
-  System.Messaging, System.Classes, FMX.Types, FMX.Platform, FMX.Forms, FGX.Consts,
-  FMX.Controls;
+  System.Messaging, System.Classes, {$IFDEF ANDROID}Androidapi.JNI.GraphicsContentViewText, Androidapi.Helpers, {$ENDIF}
+  FMX.Types, FMX.Platform, FMX.Forms, FGX.Consts, FMX.Controls;
 
 type
 
+{$IFDEF ANDROID}
+  TIntent = JIntent;
+{$ELSE}
+  TIntent = type TObject;
+{$ENDIF}
+
+(*
+// TBeforeStyleChangingMessage
+*)
+
 { TfgApplicationEvents }
 
-  TfgDeviceOrientationChanged = procedure (const AOrientation: TScreenOrientation) of object;
-  TfgMainFormChanged = procedure (Sender: TObject; const ANewForm: TCommonCustomForm) of object;
-  TfgMainFormCaptionChanged = procedure (Sender: TObject; const ANewForm: TCommonCustomForm; const ANewCaption: string) of object;
-  TfgStyleChanged = procedure (Sender: TObject; const AScene: IScene; const AStyleBook: TStyleBook) of object;
-  TfgFormNotify = procedure (Sender: TObject; const AForm: TCommonCustomForm) of object;
+  TfgDeviceOrientationChangedEvent = procedure (const AOrientation: TScreenOrientation) of object;
+  TfgMainFormChangedEvent = procedure (Sender: TObject; const ANewForm: TCommonCustomForm) of object;
+  TfgMainFormCaptionChangedEvent = procedure (Sender: TObject; const ANewForm: TCommonCustomForm; const ANewCaption: string) of object;
+  TfgStyleChangedEvent = procedure (Sender: TObject; const AScene: IScene; const AStyleBook: TStyleBook) of object;
+  TfgFormNotifyEvent = procedure (Sender: TObject; const AForm: TCommonCustomForm) of object;
+  TfgActivityResultEvent = procedure (Sender: TObject; const ARequestCode: Integer; const AResultCode: Integer;
+    const AIntent: TIntent) of object;
 
   [ComponentPlatformsAttribute(fgAllPlatform)]
   TfgApplicationEvents = class(TFmxObject)
   private
+    FOnActivityResult: TfgActivityResultEvent;
     FOnActionUpdate: TActionEvent;
     FOnActionExecute: TActionEvent;
     FOnException: TExceptionEvent;
-    FOnOrientationChanged: TfgDeviceOrientationChanged;
-    FOnFormSizeChanged: TfgFormNotify;
-    FOnMainFormChanged: TfgMainFormChanged;
-    FOnMainFormCaptionChanged: TfgMainFormCaptionChanged;
+    FOnOrientationChanged: TfgDeviceOrientationChangedEvent;
+    FOnFormSizeChanged: TfgFormNotifyEvent;
+    FOnMainFormChanged: TfgMainFormChangedEvent;
+    FOnMainFormCaptionChanged: TfgMainFormCaptionChangedEvent;
     FOnIdle: TIdleEvent;
     FOnSaveState: TNotifyEvent;
     FOnStateChanged: TApplicationEventHandler;
-    FOnStyleChanged: TfgStyleChanged;
+    FOnStyleChanged: TfgStyleChangedEvent;
     FOnFormsCreated: TNotifyEvent;
-    FOnFormReleased: TfgFormNotify;
+    FOnFormReleased: TfgFormNotifyEvent;
+    FOnFormBeforeShown: TfgFormNotifyEvent;
+    FOnFormActivate: TfgFormNotifyEvent;
+    FOnFormDeactivate: TfgFormNotifyEvent;
+
+    FOnFormCreate: TfgFormNotifyEvent;
+    FOnFormDestroy: TfgFormNotifyEvent;
+    FOnScaleChanged: TNotifyEvent;
+
     procedure SetOnActionExecute(const Value: TActionEvent);
     procedure SetOnActionUpdate(const Value: TActionEvent);
     procedure SetOnException(const Value: TExceptionEvent);
@@ -59,6 +80,13 @@ type
     procedure MainFormCaptionChangedMessageHandler(const ASender: TObject; const AMessage: TMessage);
     procedure StyleChangedMessageHandler(const ASender: TObject; const AMessage: TMessage);
     procedure SaveStateMessageHandler(const ASender: TObject; const AMessage: TMessage);
+    procedure ActivityResultMessageHandler(const ASender: TObject; const AMessage: TMessage);
+    procedure FormBeforeShownHandler(const ASender: TObject; const AMessage: TMessage);
+    procedure FormActivateHandler(const ASender: TObject; const AMessage: TMessage);
+    procedure FormDeactivateHandler(const ASender: TObject; const AMessage: TMessage);
+    procedure ScaleChangedHandler(const ASender: TObject; const AMessage: TMessage);
+    procedure FormAfterCreateHandler(const ASender: TObject; const AMessage: TMessage);
+    procedure FormBeforeDestroyHandler(const ASender: TObject; const AMessage: TMessage);
   protected
     procedure DoStateChanged(const AEventData: TApplicationEventData); virtual;
     procedure DoOrientationChanged(const AOrientation: TScreenOrientation); virtual;
@@ -66,19 +94,26 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
+    property OnActivityResult: TfgActivityResultEvent read FOnActivityResult write FOnActivityResult;
     property OnActionExecute: TActionEvent read FOnActionExecute write SetOnActionExecute;
     property OnActionUpdate: TActionEvent read FOnActionUpdate write SetOnActionUpdate;
     property OnException: TExceptionEvent read FOnException write SetOnException;
     property OnIdle: TIdleEvent read FOnIdle write SetOnIdle;
-    property OnFormSizeChanged: TfgFormNotify read FOnFormSizeChanged write FOnFormSizeChanged;
+    property OnFormSizeChanged: TfgFormNotifyEvent read FOnFormSizeChanged write FOnFormSizeChanged;
     property OnSaveState: TNotifyEvent read FOnSaveState write FOnSaveState;
     property OnStateChanged: TApplicationEventHandler read FOnStateChanged write FOnStateChanged;
-    property OnStyleChanged: TfgStyleChanged read FOnStyleChanged write FOnStyleChanged;
-    property OnOrientationChanged: TfgDeviceOrientationChanged read FOnOrientationChanged write FOnOrientationChanged;
+    property OnStyleChanged: TfgStyleChangedEvent read FOnStyleChanged write FOnStyleChanged;
+    property OnOrientationChanged: TfgDeviceOrientationChangedEvent read FOnOrientationChanged write FOnOrientationChanged;
     property OnFormsCreated: TNotifyEvent read FOnFormsCreated write FOnFormsCreated;
-    property OnFormReleased: TfgFormNotify read FOnFormReleased write FOnFormReleased;
-    property OnMainFormChanged: TfgMainFormChanged read FOnMainFormChanged write FOnMainFormChanged;
-    property OnMainFormCaptionChanged: TfgMainFormCaptionChanged read FOnMainFormCaptionChanged write FOnMainFormCaptionChanged;
+    property OnFormReleased: TfgFormNotifyEvent read FOnFormReleased write FOnFormReleased;
+    property OnFormBeforeShown: TfgFormNotifyEvent read FOnFormBeforeShown write FOnFormBeforeShown;
+    property OnFormActivate: TfgFormNotifyEvent read FOnFormActivate write FOnFormActivate;
+    property OnFormDeactivate: TfgFormNotifyEvent read FOnFormDeactivate write FOnFormDeactivate;
+    property OnFormCreate: TfgFormNotifyEvent read FOnFormCreate write FOnFormCreate;
+    property OnFormDestroy: TfgFormNotifyEvent read FOnFormDestroy write FOnFormDestroy;
+    property OnScaleChanged: TNotifyEvent read FOnScaleChanged write FOnScaleChanged;
+    property OnMainFormChanged: TfgMainFormChangedEvent read FOnMainFormChanged write FOnMainFormChanged;
+    property OnMainFormCaptionChanged: TfgMainFormCaptionChangedEvent read FOnMainFormCaptionChanged write FOnMainFormCaptionChanged;
   end;
 
 implementation
@@ -98,16 +133,33 @@ begin
   TMessageManager.DefaultManager.SubscribeToMessage(TMainCaptionChangedMessage, MainFormCaptionChangedMessageHandler);
   TMessageManager.DefaultManager.SubscribeToMessage(TStyleChangedMessage, StyleChangedMessageHandler);
   TMessageManager.DefaultManager.SubscribeToMessage(TSaveStateMessage, SaveStateMessageHandler);
+  TMessageManager.DefaultManager.SubscribeToMessage(TScaleChangedMessage, ScaleChangedHandler);
+  { Form size }
   TMessageManager.DefaultManager.SubscribeToMessage(TSizeChangedMessage, FormSizeChangedHandler);
+  { Form Creation / Destroying }
+  TMessageManager.DefaultManager.SubscribeToMessage(TAfterCreateFormHandle, FormAfterCreateHandler);
+  TMessageManager.DefaultManager.SubscribeToMessage(TBeforeDestroyFormHandle, FormBeforeDestroyHandler);
   TMessageManager.DefaultManager.SubscribeToMessage(TFormReleasedMessage, FormReleasedHandler);
-
-  { TODO -oBrovin Y.D. -cNextRelease : Need to add event handlers for these messages }
-// TScaleChangedMessage
-// TBeforeStyleChangingMessage
+  { Form Activation / Deactiovation }
+  TMessageManager.DefaultManager.SubscribeToMessage(TFormActivateMessage, FormActivateHandler);
+  TMessageManager.DefaultManager.SubscribeToMessage(TFormDeactivateMessage, FormDeactivateHandler);
+  TMessageManager.DefaultManager.SubscribeToMessage(TFormBeforeShownMessage, FormBeforeShownHandler);
+{$IFDEF ANDROID}
+  TMessageManager.DefaultManager.SubscribeToMessage(TMessageResultNotification, ActivityResultMessageHandler);
+{$ENDIF}
 end;
 
 destructor TfgApplicationEvents.Destroy;
 begin
+{$IFDEF ANDROID}
+  TMessageManager.DefaultManager.Unsubscribe(TMessageResultNotification, ActivityResultMessageHandler);
+{$ENDIF}
+  TMessageManager.DefaultManager.Unsubscribe(TScaleChangedMessage, ScaleChangedHandler);
+  TMessageManager.DefaultManager.Unsubscribe(TAfterCreateFormHandle, FormAfterCreateHandler);
+  TMessageManager.DefaultManager.Unsubscribe(TBeforeDestroyFormHandle, FormBeforeDestroyHandler);
+  TMessageManager.DefaultManager.Unsubscribe(TFormBeforeShownMessage, FormBeforeShownHandler);
+  TMessageManager.DefaultManager.Unsubscribe(TFormActivateMessage, FormActivateHandler);
+  TMessageManager.DefaultManager.Unsubscribe(TFormDeactivateMessage, FormDeactivateHandler);
   TMessageManager.DefaultManager.Unsubscribe(TFormReleasedMessage, FormReleasedHandler);
   TMessageManager.DefaultManager.Unsubscribe(TSizeChangedMessage, FormSizeChangedHandler);
   TMessageManager.DefaultManager.Unsubscribe(TSaveStateMessage, SaveStateMessageHandler);
@@ -120,12 +172,32 @@ begin
   inherited Destroy;
 end;
 
+procedure TfgApplicationEvents.ActivityResultMessageHandler(const ASender: TObject; const AMessage: TMessage);
+{$IFDEF ANDROID}
+var
+  Message: TMessageResultNotification;
+begin
+  TfgAssert.IsNotNil(AMessage);
+  TfgAssert.IsClass(AMessage, TMessageResultNotification);
+
+  if (AMessage is TMessageResultNotification) and Assigned(FOnActivityResult) then
+  begin
+    Message := TMessageResultNotification(AMessage);
+    FOnActivityResult(Self, Message.RequestCode, Message.ResultCode, Message.Value);
+  end;
+end;
+{$ELSE}
+begin
+  // Don't have meaning for other platform
+end;
+{$ENDIF}
+
 procedure TfgApplicationEvents.ApplicationEventChangedMessageHandler(const ASender: TObject; const AMessage: TMessage);
 var
   EventData: TApplicationEventData;
 begin
-  AssertIsNotNil(AMessage);
-  AssertIsClass(AMessage, TApplicationEventMessage);
+  TfgAssert.IsNotNil(AMessage);
+  TfgAssert.IsClass(AMessage, TApplicationEventMessage);
 
   if AMessage is TApplicationEventMessage then
   begin
@@ -142,8 +214,8 @@ end;
 
 procedure TfgApplicationEvents.OrientationChangedMessageHandler(const ASender: TObject; const AMessage: TMessage);
 begin
-  AssertIsNotNil(AMessage);
-  AssertIsClass(AMessage, TOrientationChangedMessage);
+  TfgAssert.IsNotNil(AMessage);
+  TfgAssert.IsClass(AMessage, TOrientationChangedMessage);
 
   if AMessage is TOrientationChangedMessage then
     DoOrientationChanged(Screen.Orientation);
@@ -151,17 +223,26 @@ end;
 
 procedure TfgApplicationEvents.SaveStateMessageHandler(const ASender: TObject; const AMessage: TMessage);
 begin
-  AssertIsNotNil(AMessage);
-  AssertIsClass(AMessage, TSaveStateMessage);
+  TfgAssert.IsNotNil(AMessage);
+  TfgAssert.IsClass(AMessage, TSaveStateMessage);
 
   if AMessage is TSaveStateMessage then
     if Assigned(OnSaveState) then
       OnSaveState(Self);
 end;
 
+procedure TfgApplicationEvents.ScaleChangedHandler(const ASender: TObject; const AMessage: TMessage);
+begin
+  TfgAssert.IsNotNil(AMessage);
+  TfgAssert.IsClass(AMessage, TScaleChangedMessage);
+
+  if (AMessage is TScaleChangedMessage) and Assigned(OnScaleChanged) then
+    OnScaleChanged(Self);
+end;
+
 procedure TfgApplicationEvents.SetOnActionExecute(const Value: TActionEvent);
 begin
-  AssertIsNotNil(Application);
+  TfgAssert.IsNotNil(Application);
 
   FOnActionExecute := Value;
   Application.OnActionExecute := Value;
@@ -169,7 +250,7 @@ end;
 
 procedure TfgApplicationEvents.SetOnActionUpdate(const Value: TActionEvent);
 begin
-  AssertIsNotNil(Application);
+  TfgAssert.IsNotNil(Application);
 
   FOnActionUpdate := Value;
   Application.OnActionUpdate := Value;
@@ -177,7 +258,7 @@ end;
 
 procedure TfgApplicationEvents.SetOnException(const Value: TExceptionEvent);
 begin
-  AssertIsNotNil(Application);
+  TfgAssert.IsNotNil(Application);
 
   FOnException := Value;
   Application.OnException := Value;
@@ -185,7 +266,7 @@ end;
 
 procedure TfgApplicationEvents.SetOnIdle(const Value: TIdleEvent);
 begin
-  AssertIsNotNil(Application);
+  TfgAssert.IsNotNil(Application);
 
   FOnIdle := Value;
   Application.OnIdle := Value;
@@ -196,8 +277,8 @@ var
   Scene: IScene;
   StyleBook: TStyleBook;
 begin
-  AssertIsNotNil(AMessage);
-  AssertIsClass(AMessage, TStyleChangedMessage);
+  TfgAssert.IsNotNil(AMessage);
+  TfgAssert.IsClass(AMessage, TStyleChangedMessage);
 
   if (AMessage is TStyleChangedMessage) and Assigned(OnStyleChanged) then
   begin
@@ -213,13 +294,84 @@ begin
     OnStateChanged(AEventData.Event, AEventData.Context);
 end;
 
+procedure TfgApplicationEvents.FormActivateHandler(const ASender: TObject; const AMessage: TMessage);
+var
+  Form: TCommonCustomForm;
+begin
+  TfgAssert.IsNotNil(AMessage);
+  TfgAssert.IsClass(AMessage, TFormActivateMessage);
+
+  if (AMessage is TFormActivateMessage) and Assigned(OnFormActivate) then
+  begin
+    Form := TFormActivateMessage(AMessage).Value;
+    OnFormActivate(Self, Form);
+  end;
+end;
+
+procedure TfgApplicationEvents.FormAfterCreateHandler(const ASender: TObject; const AMessage: TMessage);
+var
+  Form: TCommonCustomForm;
+begin
+  TfgAssert.IsNotNil(AMessage);
+  TfgAssert.IsClass(AMessage, TAfterCreateFormHandle);
+
+  if (AMessage is TAfterCreateFormHandle) and Assigned(OnFormCreate) then
+  begin
+    Form := TAfterCreateFormHandle(AMessage).Value;
+    OnFormCreate(Self, Form);
+  end;
+end;
+
+procedure TfgApplicationEvents.FormBeforeDestroyHandler(const ASender: TObject; const AMessage: TMessage);
+var
+  Form: TCommonCustomForm;
+begin
+  TfgAssert.IsNotNil(AMessage);
+  TfgAssert.IsClass(AMessage, TBeforeDestroyFormHandle);
+  TfgAssert.IsClass(ASender, TCommonCustomForm);
+
+  if (AMessage is TBeforeDestroyFormHandle) and Assigned(OnFormDestroy) then
+  begin
+    Form := TCommonCustomForm(ASender);
+    OnFormDestroy(Self, Form);
+  end;
+end;
+
+procedure TfgApplicationEvents.FormBeforeShownHandler(const ASender: TObject; const AMessage: TMessage);
+var
+  Form: TCommonCustomForm;
+begin
+  TfgAssert.IsNotNil(AMessage);
+  TfgAssert.IsClass(AMessage, TFormBeforeShownMessage);
+
+  if (AMessage is TFormBeforeShownMessage) and Assigned(OnFormBeforeShown) then
+  begin
+    Form := TFormBeforeShownMessage(AMessage).Value;
+    OnFormBeforeShown(Self, Form);
+  end;
+end;
+
+procedure TfgApplicationEvents.FormDeactivateHandler(const ASender: TObject; const AMessage: TMessage);
+var
+  Form: TCommonCustomForm;
+begin
+  TfgAssert.IsNotNil(AMessage);
+  TfgAssert.IsClass(AMessage, TFormDeactivateMessage);
+
+  if (AMessage is TFormDeactivateMessage) and Assigned(OnFormDeactivate) then
+  begin
+    Form := TFormDeactivateMessage(AMessage).Value;
+    OnFormDeactivate(Self, Form);
+  end;
+end;
+
 procedure TfgApplicationEvents.FormReleasedHandler(const ASender: TObject; const AMessage: TMessage);
 var
   Form: TCommonCustomForm;
 begin
-  AssertIsNotNil(AMessage);
-  AssertIsClass(AMessage, TFormReleasedMessage);
-  AssertIsClass(ASender, TCommonCustomForm);
+  TfgAssert.IsNotNil(AMessage);
+  TfgAssert.IsClass(AMessage, TFormReleasedMessage);
+  TfgAssert.IsClass(ASender, TCommonCustomForm);
 
   if (AMessage is TFormReleasedMessage) and Assigned(OnFormReleased) then
   begin
@@ -238,9 +390,9 @@ procedure TfgApplicationEvents.FormSizeChangedHandler(const ASender: TObject; co
 var
   Form: TCommonCustomForm;
 begin
-  AssertIsNotNil(AMessage);
-  AssertIsClass(AMessage, TSizeChangedMessage);
-  AssertIsClass(ASender, TCommonCustomForm);
+  TfgAssert.IsNotNil(AMessage);
+  TfgAssert.IsClass(AMessage, TSizeChangedMessage);
+  TfgAssert.IsClass(ASender, TCommonCustomForm);
 
   if (AMessage is TSizeChangedMessage) and Assigned(OnFormSizeChanged) then
   begin
@@ -254,8 +406,8 @@ var
   MainForm: TCommonCustomForm;
   Caption: string;
 begin
-  AssertIsNotNil(AMessage);
-  AssertIsClass(AMessage, TMainCaptionChangedMessage);
+  TfgAssert.IsNotNil(AMessage);
+  TfgAssert.IsClass(AMessage, TMainCaptionChangedMessage);
 
   if AMessage is TMainCaptionChangedMessage then
   begin
@@ -273,8 +425,8 @@ end;
 
 procedure TfgApplicationEvents.MainFormChangedMessageHandler(const ASender: TObject; const AMessage: TMessage);
 begin
-  AssertIsNotNil(AMessage);
-  AssertIsClass(AMessage, TMainFormChangedMessage);
+  TfgAssert.IsNotNil(AMessage);
+  TfgAssert.IsClass(AMessage, TMainFormChangedMessage);
 
   if AMessage is TMainFormChangedMessage then
   begin

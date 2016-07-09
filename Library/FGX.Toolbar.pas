@@ -353,7 +353,7 @@ end;
 
 procedure TfgCustomToolBar.FreeNotification(AObject: TObject);
 begin
-  AssertIsNotNil(AObject);
+  TfgAssert.IsNotNil(AObject);
 
   inherited FreeNotification(AObject);
   if AObject is TfgToolBarButton then
@@ -372,15 +372,15 @@ end;
 
 function TfgCustomToolBar.GetItem(const AIndex: Integer): TFmxObject;
 begin
-  AssertIsNotNil(FButtons);
-  AssertInRange(AIndex, 0, FButtons.Count - 1);
+  TfgAssert.IsNotNil(FButtons);
+  TfgAssert.InRange(AIndex, 0, FButtons.Count - 1);
 
   Result := FButtons[AIndex];
 end;
 
 function TfgCustomToolBar.GetItemsCount: Integer;
 begin
-  AssertIsNotNil(FButtons);
+  TfgAssert.IsNotNil(FButtons);
 
   Result := FButtons.Count;
 end;

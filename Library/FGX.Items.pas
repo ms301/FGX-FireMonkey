@@ -59,7 +59,7 @@ uses
 
 constructor TfgItemInformation.Create(const AItemClass: TFmxObjectClass; const AAcceptsChildItems: Boolean = False);
 begin
-  AssertIsNotNil(AItemClass, 'Класс итема обязательно должен быть указан');
+  TfgAssert.IsNotNil(AItemClass, 'Класс итема обязательно должен быть указан');
 
   Self.ItemClass := AItemClass;
   Self.AcceptsChildItems := AAcceptsChildItems;
@@ -67,7 +67,7 @@ end;
 
 constructor TfgItemInformation.Create(const AItemClass: TFmxObjectClass; const ADescription: string);
 begin
-  AssertIsNotNil(AItemClass, 'Класс итема обязательно должен быть указан');
+  TfgAssert.IsNotNil(AItemClass, 'Класс итема обязательно должен быть указан');
 
   Self.ItemClass := AItemClass;
   Self.Description := ADescription;
@@ -87,7 +87,7 @@ end;
 
 class function TfgItemsManager.GetListByComponentClass(const AComponentClass: TFmxObjectClass): TList<TfgItemInformation>;
 begin
-  AssertIsNotNil(FDictionary);
+  TfgAssert.IsNotNil(FDictionary);
 
   Result := nil;
   FDictionary.TryGetValue(AComponentClass, Result);
@@ -108,8 +108,8 @@ class procedure TfgItemsManager.RegisterItem(const AComponentClass: TFmxObjectCl
 var
   List: TList<TfgItemInformation>;
 begin
-  AssertIsNotNil(FDictionary);
-  AssertIsNotNil(AComponentClass);
+  TfgAssert.IsNotNil(FDictionary);
+  TfgAssert.IsNotNil(AComponentClass);
 
   if FDictionary.TryGetValue(AComponentClass, List) then
   begin
@@ -129,8 +129,8 @@ class procedure TfgItemsManager.RegisterItems(const AComponentClass: TFmxObjectC
 var
   ItemClass: TFmxObjectClass;
 begin
-  AssertIsNotNil(FDictionary);
-  AssertIsNotNil(AComponentClass);
+  TfgAssert.IsNotNil(FDictionary);
+  TfgAssert.IsNotNil(AComponentClass);
 
   for ItemClass in AItemsClasses do
     RegisterItem(AComponentClass, TfgItemInformation.Create(ItemClass));
@@ -140,8 +140,8 @@ class procedure TfgItemsManager.RegisterItems(const AComponentClass: TFmxObjectC
 var
   Item: TfgItemInformation;
 begin
-  AssertIsNotNil(FDictionary);
-  AssertIsNotNil(AComponentClass);
+  TfgAssert.IsNotNil(FDictionary);
+  TfgAssert.IsNotNil(AComponentClass);
 
   for Item in AItemsInformations do
     RegisterItem(AComponentClass, Item);
@@ -151,8 +151,8 @@ class procedure TfgItemsManager.UnregisterItem(const AComponentClass: TFmxObject
 var
   List: TList<TfgItemInformation>;
 begin
-  AssertIsNotNil(FDictionary);
-  AssertIsNotNil(AComponentClass);
+  TfgAssert.IsNotNil(FDictionary);
+  TfgAssert.IsNotNil(AComponentClass);
 
   if FDictionary.TryGetValue(AComponentClass, List) then
   begin
@@ -166,7 +166,7 @@ class procedure TfgItemsManager.UnregisterItems(const AComponentClass: TFmxObjec
 var
   Item: TfgItemInformation;
 begin
-  AssertIsNotNil(AComponentClass);
+  TfgAssert.IsNotNil(AComponentClass);
 
   for Item in AItemsInformations do
     UnregisterItem(AComponentClass, Item);

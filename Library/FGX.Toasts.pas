@@ -14,16 +14,19 @@ unit FGX.Toasts;
 interface
 
 uses
-  System.Types, System.Classes, System.UITypes, FMX.Graphics;
+  System.Types, System.Classes, System.SysUtils, System.UITypes, FMX.Graphics;
 
 resourcestring
   SToastsIsNotSupported = 'Toast is not supported on current platform';
+  SCannotCreateToastWrongCall = 'Cannot create toast. You have to use class methods [Create] of [TfgToast] for it with parameters.';
 
 type
 
 { TfgToast }
 
   TfgToast = class;
+
+  EfgToastError = class(Exception);
 
   TfgToastDuration = (Short, Long);
 
@@ -43,6 +46,7 @@ type
   TfgToast = class abstract
   private class var
     FToastService: IFGXToastService;
+  protected class var
     FDefaultBackgroundColor: TAlphaColor;
     FDefaultMessageColor: TAlphaColor;
     FDefaultPadding: TRectF;
@@ -68,9 +72,9 @@ type
     procedure DoMessageColorChanged; virtual;
     procedure DoDurationChanged; virtual;
     procedure DoIconChanged; virtual;
-    constructor Create; overload;
   public
-    class function Create(const AMessage: string; const ADuration: TfgToastDuration): TfgToast; overload;
+    constructor Create; overload;
+    class function Create(const AMessage: string; const ADuration: TfgToastDuration = TfgToastDuration.Short): TfgToast; overload;
     destructor Destroy; override;
     { Manipulations }
     class procedure Show(const AMessage: string); overload;
@@ -107,7 +111,7 @@ type
 implementation
 
 uses
-  FMX.Platform, System.SysUtils, FGX.Asserts
+  FMX.Platform, FGX.Asserts
 {$IFDEF ANDROID}
   , FGX.Toasts.Android
 {$ENDIF}
@@ -120,7 +124,7 @@ uses
 
 procedure TfgToast.Hide;
 begin
-  AssertIsNotNil(FToastService);
+  TfgAssert.IsNotNil(FToastService);
 
   if FToastService <> nil then
     FToastService.Cancel(Self);
@@ -135,6 +139,9 @@ end;
 
 constructor TfgToast.Create;
 begin
+  if ClassType = TfgToast then
+    raise EfgToastError.Create(SCannotCreateToastWrongCall);
+
   inherited;
   FIcon := TBitmap.Create;
   FIcon.OnChange := IconChangedHandler;
@@ -191,7 +198,7 @@ end;
 
 function TfgToast.HasIcon: Boolean;
 begin
-  AssertIsNotNil(Icon);
+  TfgAssert.IsNotNil(Icon);
 
   Result := (Icon.Width > 0) and (Icon.Height > 0);
 end;
@@ -221,7 +228,7 @@ end;
 
 procedure TfgToast.SetIcon(const Value: TBitmap);
 begin
-  AssertIsNotNil(FIcon);
+  TfgAssert.IsNotNil(Value);
 
   FIcon.Assign(Value);
 end;
@@ -296,7 +303,7 @@ end;
 
 procedure TfgToast.Show;
 begin
-  AssertIsNotNil(FToastService);
+  TfgAssert.IsNotNil(FToastService);
 
   if FToastService <> nil then
     FToastService.Show(Self);

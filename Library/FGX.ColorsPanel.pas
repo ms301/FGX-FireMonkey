@@ -153,7 +153,7 @@ uses
 
 function TfgCustomColorsPanel.ColumnsCount: Integer;
 begin
-  AssertIsNotNil(CellSize);
+  TfgAssert.IsNotNil(CellSize);
 
   if not SameValue(CellSize.Width - 1, 0, EPSILON_SINGLE) then
     Result := Floor(Width / (CellSize.Width - 1))
@@ -164,8 +164,7 @@ end;
 constructor TfgCustomColorsPanel.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  FCellSize := TfgSingleSize.Create(DefaultCellSize, DefaultCellSize, TfgEqualityComparators.SingleEquality);
-  FCellSize.OnChange := DoCellSizeChanged;
+  FCellSize := TfgSingleSize.Create(Self, DefaultCellSize, DefaultCellSize, DoCellSizeChanged);
   FBorderRadius := 0;
   FStrokeBrush := TStrokeBrush.Create(TBrushKind.Solid, TAlphaColorRec.Black);
   FStrokeBrush.OnChanged := DoBorderStrokeChanged;
@@ -233,9 +232,9 @@ var
   Corners: TCorners;
   Done: Boolean;
 begin
-  AssertIsNotNil(Canvas);
-  AssertInRange(AColumn, 1, ColumnsCount);
-  AssertInRange(ARow, 1, RowsCount);
+  TfgAssert.IsNotNil(Canvas);
+  TfgAssert.InRange(AColumn, 1, ColumnsCount);
+  TfgAssert.InRange(ARow, 1, RowsCount);
 
   Canvas.Fill.Kind := TBrushKind.Solid;
   Canvas.Fill.Color := AColor;
@@ -259,9 +258,9 @@ var
   Top: Single;
   HalfThickness: Single;
 begin
-  AssertIsNotNil(CellSize);
-  AssertInRange(Column, 1, ColumnsCount);
-  AssertInRange(Row, 1, RowsCount);
+  TfgAssert.IsNotNil(CellSize);
+  TfgAssert.InRange(Column, 1, ColumnsCount);
+  TfgAssert.InRange(Row, 1, RowsCount);
 
   Left := (Column - 1) * (CellSize.Width - Stroke.Thickness);
   Top := (Row - 1) * (CellSize.Height - Stroke.Thickness);
@@ -372,8 +371,8 @@ end;
 
 procedure TfgCustomColorsPanel.SetColorCellSize(const Value: TfgSingleSize);
 begin
-  AssertIsNotNil(Value);
-  AssertIsNotNil(CellSize);
+  TfgAssert.IsNotNil(Value);
+  TfgAssert.IsNotNil(CellSize);
   Assert(Value.Width >= MinCellSize);
   Assert(Value.Height >= MinCellSize);
 

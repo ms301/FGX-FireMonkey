@@ -36,7 +36,6 @@ type
     procedure DoIconChanged; override;
     { Creating custom view and preparing data for Toast }
     function CreateBitmapIcon: JBitmap;
-    function CreateBackgroundImage: JBitmap;
     procedure CreateCustomView;
     procedure RemoveCustomView;
   public
@@ -93,18 +92,6 @@ begin
     end);
   Message := AMessage;
   Duration := ADuration;
-end;
-
-function TfgAndroidToast.CreateBackgroundImage: JBitmap;
-var
-  Bitmap: TBitmap;
-begin
-  Bitmap := Create9PatchShadow(TSizeF.Create(100, 20), BackgroundColor);
-  try
-    Result := BitmapToJBitmap(Bitmap)
-  finally
-    Bitmap.Free;
-  end;
 end;
 
 procedure TfgAndroidToast.CreateCustomView;
@@ -177,7 +164,7 @@ end;
 
 procedure TfgAndroidToast.DoDurationChanged;
 begin
-  AssertIsNotNil(FToast);
+  TfgAssert.IsNotNil(FToast);
 
   inherited;
   CallInUIThreadAndWaitFinishing(procedure
@@ -188,8 +175,8 @@ end;
 
 procedure TfgAndroidToast.DoIconChanged;
 begin
-  AssertIsNotNil(Icon);
-  AssertIsNotNil(Toast);
+  TfgAssert.IsNotNil(Icon);
+  TfgAssert.IsNotNil(Toast);
 
   inherited;
   if HasIcon then
@@ -205,7 +192,7 @@ end;
 
 procedure TfgAndroidToast.DoMessageChanged;
 begin
-  AssertIsNotNil(FToast);
+  TfgAssert.IsNotNil(FToast);
 
   inherited;
   CallInUIThreadAndWaitFinishing(procedure
@@ -249,8 +236,8 @@ end;
 
 procedure TfgAndroidToastService.Cancel(const AToast: TfgToast);
 begin
-  AssertIsNotNil(AToast);
-  AssertIsClass(AToast, TfgAndroidToast);
+  TfgAssert.IsNotNil(AToast);
+  TfgAssert.IsClass(AToast, TfgAndroidToast);
 
   CallInUIThreadAndWaitFinishing(procedure
     begin
@@ -265,8 +252,8 @@ end;
 
 procedure TfgAndroidToastService.Show(const AToast: TfgToast);
 begin
-  AssertIsNotNil(AToast);
-  AssertIsClass(AToast, TfgAndroidToast);
+  TfgAssert.IsNotNil(AToast);
+  TfgAssert.IsClass(AToast, TfgAndroidToast);
 
   CallInUIThreadAndWaitFinishing(procedure
     begin

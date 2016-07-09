@@ -35,6 +35,8 @@ type
     function ToString: string;
   end;
 
+  TfgActionSheetTheme = (Auto, Dark, Light);
+
   TfgActionCollectionItem = class;
 
   TfgActionsCollections = class(TCollection)
@@ -104,9 +106,22 @@ type
 
 { IFGXActionSheetService }
 
+  TfgActionSheetItemClickEvent = procedure (Sender: TObject; const AAction: TfgActionCollectionItem) of object;
+
+  TfgActionSheetQueryParams = record
+    Owner: TObject;
+    Title: string;
+    Actions: TfgActionsCollections;
+    UseUIGuidline: Boolean;
+    Theme: TfgActionSheetTheme;
+    ShowCallback: TNotifyEvent;
+    HideCallback: TNotifyEvent;
+    ItemClickCallback: TfgActionSheetItemClickEvent;
+  end;
+
   IFGXActionSheetService = interface
   ['{70269D3A-52DF-484F-A241-DE9A07C0D593}']
-    procedure Show(const ATitle: string; Actions: TfgActionsCollections; const UseUIGuidline: Boolean = True);
+    procedure Show(const AParams: TfgActionSheetQueryParams);
   end;
 
 implementation
@@ -142,7 +157,7 @@ end;
 
 function TfgActionsCollections.GetAction(const Index: Integer): TfgActionCollectionItem;
 begin
-  AssertInRange(Index, 0, Count - 1);
+  TfgAssert.InRange(Index, 0, Count - 1);
 
   if not InRange(Index, 0, Count - 1) then
     raise EInvalidArgument.Create(Format(SErrorWrongIndex, [Index, Count - 1]));
@@ -199,7 +214,7 @@ var
   I: Integer;
   Action: TfgActionCollectionItem;
 begin
-  AssertIsNotNil(AItem);
+  TfgAssert.IsNotNil(AItem);
 
   // This collection doesn't suppport more then 1 item with Destructiv and Cancel style. So, we should reset style
   // for all items, if current item is not in normal style
@@ -214,8 +229,8 @@ end;
 
 procedure TfgActionsCollections.Notify(Item: TCollectionItem; Action: TCollectionNotification);
 begin
-  AssertIsNotNil(Item);
-  AssertIsClass(Item, TfgActionCollectionItem);
+  TfgAssert.IsNotNil(Item);
+  TfgAssert.IsClass(Item, TfgActionCollectionItem);
 
   if Action = TCollectionNotification.cnAdded then
     TfgActionCollectionItem(Item).OnChanged := ItemChanged;
@@ -225,7 +240,7 @@ end;
 
 procedure TfgActionCollectionItem.ActionChange(Sender: TBasicAction; CheckDefaults: Boolean);
 begin
-  AssertIsNotNil(Sender);
+  TfgAssert.IsNotNil(Sender);
 
   if Sender is TCustomAction then
   begin
@@ -262,16 +277,16 @@ end;
 
 function TfgActionCollectionItem.Collection: TfgActionsCollections;
 begin
-  AssertIsNotNil(Collection);
-  AssertIsClass(Collection, TfgActionsCollections);
+  TfgAssert.IsNotNil(Collection);
+  TfgAssert.IsClass(Collection, TfgActionsCollections);
 
   Result := Collection as TfgActionsCollections;
 end;
 
 constructor TfgActionCollectionItem.Create(Collection: TCollection);
 begin
-  AssertIsNotNil(Collection);
-  AssertIsClass(Collection, TfgActionsCollections);
+  TfgAssert.IsNotNil(Collection);
+  TfgAssert.IsClass(Collection, TfgActionsCollections);
 
   inherited Create(Collection);
   FStyle := DefaultStyle;
@@ -286,7 +301,7 @@ end;
 
 procedure TfgActionCollectionItem.DoActionChange(Sender: TObject);
 begin
-  AssertIsClass(Sender, TBasicAction);
+  TfgAssert.IsClass(Sender, TBasicAction);
 
   if Sender = Action then
     ActionChange(TBasicAction(Sender), False);
@@ -345,8 +360,8 @@ end;
 
 procedure TfgActionCollectionItemActionLink.AssignClient(AClient: TObject);
 begin
-  AssertIsNotNil(AClient);
-  AssertIsClass(AClient, TfgActionCollectionItem);
+  TfgAssert.IsNotNil(AClient);
+  TfgAssert.IsClass(AClient, TfgActionCollectionItem);
 
   if AClient = nil then
     raise EActionError.CreateFMT(SParamIsNil, ['AClient']);
@@ -357,34 +372,34 @@ end;
 
 function TfgActionCollectionItemActionLink.IsCaptionLinked: Boolean;
 begin
-  AssertIsNotNil(FClient);
-  AssertIsNotNil(Action);
-  AssertIsClass(Action, TContainedAction);
+  TfgAssert.IsNotNil(FClient);
+  TfgAssert.IsNotNil(Action);
+  TfgAssert.IsClass(Action, TContainedAction);
 
   Result := inherited IsCaptionLinked and (FClient.Caption = TContainedAction(Action).Caption);
 end;
 
 function TfgActionCollectionItemActionLink.IsOnExecuteLinked: Boolean;
 begin
-  AssertIsNotNil(FClient);
-  AssertIsNotNil(Action);
-  AssertIsClass(Action, TContainedAction);
+  TfgAssert.IsNotNil(FClient);
+  TfgAssert.IsNotNil(Action);
+  TfgAssert.IsClass(Action, TContainedAction);
 
   Result := inherited IsOnExecuteLinked and (TMethod(FClient.OnClick) = TMethod(Action.OnExecute));
 end;
 
 function TfgActionCollectionItemActionLink.IsVisibleLinked: Boolean;
 begin
-  AssertIsNotNil(FClient);
-  AssertIsNotNil(Action);
-  AssertIsClass(Action, TContainedAction);
+  TfgAssert.IsNotNil(FClient);
+  TfgAssert.IsNotNil(Action);
+  TfgAssert.IsClass(Action, TContainedAction);
 
   Result := inherited IsVisibleLinked and (FClient.Visible = TContainedAction(Action).Visible);
 end;
 
 procedure TfgActionCollectionItemActionLink.SetCaption(const Value: string);
 begin
-  AssertIsNotNil(FClient);
+  TfgAssert.IsNotNil(FClient);
 
   if IsCaptionLinked then
     FClient.Caption := Value;
@@ -392,7 +407,7 @@ end;
 
 procedure TfgActionCollectionItemActionLink.SetOnExecute(Value: TNotifyEvent);
 begin
-  AssertIsNotNil(FClient);
+  TfgAssert.IsNotNil(FClient);
 
   if IsOnExecuteLinked then
     FClient.OnClick := Value;
@@ -400,7 +415,7 @@ end;
 
 procedure TfgActionCollectionItemActionLink.SetVisible(Value: Boolean);
 begin
-  AssertIsNotNil(FClient);
+  TfgAssert.IsNotNil(FClient);
 
   if IsCaptionLinked then
     FClient.Visible := Value;

@@ -23,6 +23,7 @@ uses
 
 procedure Register;
 begin
+{$IFDEF REGISTER_ITEMS_DESIGNER}
   { Registration Class of Items for Item Editor }
   TfgItemsManager.RegisterItems(TfgToolBar, [TfgToolBarButton, TfgToolBarPopupButton, TfgToolBarSeparator,
                                              TfgToolBarDivider, TfgToolBarComboBox]);
@@ -49,9 +50,6 @@ begin
   { Component Editors }
   RegisterComponentEditor(TfgToolBar, TfgItemsEditor);
   RegisterComponentEditor(TfgToolBarComboBox, TfgItemsEditor);
-
-{$IFDEF REGISTER_ITEMS_DESIGNER}
-  { Component Editors }
 
   RegisterComponentEditor(TListBox, TfgItemsEditor);
   RegisterComponentEditor(TTreeView, TfgItemsEditor);

@@ -79,9 +79,9 @@ type
     property Inverse default TfgCustomPositionAnimation.DefaultInverse;
     property Loop default TfgCustomPositionAnimation.DefaultLoop;
     property PropertyName;
-    property StartValue stored True nodefault;
+    property StartValue;
     property StartFromCurrent default TfgCustomPositionAnimation.DefaultStartFromCurrent;
-    property StopValue stored True nodefault;
+    property StopValue;
     property Trigger;
     property TriggerInverse;
     property OnProcess;
@@ -111,9 +111,9 @@ type
     property Inverse default TfgCustomPosition3DAnimation.DefaultInverse;
     property Loop default TfgCustomPosition3DAnimation.DefaultLoop;
     property PropertyName;
-    property StartValue stored True nodefault;
+    property StartValue;
     property StartFromCurrent default TfgCustomPosition3DAnimation.DefaultStartFromCurrent;
-    property StopValue stored True nodefault;
+    property StopValue;
     property Trigger;
     property TriggerInverse;
     property OnProcess;
@@ -158,9 +158,9 @@ type
     property Loop default TfgCustomBitmapLinkAnimation.DefaultLoop;
     property Options;
     property PropertyName;
-    property StartValue stored True nodefault;
+    property StartValue;
     property StartFromCurrent default TfgCustomBitmapLinkAnimation.DefaultStartFromCurrent;
-    property StopValue stored True nodefault;
+    property StopValue;
     property Trigger;
     property TriggerInverse;
     property OnProcess;
@@ -210,7 +210,7 @@ end;
 
 procedure TfgCustomPropertyAnimation<T>.FirstFrame;
 begin
-  AssertIsNotNil(FCurrentValue);
+  TfgAssert.IsNotNil(FCurrentValue);
 
   if StartFromCurrent and (FRttiProperty <> nil) and FRttiProperty.PropertyType.IsInstance then
     T(FRttiProperty.GetValue(FInstance).AsObject).Assign(FCurrentValue);
@@ -228,9 +228,9 @@ end;
 
 procedure TfgCustomPropertyAnimation<T>.ProcessAnimation;
 begin
-  AssertIsNotNil(FStartValue);
-  AssertIsNotNil(FStopValue);
-  AssertIsNotNil(FCurrentValue);
+  TfgAssert.IsNotNil(FStartValue);
+  TfgAssert.IsNotNil(FStopValue);
+  TfgAssert.IsNotNil(FCurrentValue);
 
   inherited;
   if (FInstance <> nil) and (FRttiProperty <> nil) then
@@ -243,16 +243,16 @@ end;
 
 procedure TfgCustomPropertyAnimation<T>.SetStartValue(const Value: T);
 begin
-  AssertIsNotNil(FStartValue);
-  AssertIsNotNil(Value);
+  TfgAssert.IsNotNil(FStartValue);
+  TfgAssert.IsNotNil(Value);
 
   FStartValue.Assign(Value);
 end;
 
 procedure TfgCustomPropertyAnimation<T>.SetStopValue(const Value: T);
 begin
-  AssertIsNotNil(FStopValue);
-  AssertIsNotNil(Value);
+  TfgAssert.IsNotNil(FStopValue);
+  TfgAssert.IsNotNil(Value);
 
   FStopValue.Assign(Value);
 end;
@@ -307,8 +307,8 @@ begin
   SceneScale := GetSceneScale;
   LinkStart := StartValue.LinkByScale(SceneScale, True);
   LinkStop := StopValue.LinkByScale(SceneScale, True);
-  AssertIsNotNil(LinkStart, Format('For current scene scale |%f|, Animator doesn''t have specified Start link', [SceneScale]));
-  AssertIsNotNil(LinkStop, Format('For current scene scale |%f|, Animator doesn''t have specified Stop link', [SceneScale]));
+  TfgAssert.IsNotNil(LinkStart, Format('For current scene scale |%f|, Animator doesn''t have specified Start link', [SceneScale]));
+  TfgAssert.IsNotNil(LinkStop, Format('For current scene scale |%f|, Animator doesn''t have specified Stop link', [SceneScale]));
 
   Link := CurrentValue.LinkByScale(SceneScale, True);
   if Link = nil then
@@ -343,7 +343,7 @@ end;
 
 procedure TfgCustomBitmapLinkAnimation.ProcessAnimation;
 begin
-  AssertEqual(StartValue.Count, StopValue.Count, 'Count of links in StartValue and StopValue must be identical');
+  TfgAssert.AreEqual(StartValue.Count, StopValue.Count, 'Count of links in StartValue and StopValue must be identical');
   inherited;
   // Workaround: TStyleObject doesn't repaint itself, when we change BitmapLinks. So we force painting in this case
   if Parent is TStyleObject then

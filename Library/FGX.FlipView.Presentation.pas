@@ -180,7 +180,7 @@ end;
 
 procedure TfgStyledFlipViewBasePresentation.HandlerCurrentSlideClick(Sender: TObject);
 begin
-  AssertIsClass(PresentedControl, TfgCustomFlipView);
+  TfgAssert.IsClass(PresentedControl, TfgCustomFlipView);
 
   if not FIsGestureStarted and Assigned(Model.OnImageClick) and (PresentedControl is TfgCustomFlipView) and (Model.ItemIndex <> -1) then
     Model.OnImageClick(PresentedControl, TfgCustomFlipView(PresentedControl), Model.ItemIndex);
@@ -192,21 +192,21 @@ end;
 
 procedure TfgStyledFlipViewBasePresentation.HandlerNextButtonClick(Sender: TObject);
 begin
-  AssertIsNotNil(Model);
+  TfgAssert.IsNotNil(Model);
 
   ShowNextImage(IfThen(Model.IsLastImage, 0, Model.ItemIndex + 1), TfgDirection.Forward, True);
 end;
 
 procedure TfgStyledFlipViewBasePresentation.HandlerPreviousButtonClick(Sender: TObject);
 begin
-  AssertIsNotNil(Model);
+  TfgAssert.IsNotNil(Model);
 
   ShowNextImage(IfThen(Model.IsFirstImage, Model.ImagesCount - 1, Model.ItemIndex - 1), TfgDirection.Backward, True);
 end;
 
 procedure TfgStyledFlipViewBasePresentation.MMItemIndexChanged(var AMessage: TDispatchMessageWithValue<Integer>);
 begin
-  AssertIsNotNil(Model);
+  TfgAssert.IsNotNil(Model);
 
   if ImageContainer <> nil then
     ImageContainer.Bitmap.Assign(Model.CurrentImage);
@@ -225,7 +225,7 @@ end;
 procedure TfgStyledFlipViewBasePresentation.ShowNextImage(const ANewItemIndex: Integer; const ADirection: TfgDirection;
   const AAnimate: Boolean);
 begin
-  AssertIsNotNil(Model);
+  TfgAssert.IsNotNil(Model);
 
   Model.DisableNotify;
   try

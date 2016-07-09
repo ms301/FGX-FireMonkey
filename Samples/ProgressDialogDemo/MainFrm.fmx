@@ -45,11 +45,11 @@ object FormMain: TFormMain
     Size.Width = 300.000000000000000000
     Size.Height = 39.000000000000000000
     Size.PlatformDefault = False
-    TabOrder = 2
+    TabOrder = 3
     object Label1: TLabel
       Align = Left
       AutoSize = True
-      Size.Width = 100.000000000000000000
+      Size.Width = 101.000000000000000000
       Size.Height = 39.000000000000000000
       Size.PlatformDefault = False
       TextSettings.WordWrap = False
@@ -65,6 +65,51 @@ object FormMain: TFormMain
       Size.PlatformDefault = False
       TabOrder = 1
       OnSwitch = SwitchCancellableSwitch
+    end
+  end
+  object Layout2: TLayout
+    Align = Top
+    Position.X = 10.000000000000000000
+    Position.Y = 49.000000000000000000
+    Size.Width = 300.000000000000000000
+    Size.Height = 39.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    object Label2: TLabel
+      Align = Left
+      AutoSize = True
+      Size.Width = 63.000000000000000000
+      Size.Height = 39.000000000000000000
+      Size.PlatformDefault = False
+      TextSettings.WordWrap = False
+      Text = 'Theme:'
+    end
+    object ComboBoxTheme: TComboBox
+      Align = Right
+      ItemIndex = 0
+      Position.X = 203.000000000000000000
+      Position.Y = 4.000000000000000000
+      Size.Width = 97.000000000000000000
+      Size.Height = 32.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      OnChange = ComboBoxThemeChange
+      object ListBoxItem1: TListBoxItem
+        IsSelected = True
+        Size.Width = 44.000000000000000000
+        Size.Height = 44.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Text = 'Auto'
+      end
+      object ListBoxItem2: TListBoxItem
+        TabOrder = 1
+        Text = 'Dark'
+      end
+      object ListBoxItem3: TListBoxItem
+        TabOrder = 2
+        Text = 'Light'
+      end
     end
   end
   object fgProgressDialog: TfgProgressDialog

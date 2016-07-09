@@ -63,7 +63,7 @@ function BitmapToJBitmap(const ABitmap: TBitmap): JBitmap;
 var
   BitmapSurface: TBitmapSurface;
 begin
-  AssertIsNotNil(ABitmap);
+  TfgAssert.IsNotNil(ABitmap);
 
   Result := TJBitmap.JavaClass.createBitmap(ABitmap.Width, ABitmap.Height, TJBitmap_Config.JavaClass.ARGB_8888);
   BitmapSurface := TBitmapSurface.Create;

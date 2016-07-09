@@ -260,8 +260,8 @@ uses
 
 function TfgCustomFlipView.CanSlideShow: Boolean;
 begin
-  AssertIsNotNil(Model);
-  AssertIsNotNil(SlideShowOptions);
+  TfgAssert.IsNotNil(Model);
+  TfgAssert.IsNotNil(SlideShowOptions);
 
   Result := SlideShowOptions.Enabled and not(csDesigning in ComponentState) and not Model.IsSliding;
 end;
@@ -310,21 +310,21 @@ end;
 
 function TfgCustomFlipView.GetEffectOptions: TfgFlipViewEffectOptions;
 begin
-  AssertIsNotNil(Model);
+  TfgAssert.IsNotNil(Model);
 
   Result := Model.EffectOptions;
 end;
 
 function TfgCustomFlipView.GetImages: TfgImageCollection;
 begin
-  AssertIsNotNil(Model);
+  TfgAssert.IsNotNil(Model);
 
   Result := Model.Images;
 end;
 
 function TfgCustomFlipView.GetItemIndex: Integer;
 begin
-  AssertIsNotNil(Model);
+  TfgAssert.IsNotNil(Model);
 
   Result := Model.ItemIndex;
 end;
@@ -333,12 +333,12 @@ function TfgCustomFlipView.GetModel: TfgFlipViewModel;
 begin
   Result := inherited GetModel<TfgFlipViewModel>;
 
-  AssertIsNotNil(Result, 'TfgCustomFlipView.GetModel must return Model of [TfgFlipViewModel] class');
+  TfgAssert.IsNotNil(Result, 'TfgCustomFlipView.GetModel must return Model of [TfgFlipViewModel] class');
 end;
 
 function TfgCustomFlipView.GetOnFinishChanging: TNotifyEvent;
 begin
-  AssertIsNotNil(Model);
+  TfgAssert.IsNotNil(Model);
 
   Result := Model.OnFinishChanging;
 end;
@@ -350,7 +350,7 @@ end;
 
 function TfgCustomFlipView.GetOnStartChanging: TfgChangingImageEvent;
 begin
-  AssertIsNotNil(Model);
+  TfgAssert.IsNotNil(Model);
 
   Result := Model.OnStartChanging;
 end;
@@ -362,14 +362,14 @@ end;
 
 function TfgCustomFlipView.GetSlideShowOptions: TfgFlipViewSlideShowOptions;
 begin
-  AssertIsNotNil(Model);
+  TfgAssert.IsNotNil(Model);
 
   Result := Model.SlideShowOptions;
 end;
 
 function TfgCustomFlipView.GetSlidingOptions: TfgFlipViewSlideOptions;
 begin
-  AssertIsNotNil(Model);
+  TfgAssert.IsNotNil(Model);
 
   Result := Model.SlideOptions;
 end;
@@ -400,7 +400,7 @@ end;
 
 procedure TfgCustomFlipView.HandlerTimer(Sender: TObject);
 begin
-  AssertIsNotNil(FSlideShowTimer);
+  TfgAssert.IsNotNil(FSlideShowTimer);
 
   FSlideShowTimer.Enabled := False;
   try
@@ -412,46 +412,46 @@ end;
 
 function TfgCustomFlipView.IsEffectOptionsStored: Boolean;
 begin
-  AssertIsNotNil(EffectOptions);
+  TfgAssert.IsNotNil(EffectOptions);
 
-  Result := not EffectOptions.IsDefaultValues;
+  Result := not EffectOptions.AreDefaultValues;
 end;
 
 function TfgCustomFlipView.IsSlideOptionsStored: Boolean;
 begin
-  AssertIsNotNil(SlideOptions);
+  TfgAssert.IsNotNil(SlideOptions);
 
-  Result := not SlideOptions.IsDefaultValues;
+  Result := not SlideOptions.AreDefaultValues;
 end;
 
 function TfgCustomFlipView.IsSlideShowOptionsStored: Boolean;
 begin
-  AssertIsNotNil(SlideShowOptions);
+  TfgAssert.IsNotNil(SlideShowOptions);
 
-  Result := not SlideShowOptions.IsDefaultValues;
+  Result := not SlideShowOptions.AreDefaultValues;
 end;
 
 procedure TfgCustomFlipView.SetEffectOptions(const Value: TfgFlipViewEffectOptions);
 begin
-  AssertIsNotNil(Value);
-  AssertIsNotNil(Model);
-  AssertIsNotNil(Model.EffectOptions);
+  TfgAssert.IsNotNil(Value);
+  TfgAssert.IsNotNil(Model);
+  TfgAssert.IsNotNil(Model.EffectOptions);
 
   Model.EffectOptions := Value;
 end;
 
 procedure TfgCustomFlipView.SetImages(const Value: TfgImageCollection);
 begin
-  AssertIsNotNil(Value);
-  AssertIsNotNil(Model);
-  AssertIsNotNil(Model.Images);
+  TfgAssert.IsNotNil(Value);
+  TfgAssert.IsNotNil(Model);
+  TfgAssert.IsNotNil(Model.Images);
 
   Model.Images := Value;
 end;
 
 procedure TfgCustomFlipView.SetItemIndex(const Value: Integer);
 begin
-  AssertIsNotNil(Model);
+  TfgAssert.IsNotNil(Model);
 
   Model.ItemIndex := Value;
 end;
@@ -468,7 +468,7 @@ end;
 
 procedure TfgCustomFlipView.SetOnFinishChanging(const Value: TNotifyEvent);
 begin
-  AssertIsNotNil(Model);
+  TfgAssert.IsNotNil(Model);
 
   Model.OnFinishChanging := Value;
 end;
@@ -480,7 +480,7 @@ end;
 
 procedure TfgCustomFlipView.SetOnStartChanging(const Value: TfgChangingImageEvent);
 begin
-  AssertIsNotNil(Model);
+  TfgAssert.IsNotNil(Model);
 
   Model.OnStartChanging := Value;
 end;
@@ -492,25 +492,25 @@ end;
 
 procedure TfgCustomFlipView.SetSlideShowOptions(const Value: TfgFlipViewSlideShowOptions);
 begin
-  AssertIsNotNil(Value);
-  AssertIsNotNil(Model);
-  AssertIsNotNil(Model.SlideShowOptions);
+  TfgAssert.IsNotNil(Value);
+  TfgAssert.IsNotNil(Model);
+  TfgAssert.IsNotNil(Model.SlideShowOptions);
 
   Model.SlideShowOptions := Value;
 end;
 
 procedure TfgCustomFlipView.SetSlidingOptions(const Value: TfgFlipViewSlideOptions);
 begin
-  AssertIsNotNil(Value);
-  AssertIsNotNil(Model);
-  AssertIsNotNil(Model.SlideOptions);
+  TfgAssert.IsNotNil(Value);
+  TfgAssert.IsNotNil(Model);
+  TfgAssert.IsNotNil(Model.SlideOptions);
 
   Model.SlideOptions := Value;
 end;
 
 procedure TfgCustomFlipView.StartChanging;
 begin
-  AssertIsNotNil(FSlideShowTimer);
+  TfgAssert.IsNotNil(FSlideShowTimer);
 
   FSlideShowTimer.Enabled := False;
 end;
@@ -523,7 +523,7 @@ end;
 
 procedure TfgCustomFlipView.FinishChanging;
 begin
-  AssertIsNotNil(FSlideShowTimer);
+  TfgAssert.IsNotNil(FSlideShowTimer);
 
   FSlideShowTimer.Enabled := CanSlideShow;
 end;
@@ -578,8 +578,8 @@ end;
 
 function TfgFlipViewModel.GetCurrentImage: TBitmap;
 begin
-  AssertIsNotNil(FImages);
-  AssertInRange(ItemIndex, -1, ImagesCount - 1);
+  TfgAssert.IsNotNil(FImages);
+  TfgAssert.InRange(ItemIndex, -1, ImagesCount - 1);
 
   if InRange(ItemIndex, 0, ImagesCount - 1) then
     Result := FImages[ItemIndex].Bitmap
@@ -589,7 +589,7 @@ end;
 
 function TfgFlipViewModel.GetImageCount: Integer;
 begin
-  AssertIsNotNil(FImages);
+  TfgAssert.IsNotNil(FImages);
 
   Result := FImages.Count;
 end;
@@ -602,7 +602,7 @@ end;
 procedure TfgFlipViewModel.HandlerImagesChanged(Collection: TfgCollection; Item: TCollectionItem;
   const Action: TfgCollectionNotification);
 begin
-  AssertIsNotNil(Item);
+  TfgAssert.IsNotNil(Item);
   if Action = TfgCollectionNotification.Updated then
     UpdateCurrentImage;
   if (Action = TfgCollectionNotification.Added) and (ItemIndex = -1) then
@@ -635,14 +635,14 @@ end;
 
 procedure TfgFlipViewModel.SetEffectOptions(const Value: TfgFlipViewEffectOptions);
 begin
-  AssertIsNotNil(Value);
+  TfgAssert.IsNotNil(Value);
 
   FEffectOptions.Assign(Value);
 end;
 
 procedure TfgFlipViewModel.SetImages(const Value: TfgImageCollection);
 begin
-  AssertIsNotNil(Value);
+  TfgAssert.IsNotNil(Value);
 
   FImages.Assign(Value);
 end;
@@ -667,14 +667,14 @@ end;
 
 procedure TfgFlipViewModel.SetSlideShowOptions(const Value: TfgFlipViewSlideShowOptions);
 begin
-  AssertIsNotNil(Value);
+  TfgAssert.IsNotNil(Value);
 
   FSlideShowOptions.Assign(Value);
 end;
 
 procedure TfgFlipViewModel.SetSlidingOptions(const Value: TfgFlipViewSlideOptions);
 begin
-  AssertIsNotNil(Value);
+  TfgAssert.IsNotNil(Value);
 
   FSlidingOptions.Assign(Value);
 end;

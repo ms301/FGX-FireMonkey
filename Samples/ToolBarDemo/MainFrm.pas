@@ -16,7 +16,7 @@ type
     fgToolBarSeparator1: TfgToolBarSeparator;
     fgToolBarButton3: TfgToolBarButton;
     fgToolBarButton4: TfgToolBarButton;
-    ImageList1: TImageList;
+    ImageList26: TImageList;
     fgToolBarDivider1: TfgToolBarDivider;
     fgToolBarPopupButton2: TfgToolBarPopupButton;
     PopupMenu1: TPopupMenu;

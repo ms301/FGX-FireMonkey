@@ -107,9 +107,9 @@ procedure TfgFlipViewEffectPresentation.RecreateEffect;
 var
   EffectClass: TfgImageFXEffectClass;
 begin
-  AssertIsNotNil(Model);
-  AssertIsNotNil(Model.EffectOptions);
-  AssertIsNotNil(Model.EffectOptions.TransitionEffectClass);
+  TfgAssert.IsNotNil(Model);
+  TfgAssert.IsNotNil(Model.EffectOptions);
+  TfgAssert.IsNotNil(Model.EffectOptions.TransitionEffectClass);
 
   // We don't recreat effect, if current effect class is the same as a Options class.
   EffectClass := Model.EffectOptions.TransitionEffectClass;

@@ -36,7 +36,7 @@ package fgx;
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'Extensions for FM (FireMonkey)'}
-{$LIBSUFFIX '230'}
+{$LIBSUFFIX '240'}
 {$IMPLICITBUILD OFF}
 
 requires
@@ -70,6 +70,8 @@ contains
   FGX.FlipView.Effect in 'FGX.FlipView.Effect.pas',
   FGX.FlipView.Sliding in 'FGX.FlipView.Sliding.pas',
   FGX.FlipView.Presentation in 'FGX.FlipView.Presentation.pas',
-  FGX.Toasts in 'FGX.Toasts.pas';
+  FGX.Toasts in 'FGX.Toasts.pas',
+  FGX.Types.StateValue in 'FGX.Types.StateValue.pas';
 
 end.
+

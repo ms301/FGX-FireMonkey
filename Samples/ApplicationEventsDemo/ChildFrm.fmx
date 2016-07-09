@@ -9,8 +9,30 @@ object FormChild: TFormChild
   FormFactor.Devices = [Desktop]
   OnClose = FormClose
   DesignerMasterStyle = 0
-  object Label1: TLabel
+  object Layout1: TLayout
     Align = Center
-    Text = 'Just another form'
+    Size.Width = 150.000000000000000000
+    Size.Height = 71.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 1
+    object Label1: TLabel
+      Align = Top
+      AutoSize = True
+      Size.Width = 150.000000000000000000
+      Size.Height = 16.000000000000000000
+      Size.PlatformDefault = False
+      Text = 'Just another form'
+      TabOrder = 0
+    end
+    object Button1: TButton
+      Align = Bottom
+      Position.Y = 37.000000000000000000
+      Size.Width = 150.000000000000000000
+      Size.Height = 34.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      Text = 'Close form'
+      OnClick = Button1Click
+    end
   end
 end

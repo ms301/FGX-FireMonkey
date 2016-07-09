@@ -57,7 +57,7 @@ begin
   RegisterComponents(rsStyleObjects, [TStyleObject, TSubImage, TActiveStyleObject, TTabStyleObject, TCheckStyleObject,
     TButtonStyleObject, TSystemButtonObject, TStyleTextObject, TStyleTextAnimation,
     TActiveStyleTextObject, TTabStyleTextObject, TButtonStyleTextObject, TActiveOpacityObject,
-    TBrushObject, TBitmapObject, TFontObject, TPathObject, TColorObject, TStyleTag,
+    TBrushObject, TBitmapObject, TFontObject, TPathObject, TColorObject, TStyleTag, TStyleDescription,
     // New XE6 objects
     TTintedButtonStyleObject, TTintedStyleObject, TMaskedImage, TActiveMaskedImage,
     TSwitchTextObject, TCustomSwitchObject, TSwitchObject, TBitmapSwitchObject

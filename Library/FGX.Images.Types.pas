@@ -27,6 +27,8 @@ type
     function GetImageCollectionItem(const Index: Integer): TfgImageCollectionItem; overload;
     function GetImageCollectionItem(const Index: string): TfgImageCollectionItem; overload;
   public
+    function AddImage(const ABitmap: TBitmap; const AName: string): TfgImageCollectionItem; overload;
+    function AddImage: TfgImageCollectionItem; overload;
     property Images[const Index: Integer]: TfgImageCollectionItem read GetImageCollectionItem; default;
     property Images[const Index: string]: TfgImageCollectionItem read GetImageCollectionItem; default;
   end;
@@ -109,6 +111,18 @@ end;
 function TfgImageCollection.GetImageCollectionItem(const Index: Integer): TfgImageCollectionItem;
 begin
   Result := Items[Index] as TfgImageCollectionItem;
+end;
+
+function TfgImageCollection.AddImage(const ABitmap: TBitmap; const AName: string): TfgImageCollectionItem;
+begin
+  Result := Add as TfgImageCollectionItem;
+  Result.Bitmap := ABitmap;
+  Result.Name := AName;
+end;
+
+function TfgImageCollection.AddImage: TfgImageCollectionItem;
+begin
+  Result := Add as TfgImageCollectionItem;
 end;
 
 function TfgImageCollection.GetImageCollectionItem(const Index: string): TfgImageCollectionItem;

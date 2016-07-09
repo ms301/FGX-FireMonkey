@@ -60,11 +60,14 @@ type
     FShadowColor: TAlphaColor;
     FShadowView: UIView;
     FMessageLabel: UILabel;
+    FMessageColor: TAlphaColor;
     FDelegate: TiOSDelegate;
     FTapRecognizer: UITapGestureRecognizer;
     procedure DoOrientationChanged(const Sender: TObject; const M: TMessage);
   protected
     procedure MessageChanged; override;
+    procedure ThemeChanged; override;
+    procedure UpdateTheme; virtual;
   public
     constructor Create(const AOwner: TObject); override;
     destructor Destroy; override;
@@ -81,10 +84,13 @@ type
     FShadowColor: TAlphaColor;
     FShadowView: UIView;
     FMessageLabel: UILabel;
+    FMessageColor: TAlphaColor;
     procedure DoOrientationChanged(const Sender: TObject; const M: TMessage);
   protected
     procedure MessageChanged; override;
     procedure ProgressChanged; override;
+    procedure ThemeChanged; override;
+    procedure UpdateTheme; virtual;
   public
     constructor Create(const AOwner: TObject); override;
     destructor Destroy; override;
@@ -136,6 +142,7 @@ begin
 
   inherited Create(AOwner);
   FShadowColor := MakeColor(0, 0, 0, SHADOW_ALPHA);
+  FMessageColor := TAlphaColorRec.White;
 
   FDelegate := TiOSDelegate.Create(Self);
   FTapRecognizer := TUITapGestureRecognizer.Create;
@@ -160,7 +167,7 @@ begin
   // Creating message label
   FMessageLabel := TUILabel.Create;
   FMessageLabel.setUserInteractionEnabled(False);
-  FMessageLabel.setTextColor(TUIColor.whiteColor);
+  FMessageLabel.setTextColor(TUIColor.MakeColor(FMessageColor));
   FMessageLabel.setBackgroundColor(TUIColor.clearColor);
   FMessageLabel.setFont(FMessageLabel.font.fontWithSize(MESSAGE_FONT_SIZE));
   FMessageLabel.setTextAlignment(UITextAlignmentCenter);
@@ -172,6 +179,7 @@ begin
   // Adding Shadow to application
   SharedApplication.keyWindow.rootViewController.view.AddSubview(FShadowView);
   Realign;
+  UpdateTheme;
 
   { Message subscription }
   TMessageManager.DefaultManager.SubscribeToMessage(TOrientationChangedMessage, DoOrientationChanged);
@@ -246,6 +254,32 @@ begin
   Application.ProcessMessages;
 end;
 
+procedure TiOSNativeActivityDialog.ThemeChanged;
+begin
+  inherited;
+  UpdateTheme;
+end;
+
+procedure TiOSNativeActivityDialog.UpdateTheme;
+begin
+  case Theme of
+    TfgDialogTheme.Auto,
+    TfgDialogTheme.Dark:
+    begin
+      FShadowColor := MakeColor(0, 0, 0, SHADOW_ALPHA);
+      FMessageColor := TAlphaColorRec.White;
+    end;
+    TfgDialogTheme.Light:
+    begin
+      FShadowColor := MakeColor(255, 255, 255, SHADOW_ALPHA);
+      FMessageColor := TAlphaColorRec.Black;
+    end;
+  end;
+
+  FShadowView.setBackgroundColor(TUIColor.MakeColor(FShadowColor));
+  FMessageLabel.setTextColor(TUIColor.MakeColor(FMessageColor));
+end;
+
 { TiOSNativeProgressDialog }
 
 constructor TiOSNativeProgressDialog.Create(const AOwner: TObject);
@@ -257,6 +291,7 @@ begin
 
   inherited Create(AOwner);
   FShadowColor := MakeColor(0, 0, 0, SHADOW_ALPHA);
+  FMessageColor := TAlphaColorRec.White;
 
   FDelegate := TiOSDelegate.Create(Self);
   FTapRecognizer := TUITapGestureRecognizer.Create;
@@ -289,6 +324,7 @@ begin
   // Adding Shadow to application
   SharedApplication.keyWindow.rootViewController.view.AddSubview(FShadowView);
   Realign;
+  UpdateTheme;
 
   { Message subscription }
   TMessageManager.DefaultManager.SubscribeToMessage(TOrientationChangedMessage, DoOrientationChanged);
@@ -384,6 +420,32 @@ begin
 
   // We should call it once for starting animation
   Application.ProcessMessages;
+end;
+
+procedure TiOSNativeProgressDialog.ThemeChanged;
+begin
+  inherited;
+  UpdateTheme;
+end;
+
+procedure TiOSNativeProgressDialog.UpdateTheme;
+begin
+  case Theme of
+    TfgDialogTheme.Auto,
+    TfgDialogTheme.Dark:
+    begin
+      FShadowColor := MakeColor(0, 0, 0, SHADOW_ALPHA);
+      FMessageColor := TAlphaColorRec.White;
+    end;
+    TfgDialogTheme.Light:
+    begin
+      FShadowColor := MakeColor(255, 255, 255, SHADOW_ALPHA);
+      FMessageColor := TAlphaColorRec.Black;
+    end;
+  end;
+
+  FShadowView.setBackgroundColor(TUIColor.MakeColor(FShadowColor));
+  FMessageLabel.setTextColor(TUIColor.MakeColor(FMessageColor));
 end;
 
 { TiOSShadow }

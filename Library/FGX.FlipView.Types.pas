@@ -60,8 +60,8 @@ type
   protected
     procedure AssignTo(Dest: TPersistent); override;
   public
-    constructor Create(AOwner: TComponent); override;
-    function IsDefaultValues: Boolean; override;
+    constructor Create(AOwner: TPersistent); override;
+    function AreDefaultValues: Boolean; override;
   published
     property Direction: TfgSlideDirection read FDirection write SetSlideDirection default DefaultDirection;
     property Duration: Single read FDuration write SetDuration stored IsDurationStored nodefault;
@@ -89,8 +89,8 @@ type
   protected
     procedure AssignTo(Dest: TPersistent); override;
   public
-    constructor Create(AOwner: TComponent); override;
-    function IsDefaultValues: Boolean; override;
+    constructor Create(AOwner: TPersistent); override;
+    function AreDefaultValues: Boolean; override;
     property TransitionEffectClass: TfgImageFXEffectClass read GetTransitionEffectClass;
   published
     property Kind: TfgTransitionEffectKind read FKind write SetKind default DefaultKind;
@@ -111,8 +111,8 @@ type
   protected
     procedure AssignTo(Dest: TPersistent); override;
   public
-    constructor Create(AOwner: TComponent); overload; override;
-    function IsDefaultValues: Boolean; override;
+    constructor Create(AOwner: TPersistent); overload; override;
+    function AreDefaultValues: Boolean; override;
   published
     property Duration: Integer read FDuration write SetDuration default DefaultDuration;
     property Enabled: Boolean read FEnabled write SetEnabled default DefaultEnabled;
@@ -135,7 +135,7 @@ const
 
 procedure TfgFlipViewSlideOptions.AssignTo(Dest: TPersistent);
 begin
-  AssertIsNotNil(Dest);
+  TfgAssert.IsNotNil(Dest);
 
   if Dest is TfgFlipViewSlideOptions then
   begin
@@ -146,14 +146,14 @@ begin
     inherited AssignTo(Dest);
 end;
 
-constructor TfgFlipViewSlideOptions.Create(AOwner: TComponent);
+constructor TfgFlipViewSlideOptions.Create(AOwner: TPersistent);
 begin
   inherited Create(AOwner);
   FDirection := DefaultDirection;
   FDuration := DefaultDuration;
 end;
 
-function TfgFlipViewSlideOptions.IsDefaultValues: Boolean;
+function TfgFlipViewSlideOptions.AreDefaultValues: Boolean;
 begin
   Result := (Direction = DefaultDirection) and not IsDurationStored;
 end;
@@ -189,7 +189,7 @@ procedure TfgFlipViewEffectOptions.AssignTo(Dest: TPersistent);
 var
   DestOptions: TfgFlipViewEffectOptions;
 begin
-  AssertIsNotNil(Dest);
+  TfgAssert.IsNotNil(Dest);
 
   if Dest is TfgFlipViewEffectOptions then
   begin
@@ -201,7 +201,7 @@ begin
     inherited AssignTo(Dest);
 end;
 
-constructor TfgFlipViewEffectOptions.Create(AOwner: TComponent);
+constructor TfgFlipViewEffectOptions.Create(AOwner: TPersistent);
 begin
   inherited Create(AOwner);
   FKind := DefaultKind;
@@ -220,10 +220,10 @@ begin
   else
     Result := TRANSITION_EFFECTS[Kind];
 
-  AssertIsNotNil(Result, 'TfgFlipViewEffectOptions.GetTransitionEffectClass must return class of effect.');
+  TfgAssert.IsNotNil(Result, 'TfgFlipViewEffectOptions.GetTransitionEffectClass must return class of effect.');
 end;
 
-function TfgFlipViewEffectOptions.IsDefaultValues: Boolean;
+function TfgFlipViewEffectOptions.AreDefaultValues: Boolean;
 begin
   Result := not IsDurationStored and (Kind = DefaultKind);
 end;
@@ -259,7 +259,7 @@ procedure TfgFlipViewSlideShowOptions.AssignTo(Dest: TPersistent);
 var
   DestOptions: TfgFlipViewSlideShowOptions;
 begin
-  AssertIsNotNil(Dest);
+  TfgAssert.IsNotNil(Dest);
 
   if Dest is TfgFlipViewSlideShowOptions then
   begin
@@ -271,14 +271,14 @@ begin
     inherited AssignTo(Dest);
 end;
 
-constructor TfgFlipViewSlideShowOptions.Create(AOwner: TComponent);
+constructor TfgFlipViewSlideShowOptions.Create(AOwner: TPersistent);
 begin
   inherited Create(AOwner);
   FEnabled := DefaultEnabled;
   FDuration := DefaultDuration;
 end;
 
-function TfgFlipViewSlideShowOptions.IsDefaultValues: Boolean;
+function TfgFlipViewSlideShowOptions.AreDefaultValues: Boolean;
 begin
   Result := (Duration = DefaultDuration) and (Enabled = DefaultEnabled);
 end;

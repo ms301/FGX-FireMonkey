@@ -136,12 +136,12 @@ var
   Item: TFmxObject;
   Node: TTreeViewItemWithData;
 begin
-  AssertIsNotNil(FItemsList);
-  AssertIsNotNil(FComponent);
-  AssertIsNotNil(Designer);
-  AssertIsNotNil(SelectedNode);
-  AssertInRange(ComboBoxItemsInfo.ItemIndex, 0, ComboBoxItemsInfo.Items.Count - 1);
-  AssertInRange(ComboBoxItemsInfo.ItemIndex, 0, FItemsList.Count - 1);
+  TfgAssert.IsNotNil(FItemsList);
+  TfgAssert.IsNotNil(FComponent);
+  TfgAssert.IsNotNil(Designer);
+  TfgAssert.IsNotNil(SelectedNode);
+  TfgAssert.InRange(ComboBoxItemsInfo.ItemIndex, 0, ComboBoxItemsInfo.Items.Count - 1);
+  TfgAssert.InRange(ComboBoxItemsInfo.ItemIndex, 0, FItemsList.Count - 1);
 
   ItemClass := FItemsList[ComboBoxItemsInfo.ItemIndex].ItemClass;
   Item := ItemClass.Create(Designer.GetRoot);
@@ -197,11 +197,11 @@ var
   NewIndex: Integer;
   ItemInformation: TfgItemInformation;
 begin
-  AssertIsNotNil(FItemsList);
-  AssertIsNotNil(FComponent);
-  AssertIsNotNil(Designer);
-  AssertInRange(ComboBoxItemsInfo.ItemIndex, 0, ComboBoxItemsInfo.Items.Count - 1);
-  AssertInRange(ComboBoxItemsInfo.ItemIndex, 0, FItemsList.Count - 1);
+  TfgAssert.IsNotNil(FItemsList);
+  TfgAssert.IsNotNil(FComponent);
+  TfgAssert.IsNotNil(Designer);
+  TfgAssert.InRange(ComboBoxItemsInfo.ItemIndex, 0, ComboBoxItemsInfo.Items.Count - 1);
+  TfgAssert.InRange(ComboBoxItemsInfo.ItemIndex, 0, FItemsList.Count - 1);
 
   ItemInformation := FItemsList[ComboBoxItemsInfo.ItemIndex];
   ItemClass := ItemInformation.ItemClass;
@@ -250,7 +250,7 @@ procedure TfgFormItemsDesigner.ActionCopyExecute(Sender: TObject);
 var
   ClipBoardService: IFMXClipboardService;
 begin
-  AssertIsNotNil(SelectedNode);
+  TfgAssert.IsNotNil(SelectedNode);
 
   if TPlatformServices.Current.SupportsPlatformService(IFMXClipboardService, ClipBoardService) then
     ClipBoardService.SetClipboard(TValue.From<TTreeViewItemWithData>(SelectedNode));
@@ -262,7 +262,7 @@ var
   OldIndex: Integer;
   Node: TTreeViewItemWithData;
 begin
-  AssertIsNotNil(SelectedNode);
+  TfgAssert.IsNotNil(SelectedNode);
 
   ItemComponent := SelectedNode.Item;
   try
@@ -291,7 +291,7 @@ end;
 
 procedure TfgFormItemsDesigner.ActionUpExecute(Sender: TObject);
 begin
-  AssertIsNotNil(SelectedNode);
+  TfgAssert.IsNotNil(SelectedNode);
 
   SetNodeIndex(SelectedNode, SelectedNode.Index - 1);
   ScrollToSelectedNode;
@@ -299,7 +299,7 @@ end;
 
 procedure TfgFormItemsDesigner.ActionDownExecute(Sender: TObject);
 begin
-  AssertIsNotNil(SelectedNode);
+  TfgAssert.IsNotNil(SelectedNode);
 
   SetNodeIndex(SelectedNode, SelectedNode.Index + 1);
   ScrollToSelectedNode;
@@ -329,7 +329,7 @@ begin
     begin
       SourceNode := Value.AsType<TTreeViewItemWithData>;
 
-      AssertIsNotNil(SourceNode.Item);
+      TfgAssert.IsNotNil(SourceNode.Item);
 
       NodeCopy := SourceNode.Clone(SourceNode.Owner) as TTreeViewItemWithData;
 
@@ -366,9 +366,9 @@ function TfgFormItemsDesigner.AddTreeNode(const ARootNode: TFmxObject; const AIt
 var
   Node: TTreeViewItemWithData;
 begin
-  AssertIsNotNil(AItem);
-  AssertIsNotNil(ARootNode);
-  AssertIsClass(AItem, TControl);
+  TfgAssert.IsNotNil(AItem);
+  TfgAssert.IsNotNil(ARootNode);
+  TfgAssert.IsClass(AItem, TControl);
 
   Node := TTreeViewItemWithData.Create(Self);
   with Node do
@@ -398,7 +398,7 @@ function TfgFormItemsDesigner.DefineItemCaption(const AItem: TFmxObject): string
 var
   Caption: string;
 begin
-  AssertIsNotNil(AItem);
+  TfgAssert.IsNotNil(AItem);
 
   if GetPropInfo(AItem, 'text') <> nil then
     Caption := GetStrProp(AItem, 'text')
@@ -431,7 +431,7 @@ procedure TfgFormItemsDesigner.FillClassItemsInfo;
 var
   Item: TfgItemInformation;
 begin
-  AssertIsNotNil(FItemsList);
+  TfgAssert.IsNotNil(FItemsList);
 
   // Скрываем выбор класса итема, если есть всего один вариант
   ComboBoxItemsInfo.Visible := FItemsList.Count > 1;
@@ -453,7 +453,8 @@ var
   Found: Boolean;
   CurrentObject: TFmxObject;
 begin
-  AssertIsNotNil(AObject);
+  TfgAssert.IsNotNil(AObject);
+
   Found := False;
   CurrentObject := AObject;
   while not Found and (CurrentObject <> nil) do
@@ -529,7 +530,7 @@ procedure TfgFormItemsDesigner.RebuildTree;
   end;
 
 begin
-  AssertIsNotNil(FComponent);
+  TfgAssert.IsNotNil(FComponent);
 
   TreeView.Clear;
   TreeView.BeginUpdate;
@@ -550,8 +551,8 @@ end;
 
 procedure TfgFormItemsDesigner.ReselectItemComponent(const AItem: TFmxObject);
 begin
-  AssertIsNotNil(AItem);
-  AssertIsNotNil(Designer);
+  TfgAssert.IsNotNil(AItem);
+  TfgAssert.IsNotNil(Designer);
 
   if Designer <> nil then
     Designer.SelectComponent(AItem);
@@ -587,9 +588,9 @@ procedure TfgFormItemsDesigner.SetItemVisible(const ANodeStyleObject: TObject; c
 var
   Node: TTreeViewItemWithData;
 begin
-  AssertIsNotNil(ANodeStyleObject);
-  AssertIsNotNil(Designer);
-  AssertIsClass(ANodeStyleObject, TFmxObject);
+  TfgAssert.IsNotNil(ANodeStyleObject);
+  TfgAssert.IsNotNil(Designer);
+  TfgAssert.IsClass(ANodeStyleObject, TFmxObject);
 
   Node := FindParentNode(TFmxObject(ANodeStyleObject));
   if Node <> nil then
@@ -605,12 +606,12 @@ procedure TfgFormItemsDesigner.SetNodeIndex(const ANode: TTreeViewItemWithData; 
 var
   Item: TFmxObject;
 begin
-  AssertIsNotNil(ANode);
-  AssertIsNotNil(ANode.Item);
-  AssertInRange(AIndex, 0, ANode.Parent.ChildrenCount - 1);
-  AssertIsNotNil(TreeView);
-  AssertIsNotNil(SelectedNode);
-  AssertIsNotNil(Component);
+  TfgAssert.IsNotNil(ANode);
+  TfgAssert.IsNotNil(ANode.Item);
+  TfgAssert.InRange(AIndex, 0, ANode.Parent.ChildrenCount - 1);
+  TfgAssert.IsNotNil(TreeView);
+  TfgAssert.IsNotNil(SelectedNode);
+  TfgAssert.IsNotNil(Component);
 
   SelectedNode.Index := AIndex;
   Item := ANode.Item;
@@ -623,8 +624,8 @@ end;
 
 procedure TfgFormItemsDesigner.TreeViewChange(Sender: TObject);
 begin
-  AssertIsNotNil(TreeView);
-  AssertIsNotNil(Designer);
+  TfgAssert.IsNotNil(TreeView);
+  TfgAssert.IsNotNil(Designer);
 
   if (SelectedNode <> nil) and (SelectedNode.Item <> nil) then
     ReselectItemComponent(SelectedNode.Item);
@@ -672,9 +673,9 @@ procedure TfgFormItemsDesigner.UpdateNodeVisibilityButton(const ANode: TTreeView
 var
   NodeVisible: Boolean;
 begin
-  AssertIsNotNil(ANode);
-  AssertIsNotNil(ANode.Item);
-  AssertIsClass(ANode.Item, TControl);
+  TfgAssert.IsNotNil(ANode);
+  TfgAssert.IsNotNil(ANode.Item);
+  TfgAssert.IsClass(ANode.Item, TControl);
 
   NodeVisible := TControl(ANode.Item).Visible;
   ANode.StylesData['visible.visible'] := NodeVisible;

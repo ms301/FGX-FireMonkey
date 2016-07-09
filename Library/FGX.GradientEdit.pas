@@ -159,7 +159,7 @@ type
 implementation
 
 uses
-  System.Math.Vectors, System.SysUtils, System.Math, FMX.Colors, FMX.Types, FGX.Graphics, FGX.Helpers;
+  System.Math.Vectors, System.SysUtils, System.Math, FMX.Colors, FMX.Types, FGX.Graphics, FGX.Helpers, FGX.Asserts;
 
 { TfgCustomGradientEdit }
 
@@ -191,7 +191,7 @@ end;
 
 procedure TfgCustomGradientEdit.DoPointAdded(AGradientPoint: TGradientPoint);
 begin
-  Assert(AGradientPoint <> nil);
+  TfgAssert.IsNotNil(AGradientPoint);
 
   if Assigned(FOnPointAdded) then
     FOnPointAdded(Self, AGradientPoint);
@@ -199,7 +199,7 @@ end;
 
 procedure TfgCustomGradientEdit.DoPointDblClick(const AGradientPoint: TGradientPoint);
 begin
-  Assert(AGradientPoint <> nil);
+  TfgAssert.IsNotNil(AGradientPoint);
 
   if Assigned(FOnPointDblClick) then
     FOnPointDblClick(Self, AGradientPoint);
@@ -207,7 +207,7 @@ end;
 
 procedure TfgCustomGradientEdit.DoPointClick(const AGradientPoint: TGradientPoint);
 begin
-  Assert(AGradientPoint <> nil);
+  TfgAssert.IsNotNil(AGradientPoint);
 
   if Assigned(FOnPointClick) then
     FOnPointClick(Self, AGradientPoint);
@@ -245,10 +245,10 @@ var
   SelectedTriangle: TPolygon;
   FillRect: TRectF;
 begin
-  Assert(InRange(AIndex, 0, FGradient.Points.Count - 1));
+  TfgAssert.InRange(AIndex, 0, FGradient.Points.Count - 1);
 
   Canvas.Stroke.Color := BorderColor;
-  Canvas.StrokeThickness := 1;
+  Canvas.Stroke.Thickness := 1;
   Canvas.Stroke.Kind := TBrushKind.Solid;
   Canvas.Fill.Kind := TBrushKind.Solid;
 
@@ -508,8 +508,8 @@ var
   PointsCount: Integer;
   OldPointIndex: Integer;
 begin
-  Assert(FGradient <> nil);
-  Assert(APoint <> nil);
+  TfgAssert.IsNotNil(FGradient);
+  TfgAssert.IsNotNil(APoint);
   Assert(APoint.Collection = FGradient.Points);
 
   I := 0;

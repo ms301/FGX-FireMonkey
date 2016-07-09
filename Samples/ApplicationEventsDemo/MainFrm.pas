@@ -32,6 +32,17 @@ type
     cbStyleChanged: TCheckBox;
     Button4: TButton;
     StyleBookResource: TStyleBook;
+    PresentedScrollBox1: TPresentedScrollBox;
+    GroupBox2: TGroupBox;
+    cbActivityResult: TCheckBox;
+    Button5: TButton;
+    cbFormActivated: TCheckBox;
+    cbFormDeactivated: TCheckBox;
+    cbFormBeforeShown: TCheckBox;
+    cbFormCreate: TCheckBox;
+    cbFormDestroy: TCheckBox;
+    GroupBox3: TGroupBox;
+    cbScaleChanged: TCheckBox;
     procedure fgApplicationEventsActionExecute(Action: TBasicAction; var Handled: Boolean);
     procedure fgApplicationEventsActionUpdate(Action: TBasicAction; var Handled: Boolean);
     procedure fgApplicationEventsException(Sender: TObject; E: Exception);
@@ -52,6 +63,16 @@ type
     procedure Button4Click(Sender: TObject);
     procedure MultiViewPresenterChanging(Sender: TObject; var PresenterClass: TMultiViewPresentationClass);
     procedure FormShow(Sender: TObject);
+    procedure fgApplicationEventsActivityResult(Sender: TObject; const ARequestCode, AResultCode: Integer;
+      const AIntent: TIntent);
+    procedure Button5Click(Sender: TObject);
+    procedure fgApplicationEventsFormActivate(Sender: TObject; const AForm: TCommonCustomForm);
+    procedure fgApplicationEventsFormBeforeShown(Sender: TObject; const AForm: TCommonCustomForm);
+    procedure fgApplicationEventsFormDeactivate(Sender: TObject; const AForm: TCommonCustomForm);
+    procedure fgApplicationEventsSaveState(Sender: TObject);
+    procedure fgApplicationEventsFormCreate(Sender: TObject; const AForm: TCommonCustomForm);
+    procedure fgApplicationEventsFormDestroy(Sender: TObject; const AForm: TCommonCustomForm);
+    procedure fgApplicationEventsScaleChanged(Sender: TObject);
   private
     procedure Log(const AFormat: string; Args: array of const); overload;
     procedure Log(const AFormat: string); overload;
@@ -66,7 +87,7 @@ implementation
 
 {$R *.fmx}
 
-uses ChildFrm, FMX.MultiView.Presentations;
+uses ChildFrm, FMX.MultiView.Presentations {$IFDEF ANDROID}, AndroidApi.Helpers, AndroidApi.JNI.GraphicsContentViewText{$ENDIF};
 
 procedure TFormMain.BtnClearLogClick(Sender: TObject);
 begin
@@ -104,6 +125,19 @@ begin
     StyleBook := nil;
 end;
 
+procedure TFormMain.Button5Click(Sender: TObject);
+{$IFDEF ANDROID}
+var
+  Intent: JIntent;
+begin
+	Intent := TJIntent.JavaClass.init(StringToJString('android.media.action.IMAGE_CAPTURE'));
+  TAndroidHelper.Activity.startActivityForResult(Intent, 5);
+end;
+{$ELSE}
+begin
+end;
+{$ENDIF}
+
 procedure TFormMain.fgApplicationEventsActionExecute(Action: TBasicAction; var Handled: Boolean);
 begin
   if cbOnActionExecute.IsChecked then
@@ -116,15 +150,54 @@ begin
     Log('OnActionUpdate');
 end;
 
+procedure TFormMain.fgApplicationEventsActivityResult(Sender: TObject; const ARequestCode, AResultCode: Integer;
+  const AIntent: TIntent);
+begin
+{$IFDEF ANDROID}
+  if cbActivityResult.IsChecked then
+    Log('OnActivityResult: RequestCode=%d ResultCode=%d Intent="%s"', [ARequestCode, AResultCode, JStringToString(AIntent.toString)]);
+{$ENDIF}
+end;
+
 procedure TFormMain.fgApplicationEventsException(Sender: TObject; E: Exception);
 begin
   if cbOnException.IsChecked then
     Log('OnException');
 end;
 
+procedure TFormMain.fgApplicationEventsFormActivate(Sender: TObject; const AForm: TCommonCustomForm);
+begin
+  if cbFormActivated.IsChecked then
+    Log('OnFormActivate: name="%s"', [AForm.Name]);
+end;
+
+procedure TFormMain.fgApplicationEventsFormBeforeShown(Sender: TObject; const AForm: TCommonCustomForm);
+begin
+  if cbFormBeforeShown.IsChecked then
+    Log('OnFormBeforeShown: name="%s"', [AForm.Name]);
+end;
+
+procedure TFormMain.fgApplicationEventsFormCreate(Sender: TObject; const AForm: TCommonCustomForm);
+begin
+  if cbFormCreate.IsChecked then
+    Log('OnFormCreate: name="%s"', [AForm.Name]);
+end;
+
+procedure TFormMain.fgApplicationEventsFormDeactivate(Sender: TObject; const AForm: TCommonCustomForm);
+begin
+  if cbFormDeactivated.IsChecked then
+    Log('OnFormDeactivate: name="%s"', [AForm.Name]);
+end;
+
+procedure TFormMain.fgApplicationEventsFormDestroy(Sender: TObject; const AForm: TCommonCustomForm);
+begin
+  if cbFormDestroy.IsChecked then
+    Log('OnFormDestroy: name="%s"', [AForm.Name]);
+end;
+
 procedure TFormMain.fgApplicationEventsFormReleased(Sender: TObject; const AForm: TCommonCustomForm);
 begin
-  if cbFormReleased.IsChecked then
+  if cbFormReleased.IsChecked and not (csDestroying in ComponentState) then
     Log('OnFormReleased: name="%s"', [AForm.Name]);
 end;
 
@@ -179,6 +252,18 @@ begin
     end;
     Log('OnOrientationChanged=%s', [OrientationText]);
   end;
+end;
+
+procedure TFormMain.fgApplicationEventsSaveState(Sender: TObject);
+begin
+  if cbFormActivated.IsChecked then
+    Log('OnSaveState');
+end;
+
+procedure TFormMain.fgApplicationEventsScaleChanged(Sender: TObject);
+begin
+  if cbScaleChanged.IsChecked then
+    Log('OnScaleChanged');
 end;
 
 function TFormMain.fgApplicationEventsStateChange(AAppEvent: TApplicationEvent; AContext: TObject): Boolean;

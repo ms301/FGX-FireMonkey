@@ -90,7 +90,7 @@ end;
 
 function TfgButtonsCollection.GetButton(const Index: Integer): TfgButtonsCollectionItem;
 begin
-  AssertInRange(Index, 0, Count - 1);
+  TfgAssert.InRange(Index, 0, Count - 1);
 
   Result := Items[Index] as TfgButtonsCollectionItem;
 end;
@@ -102,7 +102,7 @@ end;
 
 procedure TfgButtonsCollection.Notify(Item: TCollectionItem; Action: TCollectionNotification);
 begin
-  AssertIsClass(Item, TfgButtonsCollectionItem);
+  TfgAssert.IsClass(Item, TfgButtonsCollectionItem);
 
   inherited Notify(Item, Action);
   if Action = TCollectionNotification.cnAdded then
@@ -129,15 +129,15 @@ end;
 
 function TfgButtonsCollectionItem.Collection: TfgButtonsCollection;
 begin
-  AssertIsNotNil(Collection);
+  TfgAssert.IsNotNil(Collection);
 
   Result := Collection as TfgButtonsCollection;
 end;
 
 constructor TfgButtonsCollectionItem.Create(Collection: TCollection);
 begin
-  AssertIsNotNil(Collection);
-  AssertIsClass(Collection, TfgButtonsCollection);
+  TfgAssert.IsNotNil(Collection);
+  TfgAssert.IsClass(Collection, TfgButtonsCollection);
 
   inherited Create(Collection);
   FVisible := DefaultVisible;

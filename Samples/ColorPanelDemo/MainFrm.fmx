@@ -48,7 +48,7 @@ object FormMain: TFormMain
       Viewport.Width = 211.000000000000000000
       Viewport.Height = 356.000000000000000000
       object ListBoxGroupHeader1: TListBoxGroupHeader
-        TextSettings.Font.Style = [fsBold]
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
         StyledSettings = [Family, Size, FontColor, Other]
         Size.Width = 211.000000000000000000
         Size.Height = 35.000000000000000000
@@ -156,7 +156,7 @@ object FormMain: TFormMain
         end
       end
       object ListBoxGroupHeader2: TListBoxGroupHeader
-        TextSettings.Font.Style = [fsBold]
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
         StyledSettings = [Family, Size, FontColor, Other]
         Position.Y = 175.000000000000000000
         Size.Width = 211.000000000000000000
@@ -174,7 +174,6 @@ object FormMain: TFormMain
         Text = 'Preset Kind'
         object cbPresetKind: TComboBox
           Align = Right
-          DisableFocusEffect = False
           ItemIndex = 1
           Margins.Top = 6.000000000000000000
           Margins.Right = 5.000000000000000000
@@ -207,7 +206,7 @@ object FormMain: TFormMain
         end
       end
       object ListBoxGroupHeader3: TListBoxGroupHeader
-        TextSettings.Font.Style = [fsBold]
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
         StyledSettings = [Family, Size, FontColor, Other]
         Position.Y = 245.000000000000000000
         Size.Width = 211.000000000000000000

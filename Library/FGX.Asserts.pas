@@ -1,13 +1,13 @@
-{*********************************************************************
- *
- * This Source Code Form is subject to the terms of the Mozilla Public
- * License, v. 2.0. If a copy of the MPL was not distributed with this
- * file, You can obtain one at http://mozilla.org/MPL/2.0/.
- *
- * Autor: Brovin Y.D.
- * E-mail: y.brovin@gmail.com
- *
- ********************************************************************}
+{ *********************************************************************
+  *
+  * This Source Code Form is subject to the terms of the Mozilla Public
+  * License, v. 2.0. If a copy of the MPL was not distributed with this
+  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+  *
+  * Autor: Brovin Y.D.
+  * E-mail: y.brovin@gmail.com
+  *
+  ******************************************************************** }
 
 unit FGX.Asserts;
 
@@ -19,140 +19,266 @@ uses
   System.SysUtils;
 
 type
-  EAssertError = class(Exception);
+  EfgAssertError = class(Exception);
 
-resourcestring
-  SObjectIsNotNilError = 'The not nil object is required, but instead of it the empty is received. ';
-  SValueIsNotInRange = 'The current value "%f" is not in range [%f, %f]. ';
-  SValueLess = 'The current value "%f" less than [%f].';
-  SValueMore = 'The current value "%f" more than [%f].';
-  SValueIsNotRequriedClass = 'The current object has invalid class. Expected receive "%s", but "%s" is received. ';
-  SValuesIsNotEqual = 'Specified values "%d" and "%d" is not equal';
-  SValuesIsTrue = 'Specified values is not True.' ;
-  SValuesIsFalse = 'Specified values is not False.' ;
+type
 
-procedure AssertIsNotNil(const AValue: IInterface; const AMessage: string = ''); overload;
-procedure AssertIsNotNil(const AValue: TObject; const AMessage: string = ''); overload;
-procedure AssertIsNotNil(const AValue: TClass; const AMessage: string = ''); overload;
-procedure AssertInRange(const AValue, ALow, AHight: Integer; const AMessage: string = ''); overload;
-procedure AssertInRange(const AValue, ALow, AHight: Single; const AMessage: string = ''); overload;
-procedure AssertLessThan(const AValue, AHigh: Integer; const AMessage: string = ''); overload;
-procedure AssertLessThan(const AValue, AHigh: Single; const AMessage: string = ''); overload;
-procedure AssertMoreThan(const AValue, ALow: Integer; const AMessage: string = ''); overload;
-procedure AssertMoreThan(const AValue, ALow: Single; const AMessage: string = ''); overload;
-procedure AssertIsClass(const AValue: TObject; const AClass: TClass; const AMessage: string = '');
-procedure AssertEqual(const AValue1: Integer; const AValue2: Integer; const AMessage: string = '');
-procedure AssertIsTrue(const AValue: Boolean; const AMessage: string = '');
-procedure AssertIsFalse(const AValue: Boolean; const AMessage: string = '');
+  TfgAssert = class
+  public
+    class procedure IsTrue(const AValue: Boolean; const AMessage: string = '');
+    class procedure IsFalse(const AValue: Boolean; const AMessage: string = '');
+    class procedure IsNotNil(const AValue: IInterface; const AMessage: string = ''); overload;
+    class procedure IsNotNil(const AValue: TObject; const AMessage: string = ''); overload;
+    class procedure IsNotNil(const AValue: TClass; const AMessage: string = ''); overload;
+    class procedure IsClass(const AValue: TObject; const AClass: TClass; const AMessage: string = '');
+    class procedure Implements(const AValue: TObject; const AInterface: IInterface; const AMessage: string = '');
+    class procedure InRange(const AValue, ALow, AHight: Integer; const AMessage: string = ''); overload;
+    class procedure InRange(const AValue, ALow, AHight: Extended; const AMessage: string = ''); overload;
+    class procedure InRange(const AValue, ALow, AHight: Single; const AMessage: string = ''); overload;
+    class procedure StrickLessThan(const AValue, AHigh: Integer; const AMessage: string = ''); overload;
+    class procedure StrickLessThan(const AValue, AHigh: Extended; const AMessage: string = ''); overload;
+    class procedure StrickLessThan(const AValue, AHigh: Single; const AMessage: string = ''); overload;
+    class procedure StrickMoreThan(const AValue, ALow: Integer; const AMessage: string = ''); overload;
+    class procedure StrickMoreThan(const AValue, ALow: Extended; const AMessage: string = ''); overload;
+    class procedure StrickMoreThan(const AValue, ALow: Single; const AMessage: string = ''); overload;
+    class procedure LessAndEqualThan(const AValue, AHigh: Integer; const AMessage: string = ''); overload;
+    class procedure LessAndEqualThan(const AValue, AHigh: Extended; const AMessage: string = ''); overload;
+    class procedure LessAndEqualThan(const AValue, AHigh: Single; const AMessage: string = ''); overload;
+    class procedure MoreAndEqulThan(const AValue, ALow: Integer; const AMessage: string = ''); overload;
+    class procedure MoreAndEqulThan(const AValue, ALow: Extended; const AMessage: string = ''); overload;
+    class procedure MoreAndEqulThan(const AValue, ALow: Single; const AMessage: string = ''); overload;
+    class procedure AreEqual(const AValue1, AValue2: Integer; const AMessage: string = ''); overload;
+    class procedure AreEqual(const AValue1, AValue2: Extended; const AMessage: string = ''); overload;
+    class procedure AreEqual(const AValue1, AValue2: Single; const AMessage: string = ''); overload;
+  end;
 
 implementation
 
 uses
-  System.Math;
+  System.Math, System.Rtti;
 
-procedure AssertIsNotNil(const AValue: TObject; const AMessage: string = '');
+function IInterfaceToGUID(const AInterface: IInterface): TGUID;
+begin
+{ TODO -oBrovin Y.D. : Подумать о том, как сконвертировать интерфейс по ссылки в GUID }
+//  Result := TRttiInterfaceType(TRttiContext.Create.GetType(TypeInfo(AInterface))).GUID;
+end;
+
+function IInterfaceToString(const AInterface: IInterface): string;
+begin
+  Result := GUIDToString(IInterfaceToGUID(AInterface));
+end;
+
+{ TfgAssert }
+
+class procedure TfgAssert.AreEqual(const AValue1, AValue2: Single; const AMessage: string);
 begin
 {$IFDEF DEBUG}
-  if AValue = nil then
-    raise EAssertError.Create(SObjectIsNotNilError + AMessage);
+  if not SameValue(AValue1, AValue2, Single.Epsilon) then
+    raise EfgAssertError.CreateFmt('Specified values [%f] and [%f] are not equal. %s', [AValue1, AValue2,
+      AMessage]) at ReturnAddress;
 {$ENDIF}
 end;
 
-procedure AssertIsNotNil(const AValue: IInterface; const AMessage: string = '');
+class procedure TfgAssert.AreEqual(const AValue1, AValue2: Extended; const AMessage: string);
 begin
 {$IFDEF DEBUG}
-  if AValue = nil then
-    raise EAssertError.Create(SObjectIsNotNilError + AMessage);
+  if not SameValue(AValue1, AValue2, Extended.Epsilon) then
+    raise EfgAssertError.CreateFmt('Specified values [%f] and [%f] are not equal. %s', [AValue1, AValue2,
+      AMessage]) at ReturnAddress;
 {$ENDIF}
 end;
 
-procedure AssertIsNotNil(const AValue: TClass; const AMessage: string = ''); overload;
-begin
-{$IFDEF DEBUG}
-  if AValue = nil then
-    raise EAssertError.Create(SObjectIsNotNilError + AMessage);
-{$ENDIF}
-end;
-
-procedure AssertInRange(const AValue, ALow, AHight: Integer; const AMessage: string = ''); overload;
-begin
-{$IFDEF DEBUG}
-  if not InRange(AValue, ALow, AHight) then
-    raise EAssertError.Create(Format(SValueIsNotInRange, [AValue, ALow, AHight]) + AMessage);
-{$ENDIF}
-end;
-
-procedure AssertInRange(const AValue, ALow, AHight: Single; const AMessage: string = ''); overload;
-begin
-{$IFDEF DEBUG}
-  if not InRange(AValue, ALow, AHight) then
-    raise EAssertError.Create(Format(SValueIsNotInRange, [AValue, ALow, AHight]) + AMessage);
-{$ENDIF}
-end;
-
-procedure AssertLessThan(const AValue, AHigh: Integer; const AMessage: string = ''); overload;
-begin
-{$IFDEF DEBUG}
-  if AValue > AHigh then
-    raise EAssertError.Create(Format(SValueLess, [AValue, AHigh]) + AMessage);
-{$ENDIF}
-end;
-
-procedure AssertLessThan(const AValue, AHigh: Single; const AMessage: string = ''); overload;
-begin
-{$IFDEF DEBUG}
-  if AValue > AHigh then
-    raise EAssertError.Create(Format(SValueLess, [AValue, AHigh]) + AMessage);
-{$ENDIF}
-end;
-
-procedure AssertMoreThan(const AValue, ALow: Integer; const AMessage: string = ''); overload;
-begin
-{$IFDEF DEBUG}
-  if AValue < ALow then
-    raise EAssertError.Create(Format(SValueLess, [AValue, ALow]) + AMessage);
-{$ENDIF}
-end;
-
-procedure AssertMoreThan(const AValue, ALow: Single; const AMessage: string = ''); overload;
-begin
-{$IFDEF DEBUG}
-  if AValue < ALow then
-    raise EAssertError.Create(Format(SValueLess, [AValue, ALow]) + AMessage);
-{$ENDIF}
-end;
-
-procedure AssertIsClass(const AValue: TObject; const AClass: TClass; const AMessage: string = '');
-begin
-{$IFDEF DEBUG}
-  if not (AValue is AClass) then
-    raise EAssertError.Create(Format(SValueIsNotRequriedClass, [AClass.ClassName, AValue.ClassName]) + AMessage);
-{$ENDIF}
-end;
-
-procedure AssertEqual(const AValue1: Integer; const AValue2: Integer; const AMessage: string = '');
+class procedure TfgAssert.AreEqual(const AValue1, AValue2: Integer; const AMessage: string);
 begin
 {$IFDEF DEBUG}
   if AValue1 <> AValue2 then
-    raise EAssertError.Create(Format(SValuesIsNotEqual, [AValue1, AValue2]) + AMessage);
+    raise EfgAssertError.CreateFmt('Specified values [%d] and [%d] are not equal. %s', [AValue1, AValue2,
+      AMessage]) at ReturnAddress;
 {$ENDIF}
 end;
 
-procedure AssertIsTrue(const AValue: Boolean; const AMessage: string = '');
+class procedure TfgAssert.Implements(const AValue: TObject; const AInterface: IInterface; const AMessage: string);
 begin
 {$IFDEF DEBUG}
-  if not AValue then
-    raise EAssertError.Create(SValuesIsTrue + AMessage);
+  if not Supports(AValue, IInterfaceToGUID(AInterface)) then
+    raise EfgAssertError.CreateFmt('[%s] does not implements interface with GUID [%s]. %s', [AValue.ClassName,
+      IInterfaceToString(AInterface), AMessage]) at ReturnAddress;
 {$ENDIF}
 end;
 
-procedure AssertIsFalse(const AValue: Boolean; const AMessage: string = '');
+class procedure TfgAssert.InRange(const AValue, ALow, AHight: Single; const AMessage: string);
+begin
+{$IFDEF DEBUG}
+  if not System.Math.InRange(AValue, ALow, AHight) then
+    raise EfgAssertError.CreateFmt('The current value [%f] is not in range [%f, %f]. %s', [AValue, ALow, AHight,
+      AMessage]) at ReturnAddress;
+{$ENDIF}
+end;
+
+class procedure TfgAssert.InRange(const AValue, ALow, AHight: Extended; const AMessage: string);
+begin
+{$IFDEF DEBUG}
+  if not System.Math.InRange(AValue, ALow, AHight) then
+    raise EfgAssertError.CreateFmt('The current value [%f] is not in range [%f, %f]. %s', [AValue, ALow, AHight,
+      AMessage]) at ReturnAddress;
+{$ENDIF}
+end;
+
+class procedure TfgAssert.InRange(const AValue, ALow, AHight: Integer; const AMessage: string);
+begin
+{$IFDEF DEBUG}
+  if not System.Math.InRange(AValue, ALow, AHight) then
+    raise EfgAssertError.CreateFmt('The current value [%d] is not in range [%d, %d]. %s', [AValue, ALow, AHight,
+      AMessage]) at ReturnAddress;
+{$ENDIF}
+end;
+
+class procedure TfgAssert.IsClass(const AValue: TObject; const AClass: TClass; const AMessage: string);
+begin
+{$IFDEF DEBUG}
+  if not (AValue is AClass) then
+    raise EfgAssertError.CreateFmt('The current object has invalid class. Expected receive [%s], but [%s] is received. %s',
+      [AClass.ClassName, AValue.ClassName, AMessage]) at ReturnAddress;
+{$ENDIF}
+end;
+
+class procedure TfgAssert.IsFalse(const AValue: Boolean; const AMessage: string);
 begin
 {$IFDEF DEBUG}
   if AValue then
-    raise EAssertError.Create(SValuesIsFalse + AMessage);
+    raise EfgAssertError.CreateFmt('Specified conditional should be False. %s', [AMessage]) at ReturnAddress;
 {$ENDIF}
 end;
 
+class procedure TfgAssert.IsNotNil(const AValue: TObject; const AMessage: string);
+begin
+{$IFDEF DEBUG}
+  if AValue = nil then
+    raise EfgAssertError.CreateFmt('The not nil object is required, but instead of it the empty is received. %s',
+      [AMessage]) at ReturnAddress;
+{$ENDIF}
+end;
+
+class procedure TfgAssert.IsNotNil(const AValue: IInterface; const AMessage: string);
+begin
+{$IFDEF DEBUG}
+  if AValue = nil then
+    raise EfgAssertError.CreateFmt('The not nil object is required, but instead of it the empty is received. %s',
+      [AMessage]) at ReturnAddress;
+{$ENDIF}
+end;
+
+class procedure TfgAssert.IsNotNil(const AValue: TClass; const AMessage: string);
+begin
+{$IFDEF DEBUG}
+  if AValue = nil then
+    raise EfgAssertError.CreateFmt('The not nil object is required, but instead of it the empty is received. %s',
+      [AMessage]) at ReturnAddress;
+{$ENDIF}
+end;
+
+class procedure TfgAssert.IsTrue(const AValue: Boolean; const AMessage: string);
+begin
+{$IFDEF DEBUG}
+  if not AValue then
+    raise EfgAssertError.CreateFmt('Specified conditional should be True. %s', [AMessage]) at ReturnAddress;
+{$ENDIF}
+end;
+
+class procedure TfgAssert.LessAndEqualThan(const AValue, AHigh: Integer; const AMessage: string);
+begin
+{$IFDEF DEBUG}
+  if AValue > AHigh then
+    raise EfgAssertError.CreateFmt('The current value [%d] should be less or equal than [%d]. %s', [AValue, AHigh, AMessage]) at ReturnAddress;
+{$ENDIF}
+end;
+
+class procedure TfgAssert.LessAndEqualThan(const AValue, AHigh: Extended; const AMessage: string);
+begin
+{$IFDEF DEBUG}
+  if AValue > AHigh then
+    raise EfgAssertError.CreateFmt('The current value [%f] should be less or equal than [%f]. %s', [AValue, AHigh, AMessage]) at ReturnAddress;
+{$ENDIF}
+end;
+
+class procedure TfgAssert.LessAndEqualThan(const AValue, AHigh: Single; const AMessage: string);
+begin
+{$IFDEF DEBUG}
+  if AValue > AHigh then
+    raise EfgAssertError.CreateFmt('The current value [%f] should be less or equal than [%f]. %s', [AValue, AHigh, AMessage]) at ReturnAddress;
+{$ENDIF}
+end;
+
+class procedure TfgAssert.MoreAndEqulThan(const AValue, ALow: Integer; const AMessage: string);
+begin
+{$IFDEF DEBUG}
+  if ALow > AValue then
+    raise EfgAssertError.CreateFmt('The current value [%d] should be more or equal than [%d]. %s', [AValue, ALow, AMessage]) at ReturnAddress;
+{$ENDIF}
+end;
+
+class procedure TfgAssert.MoreAndEqulThan(const AValue, ALow: Extended; const AMessage: string);
+begin
+{$IFDEF DEBUG}
+  if ALow > AValue then
+    raise EfgAssertError.CreateFmt('The current value [%f] should be more or equal than [%f]. %s', [AValue, ALow, AMessage]) at ReturnAddress;
+{$ENDIF}
+end;
+
+class procedure TfgAssert.MoreAndEqulThan(const AValue, ALow: Single; const AMessage: string);
+begin
+{$IFDEF DEBUG}
+  if ALow > AValue then
+    raise EfgAssertError.CreateFmt('The current value [%f] should be more or equal than [%f]. %s', [AValue, ALow, AMessage]) at ReturnAddress;
+{$ENDIF}
+end;
+
+class procedure TfgAssert.StrickLessThan(const AValue, AHigh: Extended; const AMessage: string);
+begin
+{$IFDEF DEBUG}
+  if AValue >= AHigh then
+    raise EfgAssertError.CreateFmt('The current value [%f] should be less than [%f]. %s', [AValue, AHigh, AMessage]) at ReturnAddress;
+{$ENDIF}
+end;
+
+class procedure TfgAssert.StrickLessThan(const AValue, AHigh: Single; const AMessage: string);
+begin
+{$IFDEF DEBUG}
+  if AValue >= AHigh then
+    raise EfgAssertError.CreateFmt('The current value [%f] should be less than [%f]. %s', [AValue, AHigh, AMessage]) at ReturnAddress;
+{$ENDIF}
+end;
+
+class procedure TfgAssert.StrickLessThan(const AValue, AHigh: Integer; const AMessage: string);
+begin
+{$IFDEF DEBUG}
+  if AValue >= AHigh then
+    raise EfgAssertError.CreateFmt('The current value [%d] should be less than [%d]. %s', [AValue, AHigh, AMessage]) at ReturnAddress;
+{$ENDIF}
+end;
+
+class procedure TfgAssert.StrickMoreThan(const AValue, ALow: Single; const AMessage: string);
+begin
+{$IFDEF DEBUG}
+  if ALow >= AValue then
+    raise EfgAssertError.CreateFmt('The current value [%f] should be more than [%f]. %s', [AValue, ALow, AMessage]) at ReturnAddress;
+{$ENDIF}
+end;
+
+class procedure TfgAssert.StrickMoreThan(const AValue, ALow: Integer; const AMessage: string);
+begin
+{$IFDEF DEBUG}
+  if ALow >= AValue then
+    raise EfgAssertError.CreateFmt('The current value [%d] should be more than [%d]. %s', [AValue, ALow, AMessage]) at ReturnAddress;
+{$ENDIF}
+end;
+
+class procedure TfgAssert.StrickMoreThan(const AValue, ALow: Extended; const AMessage: string);
+begin
+{$IFDEF DEBUG}
+  if ALow >= AValue then
+    raise EfgAssertError.CreateFmt('The current value [%f] should be more than [%f]. %s', [AValue, ALow, AMessage]) at ReturnAddress;
+{$ENDIF}
+end;
 
 end.

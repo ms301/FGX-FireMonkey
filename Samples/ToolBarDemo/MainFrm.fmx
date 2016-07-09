@@ -2,7 +2,7 @@ object FormMain: TFormMain
   Left = 0
   Top = 0
   Caption = 'TfgToolBar: Tool Bar Demo'
-  ClientHeight = 467
+  ClientHeight = 410
   ClientWidth = 671
   StyleBook = StyleBook
   FormFactor.Width = 320
@@ -19,7 +19,7 @@ object FormMain: TFormMain
     Size.PlatformDefault = False
     TabOrder = 1
     object fgToolBarButton3: TfgToolBarButton
-      Images = ImageList1
+      Images = ImageList26
       ImageIndex = 1
       Position.X = 12.000000000000000000
       Size.Width = 99.000000000000000000
@@ -28,7 +28,7 @@ object FormMain: TFormMain
       Text = 'Left'
     end
     object fgToolBarButton1: TfgToolBarButton
-      Images = ImageList1
+      Images = ImageList26
       ImageIndex = 0
       Position.X = 115.000000000000000000
       Size.Width = 99.000000000000000000
@@ -37,7 +37,7 @@ object FormMain: TFormMain
       Text = 'Center'
     end
     object fgToolBarPopupButton1: TfgToolBarPopupButton
-      Images = ImageList1
+      Images = ImageList26
       ImageIndex = 1
       PopupMenu = PopupMenu1
       Position.X = 218.000000000000000000
@@ -67,7 +67,7 @@ object FormMain: TFormMain
       Text = 'Without Image'
     end
     object fgToolBarPopupButton2: TfgToolBarPopupButton
-      Images = ImageList1
+      Images = ImageList26
       ImageIndex = 1
       PopupMenu = PopupMenu1
       Position.X = 554.000000000000000000
@@ -250,7 +250,7 @@ object FormMain: TFormMain
     Top = 336
   end
   object PopupMenu1: TPopupMenu
-    Left = 192
+    Left = 104
     Top = 336
     object MenuItem1: TMenuItem
       Text = 'MenuItem1'
@@ -268,7 +268,7 @@ object FormMain: TFormMain
     Size.PlatformDefault = False
     StyleLookup = 'toollabel'
     TextSettings.Font.Size = 15.000000000000000000
-    TextSettings.Font.Style = [fsBold]
+    TextSettings.Font.StyleExt = {00070000000000000004000000}
     TextSettings.HorzAlign = Center
     TextSettings.WordWrap = False
     Text = 'Toolbar with images and text'
@@ -285,7 +285,7 @@ object FormMain: TFormMain
     Size.PlatformDefault = False
     StyleLookup = 'toollabel'
     TextSettings.Font.Size = 15.000000000000000000
-    TextSettings.Font.Style = [fsBold]
+    TextSettings.Font.StyleExt = {00070000000000000004000000}
     TextSettings.HorzAlign = Center
     TextSettings.WordWrap = False
     Text = 'Toolbar with images (Toolbar height is 24 px, Images is 16 px)'
@@ -419,11 +419,11 @@ object FormMain: TFormMain
     Margins.Left = 5.000000000000000000
     Margins.Bottom = 5.000000000000000000
     Position.X = 5.000000000000000000
-    Position.Y = 445.000000000000000000
+    Position.Y = 388.000000000000000000
     Size.Width = 666.000000000000000000
     Size.Height = 17.000000000000000000
     Size.PlatformDefault = False
-    TextSettings.Font.Style = [fsUnderline]
+    TextSettings.Font.StyleExt = {04040000000000000004000000}
     Text = 'Icons are got from http://icons8.com/'
     Url = 'http://icons8.com/'
   end
@@ -540,7 +540,7 @@ object FormMain: TFormMain
       TabOrder = 5
     end
   end
-  object ImageList1: TImageList
+  object ImageList26: TImageList
     Source = <
       item
         MultiResBitmap.Height = 26
@@ -595,7 +595,7 @@ object FormMain: TFormMain
             SourceRect.Bottom = 26.000000000000000000
           end>
       end>
-    Left = 120
+    Left = 184
     Top = 336
   end
   object ImageList16: TImageList
@@ -1238,7 +1238,7 @@ object FormMain: TFormMain
             Name = 'Clipboard'
           end>
       end>
-    Left = 448
-    Top = 360
+    Left = 272
+    Top = 336
   end
 end

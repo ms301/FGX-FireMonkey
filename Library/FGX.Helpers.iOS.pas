@@ -14,7 +14,8 @@ unit FGX.Helpers.iOS;
 interface
 
 uses
-  FMX.Types, Macapi.ObjCRuntime, iOSapi.UIKit, iOSapi.CoreGraphics, System.UITypes;
+  FMX.Types, Macapi.ObjCRuntime, iOSapi.UIKit, iOSapi.CoreGraphics, System.UITypes,
+  FMX.Graphics;
 
 const
   DEFAULT_ANIMATION_DURATION = 0.4;
@@ -51,6 +52,10 @@ type
   procedure FadeOut(AView: UIView; const ADuration: Single = DEFAULT_ANIMATION_DURATION); overload;
   procedure FadeOut(const AView: UIView; const ADuration: Single; const ATargetObject: Pointer; const ASelector: string); overload;
 
+{ Conversions }
+
+function BitmapToUIImage(const Bitmap: TBitmap): UIImage;
+
 implementation
 
 uses
@@ -62,6 +67,40 @@ begin
     Result := TfgInterfaceIdiom.Tablet
   else
     Result := TfgInterfaceIdiom.Phone;
+end;
+
+function BitmapToUIImage(const Bitmap: TBitmap): UIImage;
+var
+  ImageRef: CGImageRef;
+  CtxRef: CGContextRef;
+  ColorSpace: CGColorSpaceRef;
+  BitmapData: TBitmapData;
+begin
+  if (Bitmap = nil) or Bitmap.IsEmpty then
+    Result := nil
+  else
+  begin
+    ColorSpace := CGColorSpaceCreateDeviceRGB;
+    try
+      if Bitmap.Map(TMapAccess.Read, BitmapData) then
+      begin
+        CtxRef := CGBitmapContextCreate(BitmapData.Data, Bitmap.Width, Bitmap.Height, 8, 4 * Bitmap.Width, ColorSpace, kCGImageAlphaPremultipliedLast or kCGBitmapByteOrder32Big );
+        try
+          ImageRef := CGBitmapContextCreateImage(CtxRef);
+          try
+            Result := TUIImage.Alloc;
+            Result.initWithCGImage(ImageRef, Bitmap.BitmapScale, UIImageOrientationUp);
+          finally
+            CGImageRelease(ImageRef);
+          end;
+        finally
+          CGContextRelease(CtxRef);
+        end;
+      end;
+    finally
+      CGColorSpaceRelease(ColorSpace);
+    end;
+  end;
 end;
 
 { UIColorHelper }
@@ -124,7 +163,7 @@ procedure FadeIn(const AView: UIView; const ADuration: Single; const ATargetObje
 var
   Selector: SEL;
 begin
-  AssertIsNotNil(AView);
+  TfgAssert.IsNotNil(AView);
   Assert(ADuration >= 0);
 
   AView.setHidden(False);
@@ -156,7 +195,7 @@ procedure FadeOut(const AView: UIView; const ADuration: Single; const ATargetObj
 var
   Selector: SEL;
 begin
-  AssertIsNotNil(AView);
+  TfgAssert.IsNotNil(AView);
   Assert(ADuration >= 0);
 
   AView.setHidden(False);

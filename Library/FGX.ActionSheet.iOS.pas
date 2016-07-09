@@ -21,50 +21,63 @@ type
 
   { TiOSActionSheetService }
 
-  TiOSActionSheetDelegate = class;
+  TfgIOSActionSheetDelegate = class;
 
-  TiOSActionSheetService = class(TInterfacedObject, IFGXActionSheetService)
+  TfgIOSActionSheetService = class(TInterfacedObject, IFGXActionSheetService)
   private
     [Weak] FActions: TfgActionsCollections;
+    [Weak] FOwner: TObject;
     FActionsLinks: TDictionary<NSInteger, TfgActionCollectionItem>;
     FActionSheet: UIActionSheet;
-    FDelegate: TiOSActionSheetDelegate;
+    FDelegate: TfgIOSActionSheetDelegate;
+    FOnShow: TNotifyEvent;
+    FOnHide: TNotifyEvent;
+    FOnItemClick: TfgActionSheetItemClickEvent;
   protected
     procedure DoButtonClicked(const AButtonIndex: Integer); virtual;
+    procedure DoShow; virtual;
+    procedure DoHide; virtual;
     function CreateActionButton(const Action: TfgActionCollectionItem): NSInteger; virtual;
-    procedure CreateSheetActions(const AUseUIGuidline: Boolean); virtual;
+    procedure FillActionSheet(const AUseUIGuidline: Boolean); virtual;
   public
     constructor Create;
     destructor Destroy; override;
     { IFGXActionSheetService }
-    procedure Show(const Title: string; Actions: TfgActionsCollections; const UseUIGuidline: Boolean = True);
+    procedure Show(const AParams: TfgActionSheetQueryParams);
   end;
 
   TNotifyButtonClicked = procedure (const AButtonIndex: Integer) of object;
+  TfgMethodCallback = procedure of object;
 
   IFGXDelayedQueueMessages = interface(NSObject)
   ['{E75C798C-C506-4ED5-B643-11C3E25417EA}']
-    procedure Invoke; cdecl;
+    procedure InvokeActionExecute; cdecl;
+    procedure InvokeHide; cdecl;
   end;
 
   TfgDelayedQueueMessages = class(TOCLocal)
   protected
     FButtonIndex: Integer;
-    FOnInovoke: TNotifyButtonClicked;
+    FOnInvoke: TNotifyButtonClicked;
+    FOnHide: TfgMethodCallback;
     function GetObjectiveCClass: PTypeInfo; override;
   public
-    procedure Invoke; cdecl;
+    procedure InvokeActionExecute; cdecl;
+    procedure InvokeHide; cdecl;
   public
     property ButtonIndex: Integer read FButtonIndex write FButtonIndex;
-    property OnInovoke: TNotifyButtonClicked read FOnInovoke write FOnInovoke;
+    property OnInvoke: TNotifyButtonClicked read FOnInvoke write FOnInvoke;
+    property OnHide: TfgMethodCallback read FOnHide write FOnHide;
   end;
 
-  TiOSActionSheetDelegate = class(TOCLocal, UIActionSheetDelegate)
+  TfgIOSActionSheetDelegate = class(TOCLocal, UIActionSheetDelegate)
   private
     FQueue: TfgDelayedQueueMessages;
     FOnButtonClicked: TNotifyButtonClicked;
+    FOnShow: TfgMethodCallback;
+    FOnHide: TfgMethodCallback;
   public
-    constructor Create(const AOnButtonClicked: TNotifyButtonClicked);
+    constructor Create(const AOnButtonClicked: TNotifyButtonClicked; const AOnShow, AOnHide: TfgMethodCallback);
     destructor Destroy; override;
     { UIActionSheetDelegate }
     procedure actionSheet(actionSheet: UIActionSheet; clickedButtonAtIndex: NSInteger); cdecl;
@@ -83,18 +96,18 @@ uses
 
 procedure RegisterService;
 begin
-  TPlatformServices.Current.AddPlatformService(IFGXActionSheetService, TiOSActionSheetService.Create);
+  TPlatformServices.Current.AddPlatformService(IFGXActionSheetService, TfgIOSActionSheetService.Create);
 end;
 
 { TiOSActionSheetService }
 
-constructor TiOSActionSheetService.Create;
+constructor TfgIOSActionSheetService.Create;
 begin
-  FDelegate := TiOSActionSheetDelegate.Create(DoButtonClicked);
+  FDelegate := TfgIOSActionSheetDelegate.Create(DoButtonClicked, DoShow, DoHide);
   FActionsLinks := TDictionary<NSInteger, TfgActionCollectionItem>.Create;
 end;
 
-function TiOSActionSheetService.CreateActionButton(const Action: TfgActionCollectionItem): NSInteger;
+function TfgIOSActionSheetService.CreateActionButton(const Action: TfgActionCollectionItem): NSInteger;
 begin
   AssertIsNotNil(Action);
   AssertIsNotNil(FActionsLinks);
@@ -103,7 +116,7 @@ begin
   FActionsLinks.Add(Result, Action);
 end;
 
-procedure TiOSActionSheetService.CreateSheetActions(const AUseUIGuidline: Boolean);
+procedure TfgIOSActionSheetService.FillActionSheet(const AUseUIGuidline: Boolean);
 
   function GetDeviceClass: TDeviceInfo.TDeviceClass;
   var
@@ -160,8 +173,11 @@ begin
     end;
 end;
 
-destructor TiOSActionSheetService.Destroy;
+destructor TfgIOSActionSheetService.Destroy;
 begin
+  FOwner := nil;
+  FOnHide := nil;
+  FOnShow := nil;
   FActions := nil;
   FreeAndNil(FActionsLinks);
   if FActionSheet <> nil then
@@ -173,7 +189,7 @@ begin
   inherited Destroy;
 end;
 
-procedure TiOSActionSheetService.DoButtonClicked(const AButtonIndex: Integer);
+procedure TfgIOSActionSheetService.DoButtonClicked(const AButtonIndex: Integer);
 
   function TryFindCancelAction: TfgActionCollectionItem;
   var
@@ -205,30 +221,63 @@ begin
       Action.OnClick(Action)
     else if Action.Action <> nil then
       Action.Action.ExecuteTarget(nil);
+
+    if Assigned(FOnItemClick) then
+      FOnItemClick(FOwner, Action);
   end;
 end;
 
-procedure TiOSActionSheetService.Show(const Title: string; Actions: TfgActionsCollections; const UseUIGuidline: Boolean);
+procedure TfgIOSActionSheetService.DoHide;
 begin
-  AssertIsNotNil(Actions);
+  if Assigned(FOnHide) then
+    FOnHide(FOwner);
+end;
+
+procedure TfgIOSActionSheetService.DoShow;
+begin
+  if Assigned(FOnShow) then
+    FOnShow(FOwner);
+end;
+
+procedure TfgIOSActionSheetService.Show(const AParams: TfgActionSheetQueryParams);
+var
+  Theme: UIActionSheetStyle;
+begin
+  AssertIsNotNil(AParams.Actions);
   AssertIsNotNil(SharedApplication);
   AssertIsNotNil(SharedApplication.keyWindow);
   AssertIsNotNil(SharedApplication.keyWindow.rootViewController);
 
-  FActions := Actions;
+  FActions := AParams.Actions;
+  FOnHide := AParams.HideCallback;
+  FOnShow := AParams.ShowCallback;
+  FOnItemClick := AParams.ItemClickCallback;
+  FOwner := AParams.Owner;
+
   { Removing old UIActionSheet and get new instance }
   if FActionSheet <> nil then
     FActionSheet.release;
+
   FActionSheet := TUIActionSheet.Alloc;
-  if Title.IsEmpty then
+  if AParams.Title.IsEmpty then
   begin
     FActionSheet.init;
-    FActionSheet.setDelegate((FDelegate as ILocalObject).GetObjectID);
+    FActionSheet.setDelegate(FDelegate.GetObjectID);
   end
   else
-    FActionSheet.initWithTitle(StrToNSStr(Title), (FDelegate as ILocalObject).GetObjectID, nil, nil, nil);
+    FActionSheet.initWithTitle(StrToNSStr(AParams.Title), FDelegate.GetObjectID, nil, nil, nil);
 
-  CreateSheetActions(UseUIGuidline);
+  FillActionSheet(AParams.UseUIGuidline);
+
+  case AParams.Theme of
+    TfgActionSheetTheme.Auto:
+      Theme := UIActionSheetStyleAutomatic;
+    TfgActionSheetTheme.Dark:
+      Theme := UIActionSheetStyleBlackTranslucent;
+  else
+    Theme := UIActionSheetStyleAutomatic;
+  end;
+  FActionSheet.setActionSheetStyle(Theme);
 
   { Displaying }
   FActionSheet.showInView(SharedApplication.keyWindow.rootViewController.view);
@@ -236,35 +285,43 @@ end;
 
 { TiOSActionSheetDelegate }
 
-procedure TiOSActionSheetDelegate.actionSheet(actionSheet: UIActionSheet; clickedButtonAtIndex: NSInteger);
+procedure TfgIOSActionSheetDelegate.actionSheet(actionSheet: UIActionSheet; clickedButtonAtIndex: NSInteger);
 begin
   FQueue.ButtonIndex := clickedButtonAtIndex;
-  FQueue.OnInovoke := FOnButtonClicked;
-  NSObject(FQueue.Super).performSelector(sel_getUid('Invoke'), FQueue.GetObjectID, 1);
+  FQueue.OnInvoke := FOnButtonClicked;
+  FQueue.OnHide := FOnHide;
+  NSObject(FQueue.Super).performSelector(sel_getUid('InvokeActionExecute'), FQueue.GetObjectID, 1);
+  NSObject(FQueue.Super).performSelector(sel_getUid('InvokeHide'), FQueue.GetObjectID, 1);
 end;
 
-procedure TiOSActionSheetDelegate.actionSheetCancel(actionSheet: UIActionSheet);
+procedure TfgIOSActionSheetDelegate.actionSheetCancel(actionSheet: UIActionSheet);
 begin
+  if Assigned(FOnHide) then
+    FOnHide;
 end;
 
-constructor TiOSActionSheetDelegate.Create(const AOnButtonClicked: TNotifyButtonClicked);
+constructor TfgIOSActionSheetDelegate.Create(const AOnButtonClicked: TNotifyButtonClicked; const AOnShow, AOnHide: TfgMethodCallback);
 begin
   inherited Create;
   FQueue := TfgDelayedQueueMessages.Create;
   FOnButtonClicked := AOnButtonClicked;
+  FOnShow := AOnShow;
+  FOnHide := AOnHide;
 end;
 
-destructor TiOSActionSheetDelegate.Destroy;
+destructor TfgIOSActionSheetDelegate.Destroy;
 begin
   FreeAndNil(FQueue);
   inherited;
 end;
 
-procedure TiOSActionSheetDelegate.didPresentActionSheet(actionSheet: UIActionSheet);
+procedure TfgIOSActionSheetDelegate.didPresentActionSheet(actionSheet: UIActionSheet);
 begin
+  if Assigned(FOnShow) then
+    FOnShow;
 end;
 
-procedure TiOSActionSheetDelegate.willPresentActionSheet(actionSheet: UIActionSheet);
+procedure TfgIOSActionSheetDelegate.willPresentActionSheet(actionSheet: UIActionSheet);
 begin
 end;
 
@@ -275,10 +332,16 @@ begin
   Result := TypeInfo(IFGXDelayedQueueMessages);
 end;
 
-procedure TfgDelayedQueueMessages.Invoke;
+procedure TfgDelayedQueueMessages.InvokeActionExecute;
 begin
-  if Assigned(OnInovoke) then
-    OnInovoke(FButtonIndex);
+  if Assigned(OnInvoke) then
+    OnInvoke(FButtonIndex);
+end;
+
+procedure TfgDelayedQueueMessages.InvokeHide;
+begin
+  if Assigned(FOnHide) then
+    FOnHide;
 end;
 
 end.

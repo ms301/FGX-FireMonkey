@@ -32,7 +32,7 @@ var
 begin
   Uri := StrToJURI(AUrl);
   OpenLinkIntent := TJIntent.JavaClass.init(TJIntent.JavaClass.ACTION_VIEW, Uri);
-  SharedActivity.startActivity(OpenLinkIntent);
+  TAndroidHelper.Activity.startActivity(OpenLinkIntent);
   Result := True;
 end;
 

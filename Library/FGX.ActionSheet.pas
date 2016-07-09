@@ -25,11 +25,16 @@ type
   TfgCustomActionSheet = class(TFmxObject)
   public const
     DefaultUseUIGuidline = True;
+    DefaultTheme = TfgActionSheetTheme.Auto;
   private
     FActions: TfgActionsCollections;
     FUseUIGuidline: Boolean;
     FTitle: string;
     FActionSheetService: IFGXActionSheetService;
+    FTheme: TfgActionSheetTheme;
+    FOnItemClick: TfgActionSheetItemClickEvent;
+    FOnShow: TNotifyEvent;
+    FOnHide: TNotifyEvent;
     procedure SetActions(const Value: TfgActionsCollections);
   public
     constructor Create(AOwner: TComponent); override;
@@ -40,7 +45,11 @@ type
   public
     property Actions: TfgActionsCollections read FActions write SetActions;
     property UseUIGuidline: Boolean read FUseUIGuidline write FUseUIGuidline default DefaultUseUIGuidline;
+    property Theme: TfgActionSheetTheme read FTheme write FTheme default DefaultTheme;
     property Title: string read FTitle write FTitle;
+    property OnShow: TNotifyEvent read FOnShow write FOnShow;
+    property OnHide: TNotifyEvent read FOnHide write FOnHide;
+    property OnItemClick: TfgActionSheetItemClickEvent read FOnItemClick write FOnItemClick;
   end;
 
   [ComponentPlatformsAttribute(fgMobilePlatforms)]
@@ -48,7 +57,12 @@ type
   published
     property Actions;
     property UseUIGuidline;
+    property Theme;
     property Title;
+    { Events }
+    property OnShow;
+    property OnHide;
+    property OnItemClick;
   end;
 
 implementation
@@ -70,6 +84,7 @@ begin
   inherited Create(AOwner);
   FActions := TfgActionsCollections.Create(Self);
   FUseUIGuidline := DefaultUseUIGuidline;
+  FTheme := DefaultTheme;
   TPlatformServices.Current.SupportsPlatformService(IFGXActionSheetService, FActionSheetService);
 end;
 
@@ -82,14 +97,26 @@ end;
 
 procedure TfgCustomActionSheet.SetActions(const Value: TfgActionsCollections);
 begin
-  AssertIsNotNil(Value);
+  TfgAssert.IsNotNil(Value);
   FActions.Assign(Value);
 end;
 
 procedure TfgCustomActionSheet.Show;
+var
+  Params: TfgActionSheetQueryParams;
 begin
   if Supported then
-    FActionSheetService.Show(Title, Actions, UseUIGuidline);
+  begin
+    Params.Owner := Self;
+    Params.Title := Title;
+    Params.Actions := Actions;
+    Params.UseUIGuidline := UseUIGuidline;
+    Params.Theme := Theme;
+    Params.ShowCallback := FOnShow;
+    Params.HideCallback := FOnHide;
+    Params.ItemClickCallback := FOnItemClick;
+    FActionSheetService.Show(Params);
+  end;
 end;
 
 function TfgCustomActionSheet.Supported: Boolean;

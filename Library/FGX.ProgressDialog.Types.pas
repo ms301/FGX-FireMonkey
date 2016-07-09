@@ -18,6 +18,8 @@ uses
 
 type
 
+  TfgDialogTheme = (Auto, Dark, Light);
+
 { TfgNativeActivityDialog }
 
   /// <summary>
@@ -28,6 +30,7 @@ type
     [Weak] FOwner: TObject;
     FTitle: string;
     FMessage: string;
+    FTheme: TfgDialogTheme;
     FIsShown: Boolean;
     FCancellable: Boolean;
     FOnShow: TNotifyEvent;
@@ -36,10 +39,12 @@ type
     procedure SetMessage(const Value: string);
     procedure SetTitle(const Value: string);
     procedure SetCancellable(const Value: Boolean);
+    procedure SetTheme(const Value: TfgDialogTheme);
   protected
     procedure CancellableChanged; virtual;
     procedure MessageChanged; virtual;
     procedure TitleChanged; virtual;
+    procedure ThemeChanged; virtual;
     function GetIsShown: Boolean; virtual;
     procedure DoShow;
     procedure DoHide;
@@ -52,6 +57,7 @@ type
     property Cancellable: Boolean read FCancellable write SetCancellable;
     property Message: string read FMessage write SetMessage;
     property Title: string read FTitle write SetTitle;
+    property Theme: TfgDialogTheme read FTheme write SetTheme;
     property IsShown: Boolean read GetIsShown;
     property OnCancel: TNotifyEvent read FOnCancel write FOnCancel;
     property OnShow: TNotifyEvent read FOnShow write FOnShow;
@@ -179,6 +185,15 @@ begin
   end;
 end;
 
+procedure TfgNativeDialog.SetTheme(const Value: TfgDialogTheme);
+begin
+  if Theme <> Value then
+  begin
+    FTheme := Value;
+    ThemeChanged;
+  end;
+end;
+
 procedure TfgNativeDialog.SetTitle(const Value: string);
 begin
   if Title <> Value then
@@ -191,6 +206,11 @@ end;
 procedure TfgNativeDialog.Show;
 begin
   FIsShown := True;
+end;
+
+procedure TfgNativeDialog.ThemeChanged;
+begin
+  // Nothing
 end;
 
 procedure TfgNativeDialog.TitleChanged;
@@ -226,7 +246,7 @@ end;
 
 procedure TfgNativeProgressDialog.SetMax(const AValue: Single);
 begin
-  AssertMoreThan(AValue, 0);
+  TfgAssert.StrickMoreThan(AValue, 0);
 
   if not SameValue(AValue, Max, EPSILON_SINGLE) then
   begin
@@ -237,7 +257,7 @@ end;
 
 procedure TfgNativeProgressDialog.SetProgress(const AValue: Single);
 begin
-  AssertInRange(AValue, 0, Max, 'Progress value must be in range [Min..Max]');
+  TfgAssert.InRange(AValue, 0, Max, 'Progress value must be in range [Min..Max]');
 
   if not SameValue(Progress, AValue, EPSILON_SINGLE) then
   begin

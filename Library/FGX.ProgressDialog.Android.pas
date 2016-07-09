@@ -36,15 +36,18 @@ type
     FNativeDialog: JProgressDialog;
     FDialogListener: TDialogDismissListener;
   protected
+    procedure RecreateNativeDialog; virtual;
     procedure InitNativeDialog; virtual;
     { inherited }
     procedure TitleChanged; override;
+    procedure ThemeChanged; override;
     procedure MessageChanged; override;
     procedure CancellableChanged; override;
     function GetIsShown: Boolean; override;
   public
     constructor Create(const AOwner: TObject); override;
     destructor Destroy; override;
+    function IsNativeDialogCreated: Boolean;
     procedure Show; override;
     procedure Hide; override;
     property ID: Integer read FID;
@@ -57,9 +60,11 @@ type
     FDialogListener: TDialogDismissListener;
   protected
     function IsDialogKindDeterminated(const DialogKind: TfgProgressDialogKind): Boolean;
+    procedure RecreateNativeDialog; virtual;
     procedure InitNativeDialog; virtual;
     { inherited }
     procedure TitleChanged; override;
+    procedure ThemeChanged; override;
     procedure KindChanged; override;
     procedure MessageChanged; override;
     procedure ProgressChanged; override;
@@ -69,6 +74,7 @@ type
   public
     constructor Create(const AOwner: TObject); override;
     destructor Destroy; override;
+    function IsNativeDialogCreated: Boolean;
     procedure ResetProgress; override;
     procedure Show; override;
     procedure Hide; override;
@@ -120,25 +126,20 @@ end;
 
 procedure TAndroidNativeActivityDialog.CancellableChanged;
 begin
-  AssertIsNotNil(FNativeDialog);
+  inherited;
 
-  CallInUIThread(procedure begin
-    FNativeDialog.setCancelable(Cancellable);
-    FNativeDialog.setCanceledOnTouchOutside(Cancellable);
-  end);
+  if IsNativeDialogCreated then
+    CallInUIThread(procedure begin
+      FNativeDialog.setCancelable(Cancellable);
+      FNativeDialog.setCanceledOnTouchOutside(Cancellable);
+    end);
 end;
 
 constructor TAndroidNativeActivityDialog.Create(const AOwner: TObject);
-var
-  ThemeID: Integer;
 begin
   inherited Create(AOwner);
   FID := TfgGeneratorUniqueID.GenerateID;
   FDialogListener := TDialogDismissListener.Create(Self);
-  ThemeID := GetNativeTheme(AOwner);
-  CallInUIThreadAndWaitFinishing(procedure begin
-    FNativeDialog := TJProgressDialog.JavaClass.init(TAndroidHelper.Context, ThemeID);
-  end);
 end;
 
 destructor TAndroidNativeActivityDialog.Destroy;
@@ -150,24 +151,24 @@ end;
 
 function TAndroidNativeActivityDialog.GetIsShown: Boolean;
 begin
-  Result := FNativeDialog.isShowing;
+  Result := IsNativeDialogCreated and FNativeDialog.isShowing;
 end;
 
 procedure TAndroidNativeActivityDialog.Hide;
 begin
-  AssertIsNotNil(FNativeDialog);
-
   inherited;
-
-  DoHide;
-  CallInUIThread(procedure begin
-    HideDialog(FNativeDialog, FID);
-  end);
+  if FNativeDialog <> nil then
+  begin
+    DoHide;
+    CallInUIThread(procedure begin
+      HideDialog(FNativeDialog, FID);
+    end);
+  end;
 end;
 
 procedure TAndroidNativeActivityDialog.InitNativeDialog;
 begin
-  AssertIsNotNil(FNativeDialog);
+  TfgAssert.IsNotNil(FNativeDialog);
 
   FNativeDialog.setTitle(StrToJCharSequence(Title));
   FNativeDialog.setMessage(StrToJCharSequence(Message));
@@ -177,20 +178,51 @@ begin
   FNativeDialog.setOnCancelListener(FDialogListener);
 end;
 
+function TAndroidNativeActivityDialog.IsNativeDialogCreated: Boolean;
+begin
+  Result := FNativeDialog <> nil;
+end;
+
 procedure TAndroidNativeActivityDialog.MessageChanged;
 begin
-  AssertIsNotNil(FNativeDialog);
+  inherited;
 
-  CallInUIThread(procedure begin
-    FNativeDialog.setMessage(StrToJCharSequence(Message));
+  if IsNativeDialogCreated then
+    CallInUIThread(procedure begin
+      FNativeDialog.setMessage(StrToJCharSequence(Message));
+    end);
+end;
+
+procedure TAndroidNativeActivityDialog.RecreateNativeDialog;
+var
+  ThemeID: Integer;
+begin
+  if IsNativeDialogCreated then
+    FNativeDialog.setOnCancelListener(nil);
+  FNativeDialog := nil;
+  case Theme of
+    TfgDialogTheme.Auto:
+      ThemeID := GetNativeTheme(Owner);
+    TfgDialogTheme.Dark:
+      ThemeID := TJAlertDialog.JavaClass.THEME_HOLO_DARK;
+    TfgDialogTheme.Light:
+      ThemeID := TJAlertDialog.JavaClass.THEME_HOLO_LIGHT;
+  else
+    ThemeID := GetNativeTheme(Owner);
+  end;
+
+  CallInUIThreadAndWaitFinishing(procedure begin
+    FNativeDialog := TJProgressDialog.JavaClass.init(TAndroidHelper.Context, ThemeID);
   end);
 end;
 
 procedure TAndroidNativeActivityDialog.Show;
 begin
-  AssertIsNotNil(FNativeDialog);
-
   inherited;
+
+  if FNativeDialog = nil then
+    RecreateNativeDialog;
+
   CallInUIThread(procedure begin
     InitNativeDialog;
     ShowDialog(FNativeDialog, FID);
@@ -198,38 +230,42 @@ begin
   DoShow;
 end;
 
+procedure TAndroidNativeActivityDialog.ThemeChanged;
+begin
+  inherited;
+
+  if not IsShown then
+    RecreateNativeDialog;
+end;
+
 procedure TAndroidNativeActivityDialog.TitleChanged;
 begin
-  AssertIsNotNil(FNativeDialog);
+  inherited;
 
-  CallInUIThread(procedure begin
-    FNativeDialog.setTitle(StrToJCharSequence(Title));
-  end);
+  if IsNativeDialogCreated then
+    CallInUIThread(procedure begin
+      FNativeDialog.setTitle(StrToJCharSequence(Title));
+    end);
 end;
 
 { TAndroidNativeActivityDialog }
 
 procedure TAndroidNativeProgressDialog.CancellableChanged;
 begin
-  AssertIsNotNil(FNativeDialog);
+  TfgAssert.IsNotNil(FNativeDialog);
 
-  CallInUIThread(procedure begin
-    FNativeDialog.setCancelable(Cancellable);
-    FNativeDialog.setCanceledOnTouchOutside(Cancellable);
-  end);
+  if IsNativeDialogCreated then
+    CallInUIThread(procedure begin
+      FNativeDialog.setCancelable(Cancellable);
+      FNativeDialog.setCanceledOnTouchOutside(Cancellable);
+    end);
 end;
 
 constructor TAndroidNativeProgressDialog.Create(const AOwner: TObject);
-var
-  ThemeID: Integer;
 begin
   inherited Create(AOwner);
   FID := TfgGeneratorUniqueID.GenerateID;
   FDialogListener := TDialogDismissListener.Create(Self);
-  ThemeID := GetNativeTheme(AOwner);
-  CallInUIThreadAndWaitFinishing(procedure begin
-    FNativeDialog := TJProgressDialog.JavaClass.init(TAndroidHelper.Context, ThemeID);
-  end);
 end;
 
 destructor TAndroidNativeProgressDialog.Destroy;
@@ -241,24 +277,25 @@ end;
 
 function TAndroidNativeProgressDialog.GetIsShown: Boolean;
 begin
-  Result := FNativeDialog.isShowing;
+  Result := IsNativeDialogCreated and FNativeDialog.isShowing;
 end;
 
 procedure TAndroidNativeProgressDialog.Hide;
 begin
-  AssertIsNotNil(FNativeDialog);
-
   inherited;
 
-  DoHide;
-  CallInUIThread(procedure begin
-    HideDialog(FNativeDialog, FID);
-  end);
+  if FNativeDialog <> nil then
+  begin
+    DoHide;
+    CallInUIThread(procedure begin
+      HideDialog(FNativeDialog, FID);
+    end);
+  end;
 end;
 
 procedure TAndroidNativeProgressDialog.InitNativeDialog;
 begin
-  AssertIsNotNil(FNativeDialog);
+  TfgAssert.IsNotNil(FNativeDialog);
 
   FNativeDialog.setTitle(StrToJCharSequence(Title));
   FNativeDialog.setMessage(StrToJCharSequence(Message));
@@ -276,58 +313,90 @@ begin
   Result := DialogKind = TfgProgressDialogKind.Undeterminated;
 end;
 
+function TAndroidNativeProgressDialog.IsNativeDialogCreated: Boolean;
+begin
+  Result := FNativeDialog <> nil;
+end;
+
 procedure TAndroidNativeProgressDialog.KindChanged;
 begin
-  AssertIsNotNil(FNativeDialog);
+  inherited;
 
-  CallInUIThread(procedure begin
-    FNativeDialog.setIndeterminate(IsDialogKindDeterminated(Kind));
-  end);
+  if IsNativeDialogCreated then
+    CallInUIThread(procedure begin
+      FNativeDialog.setIndeterminate(IsDialogKindDeterminated(Kind));
+    end);
 end;
 
 procedure TAndroidNativeProgressDialog.MessageChanged;
 begin
-  AssertIsNotNil(FNativeDialog);
+  inherited;
 
-  CallInUIThread(procedure begin
-    FNativeDialog.setMessage(StrToJCharSequence(Message));
-  end);
+  if IsNativeDialogCreated then
+    CallInUIThread(procedure begin
+      FNativeDialog.setMessage(StrToJCharSequence(Message));
+    end);
 end;
 
 procedure TAndroidNativeProgressDialog.ProgressChanged;
 begin
-  AssertIsNotNil(FNativeDialog);
+  inherited;
 
-  CallInUIThread(procedure begin
-    FNativeDialog.setProgress(Round(Progress));
-  end);
+  if IsNativeDialogCreated then
+    CallInUIThread(procedure begin
+      FNativeDialog.setProgress(Round(Progress));
+    end);
 end;
 
 procedure TAndroidNativeProgressDialog.RangeChanged;
 begin
-  AssertIsNotNil(FNativeDialog);
+  inherited;
 
-  inherited RangeChanged;
-  CallInUIThread(procedure begin
-    FNativeDialog.setMax(Round(Max));
+  if IsNativeDialogCreated then
+    CallInUIThread(procedure begin
+      FNativeDialog.setMax(Round(Max));
+    end);
+end;
+
+procedure TAndroidNativeProgressDialog.RecreateNativeDialog;
+var
+  ThemeID: Integer;
+begin
+  if IsNativeDialogCreated then
+    FNativeDialog.setOnCancelListener(nil);
+  FNativeDialog := nil;
+  case Theme of
+    TfgDialogTheme.Auto:
+      ThemeID := GetNativeTheme(Owner);
+    TfgDialogTheme.Dark:
+      ThemeID := TJAlertDialog.JavaClass.THEME_HOLO_DARK;
+    TfgDialogTheme.Light:
+      ThemeID := TJAlertDialog.JavaClass.THEME_HOLO_LIGHT;
+  else
+    ThemeID := GetNativeTheme(Owner);
+  end;
+
+  CallInUIThreadAndWaitFinishing(procedure begin
+    FNativeDialog := TJProgressDialog.JavaClass.init(TAndroidHelper.Context, ThemeID);
   end);
 end;
 
 procedure TAndroidNativeProgressDialog.ResetProgress;
 begin
-  AssertIsNotNil(FNativeDialog);
+  inherited;
 
-  inherited ResetProgress;
-  CallInUIThread(procedure begin
-    FNativeDialog.setProgress(0);
-  end);
+  if IsNativeDialogCreated then
+    CallInUIThread(procedure begin
+      FNativeDialog.setProgress(0);
+    end);
 end;
 
 procedure TAndroidNativeProgressDialog.Show;
 begin
-  AssertIsNotNil(FNativeDialog);
-
   inherited;
+
+  if FNativeDialog = nil then
+    RecreateNativeDialog;
 
   CallInUIThread(procedure begin
     InitNativeDialog;
@@ -336,20 +405,29 @@ begin
   DoShow;
 end;
 
+procedure TAndroidNativeProgressDialog.ThemeChanged;
+begin
+  inherited;
+
+  if not IsShown then
+    RecreateNativeDialog;
+end;
+
 procedure TAndroidNativeProgressDialog.TitleChanged;
 begin
-  AssertIsNotNil(FNativeDialog);
+  inherited;
 
-  CallInUIThread(procedure begin
-    FNativeDialog.setTitle(StrToJCharSequence(Title));
-  end);
+  if IsNativeDialogCreated then
+    CallInUIThread(procedure begin
+      FNativeDialog.setTitle(StrToJCharSequence(Title));
+    end);
 end;
 
 { TDialogDismissListener }
 
 constructor TDialogDismissListener.Create(const ADialog: TfgNativeDialog);
 begin
-  AssertIsNotNil(ADialog);
+  TfgAssert.IsNotNil(ADialog);
 
   inherited Create;
   FDialog := ADialog;
@@ -357,7 +435,7 @@ end;
 
 procedure TDialogDismissListener.onCancel(dialog: JDialogInterface);
 begin
-  AssertIsNotNil(FDialog);
+  TfgAssert.IsNotNil(FDialog);
 
   TThread.Synchronize(nil, procedure
     begin

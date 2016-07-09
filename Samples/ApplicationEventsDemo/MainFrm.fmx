@@ -2,13 +2,13 @@ object FormMain: TFormMain
   Left = 0
   Top = 0
   Caption = 'TfgApplicationEvents: Application events Demo'
-  ClientHeight = 472
+  ClientHeight = 603
   ClientWidth = 753
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
   OnShow = FormShow
-  DesignerMasterStyle = 0
+  DesignerMasterStyle = 4
   object mmLog: TMemo
     Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
     DataDetectorTypes = []
@@ -16,23 +16,31 @@ object FormMain: TFormMain
     TextSettings.Font.Family = 'Courier New'
     Align = Client
     Size.Width = 520.000000000000000000
-    Size.Height = 472.000000000000000000
+    Size.Height = 603.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 2
     Viewport.Width = 516.000000000000000000
-    Viewport.Height = 468.000000000000000000
+    Viewport.Height = 599.000000000000000000
   end
   object fgApplicationEvents: TfgApplicationEvents
+    OnActivityResult = fgApplicationEventsActivityResult
     OnActionExecute = fgApplicationEventsActionExecute
     OnActionUpdate = fgApplicationEventsActionUpdate
     OnException = fgApplicationEventsException
     OnIdle = fgApplicationEventsIdle
     OnFormSizeChanged = fgApplicationEventsFormSizeChanged
+    OnSaveState = fgApplicationEventsSaveState
     OnStateChanged = fgApplicationEventsStateChange
     OnStyleChanged = fgApplicationEventsStyleChanged
     OnOrientationChanged = fgApplicationEventsOrientationChanged
     OnFormsCreated = fgApplicationEventsFormsCreated
     OnFormReleased = fgApplicationEventsFormReleased
+    OnFormBeforeShown = fgApplicationEventsFormBeforeShown
+    OnFormActivate = fgApplicationEventsFormActivate
+    OnFormDeactivate = fgApplicationEventsFormDeactivate
+    OnFormCreate = fgApplicationEventsFormCreate
+    OnFormDestroy = fgApplicationEventsFormDestroy
+    OnScaleChanged = fgApplicationEventsScaleChanged
     OnMainFormChanged = fgApplicationEventsMainFormChanged
     OnMainFormCaptionChanged = fgApplicationEventsMainFormCaptionChanged
     Left = 288
@@ -3288,210 +3296,328 @@ object FormMain: TFormMain
     Mode = Panel
     OnPresenterChanging = MultiViewPresenterChanging
     Size.Width = 233.000000000000000000
-    Size.Height = 472.000000000000000000
+    Size.Height = 603.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 5
-    object GroupBox: TGroupBox
-      Align = Top
-      StyledSettings = [Family, Size, FontColor, Other]
-      Margins.Left = 5.000000000000000000
-      Margins.Top = 5.000000000000000000
-      Margins.Right = 5.000000000000000000
-      Margins.Bottom = 5.000000000000000000
-      Position.X = 5.000000000000000000
-      Position.Y = 5.000000000000000000
-      Size.Width = 222.000000000000000000
-      Size.Height = 172.000000000000000000
+    object PresentedScrollBox1: TPresentedScrollBox
+      Align = Contents
+      Size.Width = 232.000000000000000000
+      Size.Height = 603.000000000000000000
       Size.PlatformDefault = False
-      Text = 'Tracking:'
-      TextSettings.Font.Style = [fsBold]
       TabOrder = 0
-      object cbOnIdle: TCheckBox
-        Position.X = 16.000000000000000000
-        Position.Y = 97.000000000000000000
-        Size.Width = 99.000000000000000000
-        Size.Height = 19.000000000000000000
+      Viewport.Width = 216.000000000000000000
+      Viewport.Height = 603.000000000000000000
+      object GroupBox: TGroupBox
+        Align = Top
+        StyledSettings = [Family, Size, FontColor, Other]
+        Margins.Left = 5.000000000000000000
+        Margins.Top = 5.000000000000000000
+        Margins.Right = 5.000000000000000000
+        Margins.Bottom = 5.000000000000000000
+        Position.X = 5.000000000000000000
+        Position.Y = 377.000000000000000000
+        Size.Width = 206.000000000000000000
+        Size.Height = 172.000000000000000000
         Size.PlatformDefault = False
+        Text = 'Tracking:'
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
         TabOrder = 0
-        Text = 'Idle'
+        object cbOnIdle: TCheckBox
+          Position.X = 16.000000000000000000
+          Position.Y = 97.000000000000000000
+          Size.Width = 99.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          Text = 'Idle'
+        end
+        object cbOnActionExecute: TCheckBox
+          IsChecked = True
+          Position.X = 16.000000000000000000
+          Position.Y = 24.000000000000000000
+          Size.Width = 189.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          Text = 'Execute action'
+        end
+        object cbOnActionUpdate: TCheckBox
+          IsChecked = True
+          Position.X = 16.000000000000000000
+          Position.Y = 48.000000000000000000
+          Size.Width = 192.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          Text = 'Action update'
+        end
+        object cbOnException: TCheckBox
+          IsChecked = True
+          Position.X = 16.000000000000000000
+          Position.Y = 72.000000000000000000
+          TabOrder = 3
+          Text = 'Exception'
+        end
+        object cbOnOrientationChanged: TCheckBox
+          IsChecked = True
+          Position.X = 16.000000000000000000
+          Position.Y = 120.000000000000000000
+          Size.Width = 191.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 5
+          Text = 'Orientation changed'
+        end
+        object cbOnStateChanged: TCheckBox
+          IsChecked = True
+          Position.X = 16.000000000000000000
+          Position.Y = 144.000000000000000000
+          Size.Width = 169.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 4
+          Text = 'Application state changed'
+        end
       end
-      object cbOnActionExecute: TCheckBox
-        IsChecked = True
-        Position.X = 16.000000000000000000
-        Position.Y = 24.000000000000000000
-        Size.Width = 189.000000000000000000
-        Size.Height = 19.000000000000000000
+      object GroupBox1: TGroupBox
+        Align = Top
+        StyledSettings = [Family, Size, FontColor, Other]
+        Margins.Left = 5.000000000000000000
+        Margins.Right = 5.000000000000000000
+        Margins.Bottom = 5.000000000000000000
+        Position.X = 5.000000000000000000
+        Position.Y = 62.000000000000000000
+        Size.Width = 206.000000000000000000
+        Size.Height = 305.000000000000000000
         Size.PlatformDefault = False
+        Text = 'Forms:'
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
         TabOrder = 1
-        Text = 'Execute action'
+        object cbAllFormsCreated: TCheckBox
+          IsChecked = True
+          Position.X = 16.000000000000000000
+          Position.Y = 24.000000000000000000
+          Size.Width = 159.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 2
+          Text = 'All forms created'
+        end
+        object cbFormSizeChanged: TCheckBox
+          IsChecked = True
+          Position.X = 16.000000000000000000
+          Position.Y = 48.000000000000000000
+          Size.Width = 159.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 1
+          Text = 'Form changed size'
+        end
+        object cbFormReleased: TCheckBox
+          IsChecked = True
+          Position.X = 16.000000000000000000
+          Position.Y = 72.000000000000000000
+          Size.Width = 113.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 3
+          Text = 'Form released'
+        end
+        object Button1: TButton
+          Position.X = 152.000000000000000000
+          Position.Y = 75.000000000000000000
+          Size.Width = 44.000000000000000000
+          Size.Height = 17.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 8
+          Text = 'Test'
+          OnClick = Button1Click
+        end
+        object cbMainFormChanged: TCheckBox
+          IsChecked = True
+          Position.X = 16.000000000000000000
+          Position.Y = 96.000000000000000000
+          Size.Width = 137.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 15
+          Text = 'Main form changed'
+        end
+        object Button2: TButton
+          Position.X = 152.000000000000000000
+          Position.Y = 98.000000000000000000
+          Size.Width = 44.000000000000000000
+          Size.Height = 17.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 6
+          Text = 'Test'
+          OnClick = Button2Click
+        end
+        object Button3: TButton
+          Position.X = 152.000000000000000000
+          Position.Y = 128.000000000000000000
+          Size.Width = 44.000000000000000000
+          Size.Height = 17.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 4
+          Text = 'Test'
+          OnClick = Button3Click
+        end
+        object cbMainFormCaptionChanged: TCheckBox
+          IsChecked = True
+          Position.X = 16.000000000000000000
+          Position.Y = 120.000000000000000000
+          Size.Width = 153.000000000000000000
+          Size.Height = 32.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 7
+          Text = 'Main form caption changed'
+          TextSettings.WordWrap = True
+        end
+        object cbStyleChanged: TCheckBox
+          IsChecked = True
+          Position.X = 16.000000000000000000
+          Position.Y = 155.000000000000000000
+          Size.Width = 137.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 14
+          Text = 'Style book changed'
+        end
+        object Button4: TButton
+          Position.X = 152.000000000000000000
+          Position.Y = 157.000000000000000000
+          Size.Width = 44.000000000000000000
+          Size.Height = 17.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 5
+          Text = 'Test'
+          OnClick = Button4Click
+        end
+        object cbFormActivated: TCheckBox
+          IsChecked = True
+          Position.X = 16.000000000000000000
+          Position.Y = 179.000000000000000000
+          Size.Width = 137.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 13
+          Text = 'Form activated'
+        end
+        object cbFormDeactivated: TCheckBox
+          IsChecked = True
+          Position.X = 16.000000000000000000
+          Position.Y = 203.000000000000000000
+          Size.Width = 137.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 12
+          Text = 'Form deactivated'
+        end
+        object cbFormBeforeShown: TCheckBox
+          IsChecked = True
+          Position.X = 16.000000000000000000
+          Position.Y = 227.000000000000000000
+          Size.Width = 137.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 10
+          Text = 'Form before shown'
+        end
+        object cbFormCreate: TCheckBox
+          IsChecked = True
+          Position.X = 16.000000000000000000
+          Position.Y = 251.000000000000000000
+          Size.Width = 137.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 11
+          Text = 'Form created'
+        end
+        object cbFormDestroy: TCheckBox
+          IsChecked = True
+          Position.X = 16.000000000000000000
+          Position.Y = 275.000000000000000000
+          Size.Width = 137.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 9
+          Text = 'Form is destroyed'
+        end
       end
-      object cbOnActionUpdate: TCheckBox
-        IsChecked = True
-        Position.X = 16.000000000000000000
-        Position.Y = 48.000000000000000000
-        Size.Width = 192.000000000000000000
-        Size.Height = 19.000000000000000000
+      object BtnClearLog: TButton
+        Align = Top
+        Margins.Left = 5.000000000000000000
+        Margins.Right = 5.000000000000000000
+        Margins.Bottom = 10.000000000000000000
+        Position.X = 5.000000000000000000
+        Position.Y = 626.000000000000000000
+        Size.Width = 206.000000000000000000
+        Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
+        StyleLookup = 'deletetoolbutton'
         TabOrder = 2
-        Text = 'Action update'
+        Text = 'Clear log'
+        OnClick = BtnClearLogClick
       end
-      object cbOnException: TCheckBox
-        IsChecked = True
-        Position.X = 16.000000000000000000
-        Position.Y = 72.000000000000000000
+      object GroupBox2: TGroupBox
+        Align = Top
+        StyledSettings = [Family, Size, FontColor, Other]
+        Margins.Left = 5.000000000000000000
+        Margins.Top = 5.000000000000000000
+        Margins.Right = 5.000000000000000000
+        Margins.Bottom = 5.000000000000000000
+        Position.X = 5.000000000000000000
+        Position.Y = 559.000000000000000000
+        Size.Width = 206.000000000000000000
+        Size.Height = 62.000000000000000000
+        Size.PlatformDefault = False
+        Text = 'Android:'
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
         TabOrder = 3
-        Text = 'Exception'
+        object cbActivityResult: TCheckBox
+          IsChecked = True
+          Position.X = 17.000000000000000000
+          Position.Y = 32.000000000000000000
+          Size.Width = 184.000000000000000000
+          Size.Height = 19.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 0
+          Text = 'Activity Result'
+        end
+        object Button5: TButton
+          Position.X = 152.000000000000000000
+          Position.Y = 34.000000000000000000
+          Size.Width = 44.000000000000000000
+          Size.Height = 17.000000000000000000
+          Size.PlatformDefault = False
+          TabOrder = 7
+          Text = 'Test'
+          OnClick = Button5Click
+        end
       end
-      object cbOnOrientationChanged: TCheckBox
-        IsChecked = True
-        Position.X = 16.000000000000000000
-        Position.Y = 120.000000000000000000
-        Size.Width = 191.000000000000000000
-        Size.Height = 19.000000000000000000
+      object GroupBox3: TGroupBox
+        Align = Top
+        StyledSettings = [Family, Size, FontColor, Other]
+        Margins.Left = 5.000000000000000000
+        Margins.Top = 5.000000000000000000
+        Margins.Right = 5.000000000000000000
+        Margins.Bottom = 5.000000000000000000
+        Position.X = 5.000000000000000000
+        Position.Y = 5.000000000000000000
+        Size.Width = 206.000000000000000000
+        Size.Height = 52.000000000000000000
         Size.PlatformDefault = False
-        TabOrder = 5
-        Text = 'Orientation changed'
-      end
-      object cbOnStateChanged: TCheckBox
-        IsChecked = True
-        Position.X = 16.000000000000000000
-        Position.Y = 144.000000000000000000
-        Size.Width = 169.000000000000000000
-        Size.Height = 19.000000000000000000
-        Size.PlatformDefault = False
+        Text = 'Common'
+        TextSettings.Font.StyleExt = {00070000000000000004000000}
         TabOrder = 4
-        Text = 'Application state changed'
-      end
-    end
-    object BtnClearLog: TButton
-      Align = Bottom
-      Margins.Left = 5.000000000000000000
-      Margins.Right = 5.000000000000000000
-      Margins.Bottom = 10.000000000000000000
-      Position.X = 5.000000000000000000
-      Position.Y = 440.000000000000000000
-      Size.Width = 222.000000000000000000
-      Size.Height = 22.000000000000000000
-      Size.PlatformDefault = False
-      StyleLookup = 'deletetoolbutton'
-      TabOrder = 1
-      Text = 'Clear log'
-      OnClick = BtnClearLogClick
-    end
-    object GroupBox1: TGroupBox
-      Align = Top
-      StyledSettings = [Family, Size, FontColor, Other]
-      Margins.Left = 5.000000000000000000
-      Margins.Right = 5.000000000000000000
-      Margins.Bottom = 5.000000000000000000
-      Position.X = 5.000000000000000000
-      Position.Y = 182.000000000000000000
-      Size.Width = 222.000000000000000000
-      Size.Height = 211.000000000000000000
-      Size.PlatformDefault = False
-      Text = 'Forms:'
-      TextSettings.Font.Style = [fsBold]
-      TabOrder = 2
-      object cbAllFormsCreated: TCheckBox
-        IsChecked = True
-        Position.X = 16.000000000000000000
-        Position.Y = 24.000000000000000000
-        Size.Width = 159.000000000000000000
-        Size.Height = 19.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 2
-        Text = 'All forms created'
-      end
-      object cbFormSizeChanged: TCheckBox
-        IsChecked = True
-        Position.X = 16.000000000000000000
-        Position.Y = 48.000000000000000000
-        Size.Width = 159.000000000000000000
-        Size.Height = 19.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 1
-        Text = 'Form changed size'
-      end
-      object cbFormReleased: TCheckBox
-        IsChecked = True
-        Position.X = 16.000000000000000000
-        Position.Y = 72.000000000000000000
-        Size.Width = 113.000000000000000000
-        Size.Height = 19.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 3
-        Text = 'Form released'
-      end
-      object Button1: TButton
-        Position.X = 152.000000000000000000
-        Position.Y = 75.000000000000000000
-        Size.Width = 56.000000000000000000
-        Size.Height = 17.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 8
-        Text = 'Test'
-        OnClick = Button1Click
-      end
-      object cbMainFormChanged: TCheckBox
-        IsChecked = True
-        Position.X = 16.000000000000000000
-        Position.Y = 96.000000000000000000
-        Size.Width = 137.000000000000000000
-        Size.Height = 19.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 10
-        Text = 'Main form changed'
-      end
-      object Button2: TButton
-        Position.X = 152.000000000000000000
-        Position.Y = 98.000000000000000000
-        Size.Width = 56.000000000000000000
-        Size.Height = 17.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 6
-        Text = 'Test'
-        OnClick = Button2Click
-      end
-      object Button3: TButton
-        Position.X = 152.000000000000000000
-        Position.Y = 128.000000000000000000
-        Size.Width = 56.000000000000000000
-        Size.Height = 17.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 4
-        Text = 'Test'
-        OnClick = Button3Click
-      end
-      object cbMainFormCaptionChanged: TCheckBox
-        IsChecked = True
-        Position.X = 16.000000000000000000
-        Position.Y = 120.000000000000000000
-        Size.Width = 153.000000000000000000
-        Size.Height = 32.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 7
-        Text = 'Main form caption changed'
-        TextSettings.WordWrap = True
-      end
-      object cbStyleChanged: TCheckBox
-        IsChecked = True
-        Position.X = 16.000000000000000000
-        Position.Y = 155.000000000000000000
-        Size.Width = 137.000000000000000000
-        Size.Height = 19.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 9
-        Text = 'Style book changed'
-      end
-      object Button4: TButton
-        Position.X = 152.000000000000000000
-        Position.Y = 157.000000000000000000
-        Size.Width = 56.000000000000000000
-        Size.Height = 17.000000000000000000
-        Size.PlatformDefault = False
-        TabOrder = 5
-        Text = 'Test'
-        OnClick = Button4Click
+        object cbScaleChanged: TCheckBox
+          IsChecked = True
+          Position.X = 16.000000000000000000
+          Position.Y = 24.000000000000000000
+          TabOrder = 0
+          Text = 'Scale Changed'
+        end
       end
     end
   end

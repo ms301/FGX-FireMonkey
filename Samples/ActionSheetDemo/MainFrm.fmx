@@ -2,7 +2,7 @@ object FormMain: TFormMain
   Left = 0
   Top = 0
   Caption = 'TfgActionSheet: Demo'
-  ClientHeight = 567
+  ClientHeight = 562
   ClientWidth = 384
   Padding.Left = 10.000000000000000000
   Padding.Top = 10.000000000000000000
@@ -14,9 +14,9 @@ object FormMain: TFormMain
   OnCreate = FormCreate
   DesignerMasterStyle = 2
   object Button1: TButton
-    Align = Horizontal
+    Align = Top
     Position.X = 10.000000000000000000
-    Position.Y = 251.000000000000000000
+    Position.Y = 235.000000000000000000
     Size.Width = 364.000000000000000000
     Size.Height = 44.000000000000000000
     Size.PlatformDefault = False
@@ -26,11 +26,10 @@ object FormMain: TFormMain
   end
   object Label2: TLabel
     Align = Top
-    AutoSize = True
     Position.X = 10.000000000000000000
-    Position.Y = 60.000000000000000000
+    Position.Y = 110.000000000000000000
     Size.Width = 364.000000000000000000
-    Size.Height = 91.000000000000000000
+    Size.Height = 125.000000000000000000
     Size.PlatformDefault = False
     StyleLookup = 'embossedlabel'
     TextSettings.VertAlign = Leading
@@ -42,7 +41,7 @@ object FormMain: TFormMain
   object Layout1: TLayout
     Align = Top
     Position.X = 10.000000000000000000
-    Position.Y = 10.000000000000000000
+    Position.Y = 60.000000000000000000
     Size.Width = 364.000000000000000000
     Size.Height = 50.000000000000000000
     Size.PlatformDefault = False
@@ -53,7 +52,7 @@ object FormMain: TFormMain
       Size.Height = 50.000000000000000000
       Size.PlatformDefault = False
       StyleLookup = 'listboxitemlabel'
-      TextSettings.Font.Style = [fsBold]
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
       Text = 'Use OS specific UI Guidline:'
     end
     object SwitchUseUIGuildline: TSwitch
@@ -71,20 +70,19 @@ object FormMain: TFormMain
     Align = Bottom
     StyledSettings = [Family, Size, Style]
     Position.X = 10.000000000000000000
-    Position.Y = 491.000000000000000000
+    Position.Y = 486.000000000000000000
     Size.Width = 364.000000000000000000
     Size.Height = 66.000000000000000000
     Size.PlatformDefault = False
     TextSettings.FontColor = claRed
     TextSettings.HorzAlign = Center
     Text = 'Action Sheet is not supported on current platform'
-    Visible = False
   end
   object LabelLog: TLabel
     Align = Top
     Margins.Top = 10.000000000000000000
     Position.X = 10.000000000000000000
-    Position.Y = 161.000000000000000000
+    Position.Y = 289.000000000000000000
     Size.Width = 364.000000000000000000
     Size.Height = 33.000000000000000000
     Size.PlatformDefault = False
@@ -130,8 +128,68 @@ object FormMain: TFormMain
         Caption = 'On-Screen Keyboard'
       end>
     Title = 'Move E-mail to..'
+    OnShow = fgActionSheetShow
+    OnHide = fgActionSheetHide
+    OnItemClick = fgActionSheetItemClick
     Left = 116
     Top = 208
+  end
+  object MemoLog: TMemo
+    Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+    DataDetectorTypes = []
+    Align = Client
+    Size.Width = 364.000000000000000000
+    Size.Height = 164.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    Viewport.Width = 356.000000000000000000
+    Viewport.Height = 156.000000000000000000
+  end
+  object Layout2: TLayout
+    Align = Top
+    Position.X = 10.000000000000000000
+    Position.Y = 10.000000000000000000
+    Size.Width = 364.000000000000000000
+    Size.Height = 50.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 6
+    object Label3: TLabel
+      Align = Left
+      StyledSettings = [Family, Size, FontColor]
+      Size.Width = 217.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'listboxitemlabel'
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
+      Text = 'Theme:'
+    end
+    object ComboBoxTheme: TComboBox
+      Align = Right
+      ItemIndex = 0
+      Position.X = 160.000000000000000000
+      Position.Y = 10.000000000000000000
+      Size.Width = 204.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      OnChange = ComboBoxThemeChange
+      object ListBoxItem1: TListBoxItem
+        IsSelected = True
+        Size.Width = 44.000000000000000000
+        Size.Height = 44.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 0
+        Text = 'Auto (iOS, Android)'
+      end
+      object ListBoxItem2: TListBoxItem
+        TabOrder = 1
+        Text = 'Dark (iOS, Android)'
+      end
+      object ListBoxItem3: TListBoxItem
+        TabOrder = 2
+        Text = 'Light (Android)'
+      end
+    end
   end
   object ActionList: TActionList
     Left = 200

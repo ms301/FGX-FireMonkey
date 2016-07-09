@@ -117,7 +117,7 @@ procedure TfgCustomVirtualKeyboard.DoVirtualKeyboardChangeHandler(const Sender: 
 var
   VKMessage: TVKStateChangeMessage;
 begin
-  AssertIsClass(AMessage, TVKStateChangeMessage);
+  TfgAssert.IsClass(AMessage, TVKStateChangeMessage);
 
   VKMessage := AMessage as TVKStateChangeMessage;
   case FLastState of
@@ -155,7 +155,7 @@ var
   I: Integer;
   Button: TfgButtonsCollectionItem;
 begin
-  AssertIsNotNil(FButtons);
+  TfgAssert.IsNotNil(FButtons);
 
   if not Supported then
     Exit;
@@ -171,7 +171,7 @@ end;
 
 procedure TfgCustomVirtualKeyboard.SetButtons(const Value: TfgButtonsCollection);
 begin
-  AssertIsNotNil(Value);
+  TfgAssert.IsNotNil(Value);
 
   FButtons.Assign(Value);
 end;

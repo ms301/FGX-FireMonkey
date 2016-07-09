@@ -149,10 +149,10 @@ var
   FirstContainerMarginsRect: TRectF;
   NextContainerMarginsRect: TRectF;
 begin
-  AssertIsNotNil(Model);
-  AssertIsNotNil(FImageAnimator);
-  AssertIsNotNil(FNextImageAnimator);
-  AssertIsNotNil(ImageContainer);
+  TfgAssert.IsNotNil(Model);
+  TfgAssert.IsNotNil(FImageAnimator);
+  TfgAssert.IsNotNil(FNextImageAnimator);
+  TfgAssert.IsNotNil(ImageContainer);
 
   case Model.SlideOptions.Direction of
     TfgSlideDirection.Horizontal:
@@ -169,8 +169,8 @@ end;
 
 procedure TfgFlipViewSlidingPresentation.MMSlideOptionsChanged(var AMessage: TDispatchMessage);
 begin
-  AssertIsNotNil(Model);
-  AssertIsNotNil(Model.SlideOptions);
+  TfgAssert.IsNotNil(Model);
+  TfgAssert.IsNotNil(Model.SlideOptions);
 
   if FImageAnimator <> nil then
     FImageAnimator.Duration := Model.SlideOptions.Duration;
@@ -180,7 +180,7 @@ end;
 
 procedure TfgFlipViewSlidingPresentation.ShowNextImage(const ANewItemIndex: Integer; const ADirection: TfgDirection; const AAnimate: Boolean);
 begin
-  AssertIsNotNil(Model);
+  TfgAssert.IsNotNil(Model);
 
   inherited;
   if (csDesigning in ComponentState) or not AAnimate then

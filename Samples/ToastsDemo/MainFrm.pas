@@ -13,7 +13,6 @@ type
     Button1: TButton;
     ComboBoxDurationType: TComboBox;
     ListBoxItem1: TListBoxItem;
-    ShadowEffect1: TShadowEffect;
     ListBoxItem2: TListBoxItem;
     Image1: TImage;
     SwitchShowIcon: TSwitch;
@@ -28,7 +27,6 @@ type
     ListBoxItem7: TListBoxItem;
     ListBoxItem8: TListBoxItem;
     Button2: TButton;
-    ShadowEffect2: TShadowEffect;
     ColorComboBoxMessage: TComboColorBox;
     ColorComboBoxBackground: TComboColorBox;
     Button3: TButton;
@@ -51,6 +49,7 @@ var
 implementation
 
 {$R *.fmx}
+{$R *.Windows.fmx MSWINDOWS}
 
 uses
   FGX.Toasts, FGX.Graphics;

@@ -16,7 +16,7 @@ interface
 uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FGX.ProgressDialog, FGX.ProgressDialog.Types,
-  FMX.StdCtrls, FMX.Layouts, FMX.Controls.Presentation;
+  FMX.StdCtrls, FMX.Layouts, FMX.Controls.Presentation, FMX.ListBox;
 
 type
   TFormMain = class(TForm)
@@ -28,6 +28,12 @@ type
     Layout1: TLayout;
     Label1: TLabel;
     SwitchCancellable: TSwitch;
+    Layout2: TLayout;
+    Label2: TLabel;
+    ComboBoxTheme: TComboBox;
+    ListBoxItem1: TListBoxItem;
+    ListBoxItem2: TListBoxItem;
+    ListBoxItem3: TListBoxItem;
     procedure btnProgressDialogClick(Sender: TObject);
     procedure btnActivityDialogClick(Sender: TObject);
     procedure fgProgressDialogHide(Sender: TObject);
@@ -35,6 +41,7 @@ type
     procedure SwitchCancellableSwitch(Sender: TObject);
     procedure fgProgressDialogCancel(Sender: TObject);
     procedure fgActivityDialogCancel(Sender: TObject);
+    procedure ComboBoxThemeChange(Sender: TObject);
   private
     FProgressDialogThread: TThread;
     FActivityDialogThread: TThread;
@@ -44,6 +51,9 @@ var
   FormMain: TFormMain;
 
 implementation
+
+uses
+  System.Math;
 
 {$R *.fmx}
 
@@ -126,6 +136,15 @@ begin
       end);
     FProgressDialogThread.FreeOnTerminate := False;
     FProgressDialogThread.Start;
+  end;
+end;
+
+procedure TFormMain.ComboBoxThemeChange(Sender: TObject);
+begin
+  if InRange(ComboBoxTheme.ItemIndex, 0, ComboBoxTheme.Items.Count - 1) then
+  begin
+    fgActivityDialog.Theme := TfgDialogTheme(ComboBoxTheme.ItemIndex);
+    fgProgressDialog.Theme := TfgDialogTheme(ComboBoxTheme.ItemIndex);
   end;
 end;
 

@@ -38,8 +38,8 @@ package dclfgx;
 {$DEFINE REGISTER_ITEMS_DESIGNER}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'FMX Extension Components (FGX - Design Time)'}
-{$LIBSUFFIX '230'}
+{$DESCRIPTION 'Extensions for FM (FireMonkey) - Designtime'}
+{$LIBSUFFIX '240'}
 {$DESIGNONLY}
 {$IMPLICITBUILD OFF}
 

@@ -25,17 +25,20 @@ type
   TfgCustomDialog<T: TfgNativeDialog> = class abstract(TComponent)
   public const
     DefaultCancellable = False;
+    DefaultTheme = TfgDialogTheme.Auto;
   private
     FNativeDialog: T;
     FTitle: string;
     FMessage: string;
     FCancellable: Boolean;
+    FTheme: TfgDialogTheme;
     FOnShow: TNotifyEvent;
     FOnHide: TNotifyEvent;
     FOnCancel: TNotifyEvent;
     procedure SetCancellabel(const Value: Boolean);
     procedure SetMessage(const Value: string);
     procedure SetTitle(const Value: string);
+    procedure SetTheme(const Value: TfgDialogTheme);
     procedure SetOnCancel(const Value: TNotifyEvent);
     procedure SetOnHide(const Value: TNotifyEvent);
     procedure SetOnShow(const Value: TNotifyEvent);
@@ -63,6 +66,7 @@ type
     property Cancellable: Boolean read FCancellable write SetCancellabel default DefaultCancellable;
     property Message: string read FMessage write SetMessage;
     property Title: string read FTitle write SetTitle;
+    property Theme: TfgDialogTheme read FTheme write SetTheme default DefaultTheme;
     property OnCancel: TNotifyEvent read FOnCancel write SetOnCancel;
     property OnShow: TNotifyEvent read FOnShow write SetOnShow;
     property OnHide: TNotifyEvent read FOnHide write SetOnHide;
@@ -84,6 +88,7 @@ type
     property Cancellable;
     property Message;
     property Title;
+    property Theme;
     property OnCancel;
     property OnShow;
     property OnHide;
@@ -145,6 +150,7 @@ type
     property Max;
     property Progress;
     property Title;
+    property Theme;
     property OnCancel;
     property OnShow;
     property OnHide;
@@ -167,8 +173,9 @@ uses
 constructor TfgCustomDialog<T>.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
-  FNativeDialog := CreateNativeDialog;
+  FTheme := DefaultTheme;
   FCancellable := DefaultCancellable;
+  FNativeDialog := CreateNativeDialog;
 end;
 
 destructor TfgCustomDialog<T>.Destroy;
@@ -179,11 +186,12 @@ end;
 
 procedure TfgCustomDialog<T>.DoInitDialog;
 begin
-  AssertIsNotNil(FNativeDialog);
+  TfgAssert.IsNotNil(FNativeDialog);
 
   FNativeDialog.Cancellable := Cancellable;
   FNativeDialog.Message := Message;
   FNativeDialog.Title := Title;
+  FNativeDialog.Theme := Theme;
   FNativeDialog.OnCancel := OnCancel;
   FNativeDialog.OnShow := OnShow;
   FNativeDialog.OnHide := OnHide;
@@ -242,6 +250,16 @@ begin
   FOnShow := Value;
   if Supported then
     FNativeDialog.OnShow := FOnShow;
+end;
+
+procedure TfgCustomDialog<T>.SetTheme(const Value: TfgDialogTheme);
+begin
+  if Theme <> Value then
+  begin
+    FTheme := Value;
+    if Supported then
+      FNativeDialog.Theme := Theme;
+  end;
 end;
 
 procedure TfgCustomDialog<T>.SetTitle(const Value: string);
@@ -319,7 +337,7 @@ end;
 
 procedure TfgCustomProgressDialog.SetMax(const Value: Single);
 begin
-  AssertMoreThan(Value, 0, 'Max Value cannot be less than 0');
+  TfgAssert.StrickMoreThan(Value, 0, 'Max Value cannot be less than 0');
 
   if not SameValue(Max, Value, EPSILON_SINGLE) then
   begin
@@ -332,7 +350,7 @@ end;
 
 procedure TfgCustomProgressDialog.SetProgress(const Value: Single);
 begin
-  AssertInRange(Value, 0, Max, 'Progress value must be in range [0..Max]');
+  TfgAssert.InRange(Value, 0, Max, 'Progress value must be in range [0..Max]');
 
   if not SameValue(Progress, Value, EPSILON_SINGLE) then
   begin
