@@ -43,7 +43,7 @@ type
 implementation
 
 uses
-  System.Math, FMX.Platform, FGX.Consts;
+  System.Math, System.SysUtils, FMX.Platform, FGX.Consts;
 
 { TfgScreen }
 
@@ -66,7 +66,7 @@ class function TfgScreenHelper.Scale: Single;
 var
   ScreenService: IFMXScreenService;
 begin
-  if SameValue(FScreenScale, SCALE_UNDEFINED, EPSILON_SINGLE) then
+  if SameValue(FScreenScale, SCALE_UNDEFINED, Single.Epsilon) then
   begin
     if TPlatformServices.Current.SupportsPlatformService(IFMXScreenService, ScreenService) then
       FScreenScale := ScreenService.GetScreenScale

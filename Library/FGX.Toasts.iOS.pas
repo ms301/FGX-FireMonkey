@@ -113,8 +113,8 @@ end;
 
 procedure TfgiOSToastService.Cancel(const AToast: TfgToast);
 begin
-  AssertIsNotNil(AToast);
-  AssertIsClass(AToast, TfgiOSToast);
+  TfgAssert.IsNotNil(AToast);
+  TfgAssert.IsClass(AToast, TfgiOSToast);
 
   ToastsQueue.DequeueToast(TfgiOSToast(AToast));
 end;
@@ -126,8 +126,8 @@ end;
 
 procedure TfgiOSToastService.Show(const AToast: TfgToast);
 begin
-  AssertIsNotNil(AToast);
-  AssertIsClass(AToast, TfgiOSToast);
+  TfgAssert.IsNotNil(AToast);
+  TfgAssert.IsClass(AToast, TfgiOSToast);
 
   ToastsQueue.EnqueueToast(TfgiOSToast(AToast));
 end;
@@ -176,13 +176,15 @@ end;
 
 destructor TfgiOSToast.Destroy;
 begin
+  TfgAssert.IsNotNil(FBackgroundView);
+
   FBackgroundView.removeFromSuperview;
   inherited;
 end;
 
 procedure TfgiOSToast.DoBackgroundColorChanged;
 begin
-  AssertIsNotNil(FBackgroundView);
+  TfgAssert.IsNotNil(FBackgroundView);
 
   inherited;
   FBackgroundView.setBackgroundColor(AlphaColorToUIColor(BackgroundColor));
@@ -190,8 +192,8 @@ end;
 
 procedure TfgiOSToast.DoIconChanged;
 begin
-  AssertIsNotNil(FIconView);
-  AssertIsNotNil(Icon);
+  TfgAssert.IsNotNil(FIconView);
+  TfgAssert.IsNotNil(Icon);
 
   inherited;
   FIconView.setImage(BitmapToUIImage(Icon));
@@ -200,7 +202,7 @@ end;
 
 procedure TfgiOSToast.DoMessageChanged;
 begin
-  AssertIsNotNil(FMessageView);
+  TfgAssert.IsNotNil(FMessageView);
 
   inherited;
   FMessageView.setText(StrToNSStr(Message));
@@ -208,7 +210,7 @@ end;
 
 procedure TfgiOSToast.DoMessageColorChanged;
 begin
-  AssertIsNotNil(FMessageView);
+  TfgAssert.IsNotNil(FMessageView);
 
   inherited;
   FMessageView.setTextColor(AlphaColorToUIColor(MessageColor));
@@ -221,9 +223,9 @@ const
 var
   BackgroundRect: TRectF;
 begin
-  AssertIsNotNil(FMessageView);
-  AssertIsNotNil(FBackgroundView);
-  AssertIsNotNil(FIconView);
+  TfgAssert.IsNotNil(FMessageView);
+  TfgAssert.IsNotNil(FBackgroundView);
+  TfgAssert.IsNotNil(FIconView);
 
   FMessageView.sizeToFit;
 
@@ -253,7 +255,7 @@ end;
 
 procedure TiOSToastsQueue.EnqueueToast(const AToast: TfgiOSToast);
 begin
-  AssertIsNotNil(AToast);
+  TfgAssert.IsNotNil(AToast);
 
   FToasts.Add(AToast);
   ShowNextToast;
@@ -274,7 +276,7 @@ end;
 
 procedure TiOSToastsQueue.ShouldHide;
 begin
-  AssertIsNotNil(FActiveToast);
+  TfgAssert.IsNotNil(FActiveToast);
 
   DequeueToast(FActiveToast);
 end;
@@ -286,16 +288,17 @@ end;
 
 procedure TiOSToastsQueue.DequeueToast(const AToast: TfgiOSToast);
 begin
-  AssertIsNotNil(AToast);
+  TfgAssert.IsNotNil(AToast);
 
   // if toast is already displayed, we hide it.
   if AToast = FActiveToast then
   begin
     FShowingToast := False;
+    FActiveToast := nil;
     FadeOut(AToast.ToastView, DEFAULT_ANIMATION_DURATION, GetObjectID, 'ToastDisappeared');
-  end
-  else
-    FToasts.Remove(FActiveToast);
+  end;
+
+  FToasts.Remove(AToast);
 end;
 
 procedure TiOSToastsQueue.ShowNextToast;
@@ -303,7 +306,7 @@ begin
   if (FToasts.Count > 0) and not FShowingToast then
   begin
     FShowingToast := True;
-    FActiveToast := FToasts[0];
+    FActiveToast := FToasts.First;
     FadeIn(FActiveToast.ToastView);
     NSObject(Super).performSelector(sel_getUid('ShouldHide'), GetObjectID, FActiveToast.Duration.ToDuration + DEFAULT_ANIMATION_DURATION);
   end;
@@ -311,10 +314,6 @@ end;
 
 procedure TiOSToastsQueue.ToastDisappeared;
 begin
-  AssertIsNotNil(FActiveToast);
-
-  FToasts.Remove(FActiveToast);
-  FActiveToast := nil;
   ShowNextToast;
 end;
 

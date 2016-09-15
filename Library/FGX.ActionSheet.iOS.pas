@@ -94,6 +94,12 @@ uses
   System.SysUtils, System.Devices, Macapi.Helpers, FMX.Platform, FGX.Helpers.iOS, FGX.Asserts,
   Macapi.ObjCRuntime;
 
+type
+  TfgActionSheetThemeHelper = record helper for TfgActionSheetTheme
+  public
+    function ToUIActionSheetStyle: UIActionSheetStyle;
+  end;
+
 procedure RegisterService;
 begin
   TPlatformServices.Current.AddPlatformService(IFGXActionSheetService, TfgIOSActionSheetService.Create);
@@ -109,8 +115,8 @@ end;
 
 function TfgIOSActionSheetService.CreateActionButton(const Action: TfgActionCollectionItem): NSInteger;
 begin
-  AssertIsNotNil(Action);
-  AssertIsNotNil(FActionsLinks);
+  TfgAssert.IsNotNil(Action);
+  TfgAssert.IsNotNil(FActionsLinks);
 
   Result := FActionSheet.addButtonWithTitle(StrToNSStr(Action.Caption));
   FActionsLinks.Add(Result, Action);
@@ -133,9 +139,9 @@ var
   I: Integer;
   Index: Integer;
 begin
-  AssertIsNotNil(FActions);
-  AssertIsNotNil(FActionsLinks);
-  AssertIsNotNil(FActionSheet);
+  TfgAssert.IsNotNil(FActions);
+  TfgAssert.IsNotNil(FActionsLinks);
+  TfgAssert.IsNotNil(FActionSheet);
 
   FActionsLinks.Clear;
   if AUseUIGuidline then
@@ -190,6 +196,8 @@ begin
 end;
 
 procedure TfgIOSActionSheetService.DoButtonClicked(const AButtonIndex: Integer);
+const
+  iPadCancelButtonIndex = -1;
 
   function TryFindCancelAction: TfgActionCollectionItem;
   var
@@ -205,12 +213,12 @@ procedure TfgIOSActionSheetService.DoButtonClicked(const AButtonIndex: Integer);
 var
   Action: TfgActionCollectionItem;
 begin
-  AssertIsNotNil(FActions);
-  AssertIsNotNil(FActionsLinks);
-  AssertInRange(AButtonIndex, -1, FActionsLinks.Count - 1);
+  TfgAssert.IsNotNil(FActions);
+  TfgAssert.IsNotNil(FActionsLinks);
+  TfgAssert.InRange(AButtonIndex, -1, FActionsLinks.Count - 1);
 
   // iPad doesn't show Cancel button, so ipad AButtonIndex can be -1. It means, that user cancels actions.
-  if AButtonIndex = -1 then
+  if AButtonIndex = iPadCancelButtonIndex then
     Action := TryFindCancelAction
   else
     Action := FActionsLinks.Items[AButtonIndex];
@@ -240,13 +248,11 @@ begin
 end;
 
 procedure TfgIOSActionSheetService.Show(const AParams: TfgActionSheetQueryParams);
-var
-  Theme: UIActionSheetStyle;
 begin
-  AssertIsNotNil(AParams.Actions);
-  AssertIsNotNil(SharedApplication);
-  AssertIsNotNil(SharedApplication.keyWindow);
-  AssertIsNotNil(SharedApplication.keyWindow.rootViewController);
+  TfgAssert.IsNotNil(AParams.Actions);
+  TfgAssert.IsNotNil(SharedApplication);
+  TfgAssert.IsNotNil(SharedApplication.keyWindow);
+  TfgAssert.IsNotNil(SharedApplication.keyWindow.rootViewController);
 
   FActions := AParams.Actions;
   FOnHide := AParams.HideCallback;
@@ -268,16 +274,7 @@ begin
     FActionSheet.initWithTitle(StrToNSStr(AParams.Title), FDelegate.GetObjectID, nil, nil, nil);
 
   FillActionSheet(AParams.UseUIGuidline);
-
-  case AParams.Theme of
-    TfgActionSheetTheme.Auto:
-      Theme := UIActionSheetStyleAutomatic;
-    TfgActionSheetTheme.Dark:
-      Theme := UIActionSheetStyleBlackTranslucent;
-  else
-    Theme := UIActionSheetStyleAutomatic;
-  end;
-  FActionSheet.setActionSheetStyle(Theme);
+  FActionSheet.setActionSheetStyle(AParams.Theme.ToUIActionSheetStyle);
 
   { Displaying }
   FActionSheet.showInView(SharedApplication.keyWindow.rootViewController.view);
@@ -290,6 +287,7 @@ begin
   FQueue.ButtonIndex := clickedButtonAtIndex;
   FQueue.OnInvoke := FOnButtonClicked;
   FQueue.OnHide := FOnHide;
+  // We use 1 sec delay for correct working of other UIViewController, which can be invoked from OnButtonClicked
   NSObject(FQueue.Super).performSelector(sel_getUid('InvokeActionExecute'), FQueue.GetObjectID, 1);
   NSObject(FQueue.Super).performSelector(sel_getUid('InvokeHide'), FQueue.GetObjectID, 1);
 end;
@@ -323,6 +321,7 @@ end;
 
 procedure TfgIOSActionSheetDelegate.willPresentActionSheet(actionSheet: UIActionSheet);
 begin
+  // Nothing
 end;
 
 { TiOSQueue }
@@ -342,6 +341,20 @@ procedure TfgDelayedQueueMessages.InvokeHide;
 begin
   if Assigned(FOnHide) then
     FOnHide;
+end;
+
+{ TfgActionSheetThemeHelper }
+
+function TfgActionSheetThemeHelper.ToUIActionSheetStyle: UIActionSheetStyle;
+begin
+  case Self of
+    TfgActionSheetTheme.Auto:
+      Result := UIActionSheetStyleAutomatic;
+    TfgActionSheetTheme.Dark:
+      Result := UIActionSheetStyleBlackTranslucent;
+  else
+    Result := UIActionSheetStyleAutomatic;
+  end;
 end;
 
 end.

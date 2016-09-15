@@ -1,10 +1,11 @@
 {
     "id": "{CF8C41FA-4940-4E02-8D26-185896E4766E}",
     "name": "FGX Components for Delphi and C++",
-    "picture": "Images\\logo-fm.png",
+    "picture": "1_fmx-logo_60x60.png",
     "license_type": "MPL-2.0",
-    "platforms": "Win32;Win64",
+	"license_file": "License.md",
+    "platforms": "Win32;Win64;OSX32",
     "first_version": "0.7.1.74",
-    "package_compiler_min": 24,
-    "compiler_min": 24
+    "package_compiler_min": 31,
+    "compiler_min": 31
 }

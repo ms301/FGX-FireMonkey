@@ -26,12 +26,14 @@ type
   public const
     DefaultCancellable = False;
     DefaultTheme = TfgDialogTheme.Auto;
+    DefaultThemeID = TfgNativeDialog.UndefinedThemeID;
   private
     FNativeDialog: T;
     FTitle: string;
     FMessage: string;
     FCancellable: Boolean;
     FTheme: TfgDialogTheme;
+    FThemeID: Integer;
     FOnShow: TNotifyEvent;
     FOnHide: TNotifyEvent;
     FOnCancel: TNotifyEvent;
@@ -39,6 +41,7 @@ type
     procedure SetMessage(const Value: string);
     procedure SetTitle(const Value: string);
     procedure SetTheme(const Value: TfgDialogTheme);
+    procedure SetThemeID(const Value: Integer);
     procedure SetOnCancel(const Value: TNotifyEvent);
     procedure SetOnHide(const Value: TNotifyEvent);
     procedure SetOnShow(const Value: TNotifyEvent);
@@ -67,6 +70,7 @@ type
     property Message: string read FMessage write SetMessage;
     property Title: string read FTitle write SetTitle;
     property Theme: TfgDialogTheme read FTheme write SetTheme default DefaultTheme;
+    property ThemeID: Integer read FThemeID write SetThemeID default DefaultThemeID;
     property OnCancel: TNotifyEvent read FOnCancel write SetOnCancel;
     property OnShow: TNotifyEvent read FOnShow write SetOnShow;
     property OnHide: TNotifyEvent read FOnHide write SetOnHide;
@@ -89,6 +93,7 @@ type
     property Message;
     property Title;
     property Theme;
+    property ThemeID;
     property OnCancel;
     property OnShow;
     property OnHide;
@@ -151,6 +156,7 @@ type
     property Progress;
     property Title;
     property Theme;
+    property ThemeID;
     property OnCancel;
     property OnShow;
     property OnHide;
@@ -174,6 +180,7 @@ constructor TfgCustomDialog<T>.Create(AOwner: TComponent);
 begin
   inherited Create(AOwner);
   FTheme := DefaultTheme;
+  FThemeID := DefaultThemeID;
   FCancellable := DefaultCancellable;
   FNativeDialog := CreateNativeDialog;
 end;
@@ -192,6 +199,7 @@ begin
   FNativeDialog.Message := Message;
   FNativeDialog.Title := Title;
   FNativeDialog.Theme := Theme;
+  FNativeDialog.ThemeID := ThemeID;
   FNativeDialog.OnCancel := OnCancel;
   FNativeDialog.OnShow := OnShow;
   FNativeDialog.OnHide := OnHide;
@@ -259,6 +267,16 @@ begin
     FTheme := Value;
     if Supported then
       FNativeDialog.Theme := Theme;
+  end;
+end;
+
+procedure TfgCustomDialog<T>.SetThemeID(const Value: Integer);
+begin
+  if ThemeID <> Value then
+  begin
+    FThemeID := Value;
+    if Supported then
+      FNativeDialog.ThemeID := ThemeID;
   end;
 end;
 
@@ -339,7 +357,7 @@ procedure TfgCustomProgressDialog.SetMax(const Value: Single);
 begin
   TfgAssert.StrickMoreThan(Value, 0, 'Max Value cannot be less than 0');
 
-  if not SameValue(Max, Value, EPSILON_SINGLE) then
+  if not SameValue(Max, Value, Single.Epsilon) then
   begin
     FMax := Value;
     if Supported then
@@ -352,7 +370,7 @@ procedure TfgCustomProgressDialog.SetProgress(const Value: Single);
 begin
   TfgAssert.InRange(Value, 0, Max, 'Progress value must be in range [0..Max]');
 
-  if not SameValue(Progress, Value, EPSILON_SINGLE) then
+  if not SameValue(Progress, Value, Single.Epsilon) then
   begin
     FProgress := EnsureRange(Value, 0, Max);
     if Supported then

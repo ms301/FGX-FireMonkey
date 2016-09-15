@@ -41,6 +41,7 @@ type
     { inherited }
     procedure TitleChanged; override;
     procedure ThemeChanged; override;
+    procedure ThemeIDChanged; override;
     procedure MessageChanged; override;
     procedure CancellableChanged; override;
     function GetIsShown: Boolean; override;
@@ -65,6 +66,7 @@ type
     { inherited }
     procedure TitleChanged; override;
     procedure ThemeChanged; override;
+    procedure ThemeIDChanged; override;
     procedure KindChanged; override;
     procedure MessageChanged; override;
     procedure ProgressChanged; override;
@@ -98,6 +100,13 @@ implementation
 uses
   System.SysUtils, System.Classes, Androidapi.Helpers, AndroidApi.JNI.JavaTypes, Androidapi.JNI.App, FMX.Platform,
   FMX.Platform.Android, FMX.Helpers.Android, FMX.Types, FGX.Helpers, FGX.Helpers.Android, FGX.Asserts;
+
+type
+
+  TfgDialogThemeHelper = record helper for TfgDialogTheme
+  public
+    function ToThemeID(const Context: TObject): Integer;
+  end;
 
 procedure RegisterService;
 begin
@@ -195,24 +204,20 @@ end;
 
 procedure TAndroidNativeActivityDialog.RecreateNativeDialog;
 var
-  ThemeID: Integer;
+  LThemeID: Integer;
 begin
   if IsNativeDialogCreated then
-    FNativeDialog.setOnCancelListener(nil);
-  FNativeDialog := nil;
-  case Theme of
-    TfgDialogTheme.Auto:
-      ThemeID := GetNativeTheme(Owner);
-    TfgDialogTheme.Dark:
-      ThemeID := TJAlertDialog.JavaClass.THEME_HOLO_DARK;
-    TfgDialogTheme.Light:
-      ThemeID := TJAlertDialog.JavaClass.THEME_HOLO_LIGHT;
+    FNativeDialog.setOnCancelListener(nil)
   else
-    ThemeID := GetNativeTheme(Owner);
-  end;
+    FNativeDialog := nil;
+
+  if (Theme = TfgDialogTheme.Custom) and (ThemeID <> UndefinedThemeID) then
+    LThemeID := ThemeID
+  else
+    LThemeID := Theme.ToThemeID(Owner);
 
   CallInUIThreadAndWaitFinishing(procedure begin
-    FNativeDialog := TJProgressDialog.JavaClass.init(TAndroidHelper.Context, ThemeID);
+    FNativeDialog := TJProgressDialog.JavaClass.init(TAndroidHelper.Context, LThemeID);
   end);
 end;
 
@@ -238,6 +243,14 @@ begin
     RecreateNativeDialog;
 end;
 
+procedure TAndroidNativeActivityDialog.ThemeIDChanged;
+begin
+  inherited;
+
+  if not IsShown and (Theme = TfgDialogTheme.Custom) then
+    RecreateNativeDialog;
+end;
+
 procedure TAndroidNativeActivityDialog.TitleChanged;
 begin
   inherited;
@@ -252,8 +265,6 @@ end;
 
 procedure TAndroidNativeProgressDialog.CancellableChanged;
 begin
-  TfgAssert.IsNotNil(FNativeDialog);
-
   if IsNativeDialogCreated then
     CallInUIThread(procedure begin
       FNativeDialog.setCancelable(Cancellable);
@@ -360,24 +371,20 @@ end;
 
 procedure TAndroidNativeProgressDialog.RecreateNativeDialog;
 var
-  ThemeID: Integer;
+  LThemeID: Integer;
 begin
   if IsNativeDialogCreated then
-    FNativeDialog.setOnCancelListener(nil);
-  FNativeDialog := nil;
-  case Theme of
-    TfgDialogTheme.Auto:
-      ThemeID := GetNativeTheme(Owner);
-    TfgDialogTheme.Dark:
-      ThemeID := TJAlertDialog.JavaClass.THEME_HOLO_DARK;
-    TfgDialogTheme.Light:
-      ThemeID := TJAlertDialog.JavaClass.THEME_HOLO_LIGHT;
+    FNativeDialog.setOnCancelListener(nil)
   else
-    ThemeID := GetNativeTheme(Owner);
-  end;
+    FNativeDialog := nil;
+  
+  if (Theme = TfgDialogTheme.Custom) and (ThemeID <> UndefinedThemeID) then
+    LThemeID := ThemeID
+  else
+    LThemeID := Theme.ToThemeID(Owner);
 
   CallInUIThreadAndWaitFinishing(procedure begin
-    FNativeDialog := TJProgressDialog.JavaClass.init(TAndroidHelper.Context, ThemeID);
+    FNativeDialog := TJProgressDialog.JavaClass.init(TAndroidHelper.Context, LThemeID);
   end);
 end;
 
@@ -413,6 +420,14 @@ begin
     RecreateNativeDialog;
 end;
 
+procedure TAndroidNativeProgressDialog.ThemeIDChanged;
+begin
+  inherited;
+
+  if not IsShown and (Theme = TfgDialogTheme.Custom) then
+    RecreateNativeDialog;
+end;
+
 procedure TAndroidNativeProgressDialog.TitleChanged;
 begin
   inherited;
@@ -442,6 +457,26 @@ begin
       if Assigned(FDialog.OnCancel) then
         FDialog.OnCancel(FDialog.Owner);
     end);
+end;
+
+{ TfgDialogThemeHelper }
+
+function TfgDialogThemeHelper.ToThemeID(const Context: TObject): Integer;
+var
+  ThemeID: Integer;
+begin
+  case Self of
+    TfgDialogTheme.Auto:
+      ThemeID := GetNativeTheme(Context);
+    TfgDialogTheme.Dark:
+      ThemeID := TJAlertDialog.JavaClass.THEME_HOLO_DARK;
+    TfgDialogTheme.Light:
+      ThemeID := TJAlertDialog.JavaClass.THEME_HOLO_LIGHT;
+  else
+    ThemeID := GetNativeTheme(Context);
+  end;
+
+  Result := ThemeID;
 end;
 
 end.

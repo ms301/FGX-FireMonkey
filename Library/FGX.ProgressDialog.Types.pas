@@ -18,7 +18,7 @@ uses
 
 type
 
-  TfgDialogTheme = (Auto, Dark, Light);
+  TfgDialogTheme = (Auto, Dark, Light, Custom);
 
 { TfgNativeActivityDialog }
 
@@ -26,11 +26,14 @@ type
   ///   Base class for implementation native progress/activity dialogs
   /// </summary>
   TfgNativeDialog = class abstract
+  public
+    const UndefinedThemeID = 0;
   private
     [Weak] FOwner: TObject;
     FTitle: string;
     FMessage: string;
     FTheme: TfgDialogTheme;
+    FThemeID: Integer;
     FIsShown: Boolean;
     FCancellable: Boolean;
     FOnShow: TNotifyEvent;
@@ -40,11 +43,13 @@ type
     procedure SetTitle(const Value: string);
     procedure SetCancellable(const Value: Boolean);
     procedure SetTheme(const Value: TfgDialogTheme);
+    procedure SetThemeID(const Value: Integer);
   protected
     procedure CancellableChanged; virtual;
     procedure MessageChanged; virtual;
     procedure TitleChanged; virtual;
     procedure ThemeChanged; virtual;
+    procedure ThemeIDChanged; virtual;
     function GetIsShown: Boolean; virtual;
     procedure DoShow;
     procedure DoHide;
@@ -58,6 +63,7 @@ type
     property Message: string read FMessage write SetMessage;
     property Title: string read FTitle write SetTitle;
     property Theme: TfgDialogTheme read FTheme write SetTheme;
+    property ThemeID: Integer read FThemeID write SetThemeID;
     property IsShown: Boolean read GetIsShown;
     property OnCancel: TNotifyEvent read FOnCancel write FOnCancel;
     property OnShow: TNotifyEvent read FOnShow write FOnShow;
@@ -125,7 +131,7 @@ type
 implementation
 
 uses
-  System.Math, FGX.Helpers, FGX.Consts, FGX.Asserts;
+  System.Math, System.SysUtils, FGX.Helpers, FGX.Consts, FGX.Asserts;
 
 { TfgNativeDialog }
 
@@ -138,6 +144,7 @@ constructor TfgNativeDialog.Create(const AOwner: TObject);
 begin
   FOwner := AOwner;
   FIsShown := False;
+  FThemeID := UndefinedThemeID;
 end;
 
 procedure TfgNativeDialog.DoHide;
@@ -194,6 +201,15 @@ begin
   end;
 end;
 
+procedure TfgNativeDialog.SetThemeID(const Value: Integer);
+begin
+  if ThemeID <> Value then
+  begin
+    FThemeID := Value;
+    ThemeIDChanged;
+  end;
+end;
+
 procedure TfgNativeDialog.SetTitle(const Value: string);
 begin
   if Title <> Value then
@@ -209,6 +225,11 @@ begin
 end;
 
 procedure TfgNativeDialog.ThemeChanged;
+begin
+  // Nothing
+end;
+
+procedure TfgNativeDialog.ThemeIDChanged;
 begin
   // Nothing
 end;
@@ -248,7 +269,7 @@ procedure TfgNativeProgressDialog.SetMax(const AValue: Single);
 begin
   TfgAssert.StrickMoreThan(AValue, 0);
 
-  if not SameValue(AValue, Max, EPSILON_SINGLE) then
+  if not SameValue(AValue, Max, Single.Epsilon) then
   begin
     FMax := AValue;
     RangeChanged;
@@ -259,7 +280,7 @@ procedure TfgNativeProgressDialog.SetProgress(const AValue: Single);
 begin
   TfgAssert.InRange(AValue, 0, Max, 'Progress value must be in range [Min..Max]');
 
-  if not SameValue(Progress, AValue, EPSILON_SINGLE) then
+  if not SameValue(Progress, AValue, Single.Epsilon) then
   begin
     FProgress := EnsureRange(AValue, 0, Max);
     ProgressChanged;

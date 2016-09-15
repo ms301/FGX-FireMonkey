@@ -35,7 +35,7 @@ package fgx;
 {$IMAGEBASE $400000}
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
-{$DESCRIPTION 'Extensions for FM (FireMonkey)'}
+{$DESCRIPTION 'Extensions for FM (FireMonkey) - Runtime'}
 {$LIBSUFFIX '240'}
 {$IMPLICITBUILD OFF}
 

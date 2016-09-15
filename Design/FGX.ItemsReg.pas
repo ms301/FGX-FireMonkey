@@ -50,7 +50,6 @@ begin
   { Component Editors }
   RegisterComponentEditor(TfgToolBar, TfgItemsEditor);
   RegisterComponentEditor(TfgToolBarComboBox, TfgItemsEditor);
-
   RegisterComponentEditor(TListBox, TfgItemsEditor);
   RegisterComponentEditor(TTreeView, TfgItemsEditor);
   RegisterComponentEditor(TEdit, TfgItemsEditor);

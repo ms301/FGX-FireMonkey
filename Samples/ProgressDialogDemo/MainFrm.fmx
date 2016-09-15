@@ -11,15 +11,20 @@ object FormMain: TFormMain
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop]
-  DesignerMasterStyle = 3
+  OnCreate = FormCreate
+  DesignerMasterStyle = 2
   object LayoutButtons: TLayout
-    Align = Center
-    Size.Width = 222.000000000000000000
+    Align = Top
+    Margins.Top = 5.000000000000000000
+    Margins.Bottom = 5.000000000000000000
+    Position.X = 10.000000000000000000
+    Position.Y = 166.000000000000000000
+    Size.Width = 300.000000000000000000
     Size.Height = 95.000000000000000000
     Size.PlatformDefault = False
     object btnProgressDialog: TButton
       Align = Top
-      Size.Width = 222.000000000000000000
+      Size.Width = 300.000000000000000000
       Size.Height = 44.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 0
@@ -30,7 +35,7 @@ object FormMain: TFormMain
       Align = Top
       Margins.Top = 5.000000000000000000
       Position.Y = 49.000000000000000000
-      Size.Width = 222.000000000000000000
+      Size.Width = 300.000000000000000000
       Size.Height = 44.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 1
@@ -40,28 +45,34 @@ object FormMain: TFormMain
   end
   object Layout1: TLayout
     Align = Top
+    Margins.Top = 1.000000000000000000
     Position.X = 10.000000000000000000
-    Position.Y = 10.000000000000000000
+    Position.Y = 111.000000000000000000
     Size.Width = 300.000000000000000000
-    Size.Height = 39.000000000000000000
+    Size.Height = 50.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 3
     object Label1: TLabel
       Align = Left
       AutoSize = True
-      Size.Width = 101.000000000000000000
-      Size.Height = 39.000000000000000000
+      StyledSettings = [Family, Size, FontColor]
+      Size.Width = 96.000000000000000000
+      Size.Height = 50.000000000000000000
       Size.PlatformDefault = False
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
       TextSettings.WordWrap = False
       Text = 'Cancellable:'
     end
     object SwitchCancellable: TSwitch
       Align = Right
+      ControlType = Platform
       IsChecked = False
-      Position.X = 256.000000000000000000
-      Position.Y = 6.000000000000000000
-      Size.Width = 44.000000000000000000
-      Size.Height = 26.000000000000000000
+      Margins.Top = 7.000000000000000000
+      Margins.Bottom = 8.000000000000000000
+      Position.X = 245.000000000000000000
+      Position.Y = 7.000000000000000000
+      Size.Width = 55.000000000000000000
+      Size.Height = 35.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 1
       OnSwitch = SwitchCancellableSwitch
@@ -70,27 +81,31 @@ object FormMain: TFormMain
   object Layout2: TLayout
     Align = Top
     Position.X = 10.000000000000000000
-    Position.Y = 49.000000000000000000
+    Position.Y = 10.000000000000000000
     Size.Width = 300.000000000000000000
-    Size.Height = 39.000000000000000000
+    Size.Height = 50.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 2
     object Label2: TLabel
       Align = Left
       AutoSize = True
-      Size.Width = 63.000000000000000000
-      Size.Height = 39.000000000000000000
+      StyledSettings = [Family, Size, FontColor]
+      Size.Width = 59.000000000000000000
+      Size.Height = 50.000000000000000000
       Size.PlatformDefault = False
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
       TextSettings.WordWrap = False
       Text = 'Theme:'
     end
     object ComboBoxTheme: TComboBox
       Align = Right
       ItemIndex = 0
-      Position.X = 203.000000000000000000
-      Position.Y = 4.000000000000000000
-      Size.Width = 97.000000000000000000
-      Size.Height = 32.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Bottom = 10.000000000000000000
+      Position.X = 136.000000000000000000
+      Position.Y = 10.000000000000000000
+      Size.Width = 164.000000000000000000
+      Size.Height = 30.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 1
       OnChange = ComboBoxThemeChange
@@ -103,32 +118,111 @@ object FormMain: TFormMain
         Text = 'Auto'
       end
       object ListBoxItem2: TListBoxItem
+        Size.Width = 44.000000000000000000
+        Size.Height = 44.000000000000000000
+        Size.PlatformDefault = False
         TabOrder = 1
         Text = 'Dark'
       end
       object ListBoxItem3: TListBoxItem
+        Size.Width = 44.000000000000000000
+        Size.Height = 44.000000000000000000
+        Size.PlatformDefault = False
         TabOrder = 2
         Text = 'Light'
       end
+      object ListBoxItem4: TListBoxItem
+        Size.Width = 44.000000000000000000
+        Size.Height = 44.000000000000000000
+        Size.PlatformDefault = False
+        TabOrder = 3
+        Text = 'Custom (Android)'
+      end
+    end
+  end
+  object MemoLog: TMemo
+    Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+    DataDetectorTypes = []
+    Align = Client
+    Size.Width = 300.000000000000000000
+    Size.Height = 221.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 6
+    Viewport.Width = 292.000000000000000000
+    Viewport.Height = 213.000000000000000000
+  end
+  object LabelError: TLabel
+    Align = Bottom
+    AutoSize = True
+    StyledSettings = [Family, Size, Style]
+    Margins.Top = 5.000000000000000000
+    Position.X = 10.000000000000000000
+    Position.Y = 492.000000000000000000
+    Size.Width = 300.000000000000000000
+    Size.Height = 46.000000000000000000
+    Size.PlatformDefault = False
+    TextSettings.FontColor = claRed
+    TextSettings.HorzAlign = Center
+    Text = 
+      'Progress and Activity DIalogs is not supported on current platfo' +
+      'rm'
+    TabOrder = 8
+  end
+  object LayoutThemeID: TLayout
+    Align = Top
+    Position.X = 10.000000000000000000
+    Position.Y = 60.000000000000000000
+    Size.Width = 300.000000000000000000
+    Size.Height = 50.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 7
+    object Label4: TLabel
+      Align = Left
+      StyledSettings = [Family, Size, FontColor]
+      Size.Width = 161.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'listboxitemlabel'
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
+      Text = 'ThemeID:'
+    end
+    object NumberBoxThemeID: TNumberBox
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Right
+      TabOrder = 1
+      Cursor = crIBeam
+      Min = -1.000000000000000000
+      Max = 10000000.000000000000000000
+      Value = 1.000000000000000000
+      Position.X = 200.000000000000000000
+      Position.Y = 10.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Bottom = 10.000000000000000000
+      Size.Width = 100.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      OnChangeTracking = NumberBoxThemeIDChangeTracking
     end
   end
   object fgProgressDialog: TfgProgressDialog
     Message = 'Downloading...'
     Max = 1000.000000000000000000
     Title = 'Please, Wait'
+    ThemeID = 1
     OnCancel = fgProgressDialogCancel
     OnShow = fgProgressDialogShow
     OnHide = fgProgressDialogHide
     Left = 64
-    Top = 120
+    Top = 296
   end
   object fgActivityDialog: TfgActivityDialog
     Message = 'Please, Wait'
     Title = 'Downloading content'
+    ThemeID = 1
     OnCancel = fgActivityDialogCancel
-    OnShow = fgProgressDialogShow
-    OnHide = fgProgressDialogHide
+    OnShow = fgActivityDialogShow
+    OnHide = fgActivityDialogHide
     Left = 216
-    Top = 120
+    Top = 296
   end
 end

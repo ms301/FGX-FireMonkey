@@ -17,7 +17,6 @@ uses
   System.Classes;
 
 const
-  EPSILON_SINGLE = 1E-4;
   UNDEFINED = -1;
 
   { Additional Component Platforms Attribute flags for using in [ComponentPlatformsAttribute] }

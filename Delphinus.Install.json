@@ -1,14 +1,18 @@
 {
 	"search_pathes" :
 	[{
-			"pathes" : "Library",
+			"pathes" : "Library;Design",
 			"platforms" : "Win32;Win64"
 		}
 	],
-
+	"raw_folders" :
+	[{
+			"folder" : "CompiledFiles"
+		}
+	],
 	"browsing_pathes" :
 	[{
-			"pathes" : "Library",
+			"pathes" : "Library;Design",
 			"platforms" : "Win32;Win64"
 		}
 	],
@@ -16,11 +20,6 @@
 	"source_folders" :
 	[{
 			"folder" : "Design",
-			"base" : "",
-			"recursive" : true,
-			"filter" : "*;*.*"
-		}, {
-			"folder" : "Images",
 			"base" : "",
 			"recursive" : true,
 			"filter" : "*;*.*"
@@ -45,11 +44,10 @@
 	"projects" :
 	[{
 			"project" : "Library\\fgx.dproj",
-			"compiler_min" : 30
-		},
-		{
+			"compiler_min" : 31
+		}, {
 			"project" : "Design\\dclfgx.dproj",
-			"compiler_min" : 30
+			"compiler_min" : 31
 		}
 	]
 }

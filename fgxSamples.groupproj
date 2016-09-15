@@ -1,0 +1,156 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{132290DB-3110-415C-8A04-2B577981568B}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Samples\ActionSheetDemo\ActionSheetDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Samples\AnimationsDemo\AnimationsDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Samples\ApplicationEventsDemo\ApplicationEventsDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Samples\GradientEditDemo\GradientEditDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Samples\ColorPanelDemo\ColorsPanelDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Samples\FlipViewDemo\FlipViewDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Samples\LinkedLabelDemo\LinkedLabelDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Samples\ProgressDialogDemo\ProgressDialogDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Samples\ToolBarDemo\ToolBarDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Samples\VirtualKeyboardDemo\VirtualKeyboardDemo.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="Samples\ToastsDemo\ToastsDemo.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="ActionSheetDemo">
+        <MSBuild Projects="Samples\ActionSheetDemo\ActionSheetDemo.dproj"/>
+    </Target>
+    <Target Name="ActionSheetDemo:Clean">
+        <MSBuild Projects="Samples\ActionSheetDemo\ActionSheetDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ActionSheetDemo:Make">
+        <MSBuild Projects="Samples\ActionSheetDemo\ActionSheetDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="AnimationsDemo">
+        <MSBuild Projects="Samples\AnimationsDemo\AnimationsDemo.dproj"/>
+    </Target>
+    <Target Name="AnimationsDemo:Clean">
+        <MSBuild Projects="Samples\AnimationsDemo\AnimationsDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="AnimationsDemo:Make">
+        <MSBuild Projects="Samples\AnimationsDemo\AnimationsDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ApplicationEventsDemo">
+        <MSBuild Projects="Samples\ApplicationEventsDemo\ApplicationEventsDemo.dproj"/>
+    </Target>
+    <Target Name="ApplicationEventsDemo:Clean">
+        <MSBuild Projects="Samples\ApplicationEventsDemo\ApplicationEventsDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ApplicationEventsDemo:Make">
+        <MSBuild Projects="Samples\ApplicationEventsDemo\ApplicationEventsDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="GradientEditDemo">
+        <MSBuild Projects="Samples\GradientEditDemo\GradientEditDemo.dproj"/>
+    </Target>
+    <Target Name="GradientEditDemo:Clean">
+        <MSBuild Projects="Samples\GradientEditDemo\GradientEditDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="GradientEditDemo:Make">
+        <MSBuild Projects="Samples\GradientEditDemo\GradientEditDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ColorsPanelDemo">
+        <MSBuild Projects="Samples\ColorPanelDemo\ColorsPanelDemo.dproj"/>
+    </Target>
+    <Target Name="ColorsPanelDemo:Clean">
+        <MSBuild Projects="Samples\ColorPanelDemo\ColorsPanelDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ColorsPanelDemo:Make">
+        <MSBuild Projects="Samples\ColorPanelDemo\ColorsPanelDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="FlipViewDemo">
+        <MSBuild Projects="Samples\FlipViewDemo\FlipViewDemo.dproj"/>
+    </Target>
+    <Target Name="FlipViewDemo:Clean">
+        <MSBuild Projects="Samples\FlipViewDemo\FlipViewDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="FlipViewDemo:Make">
+        <MSBuild Projects="Samples\FlipViewDemo\FlipViewDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="LinkedLabelDemo">
+        <MSBuild Projects="Samples\LinkedLabelDemo\LinkedLabelDemo.dproj"/>
+    </Target>
+    <Target Name="LinkedLabelDemo:Clean">
+        <MSBuild Projects="Samples\LinkedLabelDemo\LinkedLabelDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="LinkedLabelDemo:Make">
+        <MSBuild Projects="Samples\LinkedLabelDemo\LinkedLabelDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ProgressDialogDemo">
+        <MSBuild Projects="Samples\ProgressDialogDemo\ProgressDialogDemo.dproj"/>
+    </Target>
+    <Target Name="ProgressDialogDemo:Clean">
+        <MSBuild Projects="Samples\ProgressDialogDemo\ProgressDialogDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ProgressDialogDemo:Make">
+        <MSBuild Projects="Samples\ProgressDialogDemo\ProgressDialogDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ToolBarDemo">
+        <MSBuild Projects="Samples\ToolBarDemo\ToolBarDemo.dproj"/>
+    </Target>
+    <Target Name="ToolBarDemo:Clean">
+        <MSBuild Projects="Samples\ToolBarDemo\ToolBarDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ToolBarDemo:Make">
+        <MSBuild Projects="Samples\ToolBarDemo\ToolBarDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="VirtualKeyboardDemo">
+        <MSBuild Projects="Samples\VirtualKeyboardDemo\VirtualKeyboardDemo.dproj"/>
+    </Target>
+    <Target Name="VirtualKeyboardDemo:Clean">
+        <MSBuild Projects="Samples\VirtualKeyboardDemo\VirtualKeyboardDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="VirtualKeyboardDemo:Make">
+        <MSBuild Projects="Samples\VirtualKeyboardDemo\VirtualKeyboardDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ToastsDemo">
+        <MSBuild Projects="Samples\ToastsDemo\ToastsDemo.dproj"/>
+    </Target>
+    <Target Name="ToastsDemo:Clean">
+        <MSBuild Projects="Samples\ToastsDemo\ToastsDemo.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ToastsDemo:Make">
+        <MSBuild Projects="Samples\ToastsDemo\ToastsDemo.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="ActionSheetDemo;AnimationsDemo;ApplicationEventsDemo;GradientEditDemo;ColorsPanelDemo;FlipViewDemo;LinkedLabelDemo;ProgressDialogDemo;ToolBarDemo;VirtualKeyboardDemo;ToastsDemo"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="ActionSheetDemo:Clean;AnimationsDemo:Clean;ApplicationEventsDemo:Clean;GradientEditDemo:Clean;ColorsPanelDemo:Clean;FlipViewDemo:Clean;LinkedLabelDemo:Clean;ProgressDialogDemo:Clean;ToolBarDemo:Clean;VirtualKeyboardDemo:Clean;ToastsDemo:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="ActionSheetDemo:Make;AnimationsDemo:Make;ApplicationEventsDemo:Make;GradientEditDemo:Make;ColorsPanelDemo:Make;FlipViewDemo:Make;LinkedLabelDemo:Make;ProgressDialogDemo:Make;ToolBarDemo:Make;VirtualKeyboardDemo:Make;ToastsDemo:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

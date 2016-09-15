@@ -14,8 +14,8 @@ unit FGX.Types;
 interface
 
 uses
-  System.SysUtils, System.Generics.Defaults, System.Generics.Collections, System.Classes,
-  System.Types, FGX.Types.StateValue;
+  System.SysUtils, System.Generics.Defaults, System.Generics.Collections, System.Classes, System.Types,
+  FGX.Types.StateValue;
 
 type
 
@@ -638,8 +638,10 @@ end;
 
 procedure TfgCollectionItem.SetIndex(Value: Integer);
 begin
+  TfgAssert.IsClass(Collection, TfgCollection);
+
   inherited;
-  (Collection as TfgCollection).Notify(Self, TfgCollectionNotification.OrderChanged);
+  TfgCollection(Collection).Notify(Self, TfgCollectionNotification.OrderChanged);
 end;
 
 end.

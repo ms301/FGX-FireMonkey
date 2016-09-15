@@ -26,12 +26,14 @@ type
   public const
     DefaultUseUIGuidline = True;
     DefaultTheme = TfgActionSheetTheme.Auto;
+    DefaultThemeID = TfgActionSheetQueryParams.UndefinedThemeID;
   private
     FActions: TfgActionsCollections;
     FUseUIGuidline: Boolean;
     FTitle: string;
     FActionSheetService: IFGXActionSheetService;
     FTheme: TfgActionSheetTheme;
+    FThemeID: Integer;
     FOnItemClick: TfgActionSheetItemClickEvent;
     FOnShow: TNotifyEvent;
     FOnHide: TNotifyEvent;
@@ -46,6 +48,9 @@ type
     property Actions: TfgActionsCollections read FActions write SetActions;
     property UseUIGuidline: Boolean read FUseUIGuidline write FUseUIGuidline default DefaultUseUIGuidline;
     property Theme: TfgActionSheetTheme read FTheme write FTheme default DefaultTheme;
+    /// <summary>ID of theme resource on Android</summary>
+    /// <remark>Only for Android</remark>
+    property ThemeID: Integer read FThemeID write FThemeID default DefaultThemeID;
     property Title: string read FTitle write FTitle;
     property OnShow: TNotifyEvent read FOnShow write FOnShow;
     property OnHide: TNotifyEvent read FOnHide write FOnHide;
@@ -58,6 +63,7 @@ type
     property Actions;
     property UseUIGuidline;
     property Theme;
+    property ThemeID;
     property Title;
     { Events }
     property OnShow;
@@ -85,6 +91,7 @@ begin
   FActions := TfgActionsCollections.Create(Self);
   FUseUIGuidline := DefaultUseUIGuidline;
   FTheme := DefaultTheme;
+  FThemeID := DefaultThemeID;
   TPlatformServices.Current.SupportsPlatformService(IFGXActionSheetService, FActionSheetService);
 end;
 
@@ -98,6 +105,7 @@ end;
 procedure TfgCustomActionSheet.SetActions(const Value: TfgActionsCollections);
 begin
   TfgAssert.IsNotNil(Value);
+
   FActions.Assign(Value);
 end;
 
@@ -112,6 +120,7 @@ begin
     Params.Actions := Actions;
     Params.UseUIGuidline := UseUIGuidline;
     Params.Theme := Theme;
+    Params.ThemeID := ThemeID;
     Params.ShowCallback := FOnShow;
     Params.HideCallback := FOnHide;
     Params.ItemClickCallback := FOnItemClick;

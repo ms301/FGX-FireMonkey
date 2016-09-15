@@ -2,48 +2,186 @@ object FormMain: TFormMain
   Left = 0
   Top = 0
   Caption = 'TfgGradientEdit: Gradient Edit Demo'
-  ClientHeight = 189
-  ClientWidth = 420
+  ClientHeight = 343
+  ClientWidth = 275
+  Padding.Left = 10.000000000000000000
+  Padding.Top = 10.000000000000000000
+  Padding.Right = 10.000000000000000000
+  Padding.Bottom = 10.000000000000000000
   FormFactor.Width = 320
   FormFactor.Height = 480
   FormFactor.Devices = [Desktop, iPhone, iPad]
+  OnCreate = FormCreate
   DesignerMasterStyle = 0
-  object FMXGradientEdit: TGradientEdit
-    Position.X = 6.000000000000000000
-    Position.Y = 105.000000000000000000
-    Size.Width = 409.000000000000000000
-    Size.Height = 33.000000000000000000
+  object Memo1: TMemo
+    Touch.InteractiveGestures = [Pan, LongTap, DoubleTap]
+    DataDetectorTypes = []
+    Align = Client
+    Margins.Top = 10.000000000000000000
+    Size.Width = 255.000000000000000000
+    Size.Height = 87.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 0
+    Viewport.Width = 251.000000000000000000
+    Viewport.Height = 83.000000000000000000
   end
-  object fgGradientEdit: TfgGradientEdit
-    BorderRadius = 5.000000000000000000
-    Gradient.Points = <
-      item
-        Color = xFFFF0909
-        Offset = 0.000000000000000000
-      end
-      item
-        Color = xFFF0FD00
-        Offset = 0.221590906381607100
-      end
-      item
-        Color = xFF27FF2F
-        Offset = 0.375000000000000000
-      end
-      item
-        Color = xE205FFF0
-        Offset = 0.536931812763214100
-      end
-      item
-        Color = xD01B00F1
-        Offset = 1.000000000000000000
-      end>
-    Position.X = 14.000000000000000000
-    Position.Y = 56.000000000000000000
-    Size.Width = 395.000000000000000000
-    Size.Height = 35.000000000000000000
+  object Layout1: TLayout
+    Align = Top
+    Margins.Top = 10.000000000000000000
+    Position.X = 10.000000000000000000
+    Position.Y = 170.000000000000000000
+    Size.Width = 255.000000000000000000
+    Size.Height = 66.000000000000000000
     Size.PlatformDefault = False
     TabOrder = 1
+    object fgGradientEdit: TfgGradientEdit
+      BorderRadius = 5.000000000000000000
+      Gradient.Points = <
+        item
+          Color = xFFFF0909
+          Offset = 0.000000000000000000
+        end
+        item
+          Color = xFFF0FD00
+          Offset = 0.221590906381607000
+        end
+        item
+          Color = xFF27FF2F
+          Offset = 0.375000000000000000
+        end
+        item
+          Color = xE205FFF0
+          Offset = 0.536931812763214100
+        end
+        item
+          Color = xD01B00F1
+          Offset = 1.000000000000000000
+        end>
+      OnPointAdded = fgGradientEditPointAdded
+      OnPointRemoved = fgGradientEditPointRemoved
+      OnPointClick = fgGradientEditPointClick
+      OnPointDblClick = fgGradientEditPointDblClick
+      OnChanged = fgGradientEditChanged
+      OnChangeTracking = fgGradientEditChangeTracking
+      Align = Center
+      Size.Width = 255.000000000000000000
+      Size.Height = 39.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 0
+    end
+    object Button1: TButton
+      Anchors = [akTop, akRight]
+      Position.X = 155.000000000000000000
+      Position.Y = 79.000000000000000000
+      TabOrder = 1
+      Text = 'Clear'
+      OnClick = Button1Click
+    end
+  end
+  object Layout2: TLayout
+    Align = Top
+    Position.X = 10.000000000000000000
+    Position.Y = 10.000000000000000000
+    Size.Width = 255.000000000000000000
+    Size.Height = 50.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 4
+    object Label1: TLabel
+      Align = Left
+      StyledSettings = [Family, Size, FontColor]
+      Size.Width = 120.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'listboxitemlabel'
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
+      Text = 'Picker Size:'
+      TabOrder = 0
+    end
+    object SpinBoxPickerSize: TSpinBox
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Right
+      TabOrder = 1
+      Cursor = crIBeam
+      Min = 6.000000000000000000
+      Max = 20.000000000000000000
+      Value = 12.000000000000000000
+      Position.X = 155.000000000000000000
+      Position.Y = 10.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Bottom = 10.000000000000000000
+      Size.Width = 100.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      OnChangeTracking = SpinBoxPickerSizeChangeTracking
+    end
+  end
+  object Layout3: TLayout
+    Align = Top
+    Position.X = 10.000000000000000000
+    Position.Y = 60.000000000000000000
+    Size.Width = 255.000000000000000000
+    Size.Height = 50.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 3
+    object Label3: TLabel
+      Align = Left
+      StyledSettings = [Family, Size, FontColor]
+      Size.Width = 120.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'listboxitemlabel'
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
+      Text = 'Border Radius:'
+      TabOrder = 0
+    end
+    object SpinBoxBorderRadius: TSpinBox
+      Touch.InteractiveGestures = [LongTap, DoubleTap]
+      Align = Right
+      TabOrder = 1
+      Cursor = crIBeam
+      Max = 20.000000000000000000
+      Value = 5.000000000000000000
+      Position.X = 155.000000000000000000
+      Position.Y = 10.000000000000000000
+      Margins.Top = 10.000000000000000000
+      Margins.Bottom = 10.000000000000000000
+      Size.Width = 100.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      OnChangeTracking = SpinBoxBorderRadiusChangeTracking
+    end
+  end
+  object Layout4: TLayout
+    Align = Top
+    Position.X = 10.000000000000000000
+    Position.Y = 110.000000000000000000
+    Size.Width = 255.000000000000000000
+    Size.Height = 50.000000000000000000
+    Size.PlatformDefault = False
+    TabOrder = 2
+    object Label4: TLabel
+      Align = Left
+      StyledSettings = [Family, Size, FontColor]
+      Size.Width = 120.000000000000000000
+      Size.Height = 50.000000000000000000
+      Size.PlatformDefault = False
+      StyleLookup = 'listboxitemlabel'
+      TextSettings.Font.StyleExt = {00070000000000000004000000}
+      Text = 'Border Color:'
+      TabOrder = 0
+    end
+    object ComboColorBoxBorderColor: TComboColorBox
+      Align = Right
+      Color = claWhite
+      Margins.Top = 10.000000000000000000
+      Margins.Bottom = 10.000000000000000000
+      Position.X = 155.000000000000000000
+      Position.Y = 10.000000000000000000
+      Size.Width = 100.000000000000000000
+      Size.Height = 30.000000000000000000
+      Size.PlatformDefault = False
+      TabOrder = 1
+      OnChange = ComboColorBoxBorderColorChange
+    end
   end
 end

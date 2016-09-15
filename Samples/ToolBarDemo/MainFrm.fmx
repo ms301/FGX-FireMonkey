@@ -545,7 +545,6 @@ object FormMain: TFormMain
       item
         MultiResBitmap.Height = 26
         MultiResBitmap.Width = 26
-        MultiResBitmap.LoadSize = 2
         MultiResBitmap = <
           item
             Width = 26
@@ -563,7 +562,6 @@ object FormMain: TFormMain
       item
         MultiResBitmap.Height = 26
         MultiResBitmap.Width = 26
-        MultiResBitmap.LoadSize = 2
         MultiResBitmap = <
           item
             Width = 26
@@ -601,7 +599,6 @@ object FormMain: TFormMain
   object ImageList16: TImageList
     Source = <
       item
-        MultiResBitmap.LoadSize = 2
         MultiResBitmap = <
           item
             Width = 16
@@ -626,7 +623,6 @@ object FormMain: TFormMain
         Name = 'Bold'
       end
       item
-        MultiResBitmap.LoadSize = 2
         MultiResBitmap = <
           item
             Width = 16
@@ -653,7 +649,6 @@ object FormMain: TFormMain
         Name = 'Cut'
       end
       item
-        MultiResBitmap.LoadSize = 2
         MultiResBitmap = <
           item
             Width = 16
@@ -680,7 +675,6 @@ object FormMain: TFormMain
         Name = 'Quote'
       end
       item
-        MultiResBitmap.LoadSize = 2
         MultiResBitmap = <
           item
             Width = 16
@@ -703,7 +697,6 @@ object FormMain: TFormMain
         Name = 'Source Code'
       end
       item
-        MultiResBitmap.LoadSize = 2
         MultiResBitmap = <
           item
             Width = 16
@@ -733,7 +726,6 @@ object FormMain: TFormMain
         Name = 'Add Link'
       end
       item
-        MultiResBitmap.LoadSize = 2
         MultiResBitmap = <
           item
             Width = 16
@@ -762,7 +754,6 @@ object FormMain: TFormMain
         Name = 'Delete Link'
       end
       item
-        MultiResBitmap.LoadSize = 2
         MultiResBitmap = <
           item
             Width = 16
@@ -790,7 +781,6 @@ object FormMain: TFormMain
         Name = 'Paste'
       end
       item
-        MultiResBitmap.LoadSize = 2
         MultiResBitmap = <
           item
             Width = 16
@@ -811,7 +801,6 @@ object FormMain: TFormMain
         Name = 'Underline'
       end
       item
-        MultiResBitmap.LoadSize = 2
         MultiResBitmap = <
           item
             Width = 16
@@ -835,7 +824,6 @@ object FormMain: TFormMain
         Name = 'Xlarge Icons'
       end
       item
-        MultiResBitmap.LoadSize = 2
         MultiResBitmap = <
           item
             Width = 16
@@ -857,7 +845,6 @@ object FormMain: TFormMain
         Name = 'List'
       end
       item
-        MultiResBitmap.LoadSize = 2
         MultiResBitmap = <
           item
             Width = 16
@@ -879,7 +866,6 @@ object FormMain: TFormMain
         Name = 'Numbered List'
       end
       item
-        MultiResBitmap.LoadSize = 2
         MultiResBitmap = <
           item
             Width = 16
@@ -902,7 +888,6 @@ object FormMain: TFormMain
         Name = 'Italic'
       end
       item
-        MultiResBitmap.LoadSize = 2
         MultiResBitmap = <
           item
             Width = 16
@@ -926,7 +911,6 @@ object FormMain: TFormMain
         Name = 'Text Color'
       end
       item
-        MultiResBitmap.LoadSize = 2
         MultiResBitmap = <
           item
             Width = 16
@@ -953,7 +937,6 @@ object FormMain: TFormMain
         Name = 'Copy'
       end
       item
-        MultiResBitmap.LoadSize = 2
         MultiResBitmap = <
           item
             Width = 16
@@ -968,7 +951,6 @@ object FormMain: TFormMain
         Name = 'Horizontal Line'
       end
       item
-        MultiResBitmap.LoadSize = 2
         MultiResBitmap = <
           item
             Width = 16
@@ -985,7 +967,6 @@ object FormMain: TFormMain
         Name = 'Align Left'
       end
       item
-        MultiResBitmap.LoadSize = 2
         MultiResBitmap = <
           item
             Width = 16
@@ -1005,7 +986,6 @@ object FormMain: TFormMain
         Name = 'Indent'
       end
       item
-        MultiResBitmap.LoadSize = 2
         MultiResBitmap = <
           item
             Width = 16
@@ -1025,7 +1005,6 @@ object FormMain: TFormMain
         Name = 'Outdent'
       end
       item
-        MultiResBitmap.LoadSize = 2
         MultiResBitmap = <
           item
             Width = 16
@@ -1043,7 +1022,6 @@ object FormMain: TFormMain
         Name = 'Align Center'
       end
       item
-        MultiResBitmap.LoadSize = 2
         MultiResBitmap = <
           item
             Width = 16
@@ -1060,7 +1038,6 @@ object FormMain: TFormMain
         Name = 'Align Right'
       end
       item
-        MultiResBitmap.LoadSize = 2
         MultiResBitmap = <
           item
             Width = 16
@@ -1081,7 +1058,6 @@ object FormMain: TFormMain
         Name = 'Strikethrough'
       end
       item
-        MultiResBitmap.LoadSize = 2
         MultiResBitmap = <
           item
             Width = 16

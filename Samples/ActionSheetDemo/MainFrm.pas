@@ -17,7 +17,7 @@ uses
   System.SysUtils, System.Types, System.UITypes, System.Classes, System.Variants,
   FMX.Types, FMX.Controls, FMX.Forms, FMX.Graphics, FMX.Dialogs, FGX.ActionSheet, FGX.ActionSheet.Types, FMX.StdCtrls,
   FMX.Layouts, System.Actions, FMX.ActnList, FMX.StdActns, FMX.MediaLibrary.Actions, FMX.Controls.Presentation,
-  FMX.ScrollBox, FMX.Memo, FMX.ListBox;
+  FMX.ScrollBox, FMX.Memo, FMX.ListBox, FMX.Edit, FMX.EditBox, FMX.NumberBox;
 
 type
   TFormMain = class(TForm)
@@ -38,9 +38,13 @@ type
     Layout2: TLayout;
     Label3: TLabel;
     ComboBoxTheme: TComboBox;
-    ListBoxItem1: TListBoxItem;
-    ListBoxItem2: TListBoxItem;
-    ListBoxItem3: TListBoxItem;
+    LayoutThemeID: TLayout;
+    Label4: TLabel;
+    NumberBoxThemeID: TNumberBox;
+    Layout3: TLayout;
+    Label5: TLabel;
+    EditTitle: TEdit;
+    ClearEditButton1: TClearEditButton;
     procedure Button1Click(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure fgActionSheetActions0Click(Sender: TObject);
@@ -49,8 +53,10 @@ type
     procedure fgActionSheetShow(Sender: TObject);
     procedure fgActionSheetItemClick(Sender: TObject; const AAction: TfgActionCollectionItem);
     procedure ComboBoxThemeChange(Sender: TObject);
+    procedure NumberBoxThemeIDChangeTracking(Sender: TObject);
+    procedure EditTitleChangeTracking(Sender: TObject);
   private
-    { Private declarations }
+    procedure UpdateLayoutThemeIDVisible;
   public
     { Public declarations }
   end;
@@ -77,6 +83,13 @@ procedure TFormMain.ComboBoxThemeChange(Sender: TObject);
 begin
   if ComboBoxTheme.ItemIndex <> -1 then
     fgActionSheet.Theme := TfgActionSheetTheme(ComboBoxTheme.ItemIndex);
+
+  UpdateLayoutThemeIDVisible;
+end;
+
+procedure TFormMain.EditTitleChangeTracking(Sender: TObject);
+begin
+  fgActionSheet.Title := EditTitle.Text;
 end;
 
 procedure TFormMain.fgActionSheetActions0Click(Sender: TObject);
@@ -102,6 +115,21 @@ end;
 procedure TFormMain.FormCreate(Sender: TObject);
 begin
   LabelError.Visible := not fgActionSheet.Supported;
+  EditTitle.Text := fgActionSheet.Title;
+  NumberBoxThemeID.Value := fgActionSheet.ThemeID;
+  ComboBoxTheme.ItemIndex := Integer(fgActionSheet.Theme);
+  UpdateLayoutThemeIDVisible;
+end;
+
+procedure TFormMain.NumberBoxThemeIDChangeTracking(Sender: TObject);
+begin
+  fgActionSheet.ThemeID := Round(NumberBoxThemeID.Value);
+end;
+
+procedure TFormMain.UpdateLayoutThemeIDVisible;
+begin
+  LayoutThemeID.Visible := (TOSVersion.Platform = TOSVersion.TPlatform.pfAndroid)
+    and (fgActionSheet.Theme = TfgActionSheetTheme.Custom);
 end;
 
 end.

@@ -40,6 +40,7 @@ type
 
   TfgChangingImageEvent = procedure (Sender: TObject; const NewItemIndex: Integer) of object;
 
+  /// <summary>Notifications about starting and finishing sliding process</summary>
   IfgFlipViewNotifications = interface
   ['{0D4A9AF7-4B56-4972-8EF2-5693AFBD2857}']
     procedure StartChanging;
@@ -121,7 +122,7 @@ type
 implementation
 
 uses
-  System.Math, FGX.Consts, FGX.Asserts;
+  System.Math, System.SysUtils, FGX.Consts, FGX.Asserts;
 
 const
   TRANSITION_EFFECTS: array [TfgTransitionEffectKind] of TfgImageFXEffectClass = (nil, TBlindTransitionEffect,
@@ -160,14 +161,14 @@ end;
 
 function TfgFlipViewSlideOptions.IsDurationStored: Boolean;
 begin
-  Result := not SameValue(Duration, DefaultDuration, EPSILON_SINGLE);
+  Result := not SameValue(Duration, DefaultDuration, Single.Epsilon);
 end;
 
 procedure TfgFlipViewSlideOptions.SetDuration(const Value: Single);
 begin
   Assert(Value >= 0);
 
-  if not SameValue(Value, Duration, EPSILON_SINGLE) then
+  if not SameValue(Value, Duration, Single.Epsilon) then
   begin
     FDuration := Max(0, Value);
     DoInternalChanged;
@@ -230,7 +231,7 @@ end;
 
 function TfgFlipViewEffectOptions.IsDurationStored: Boolean;
 begin
-  Result := not SameValue(Duration, DefaultDuration, EPSILON_SINGLE);
+  Result := not SameValue(Duration, DefaultDuration, Single.Epsilon);
 end;
 
 procedure TfgFlipViewEffectOptions.SetKind(const Value: TfgTransitionEffectKind);
@@ -246,7 +247,7 @@ procedure TfgFlipViewEffectOptions.SetDuration(const Value: Single);
 begin
   Assert(Value >= 0);
 
-  if not SameValue(Value, Duration, EPSILON_SINGLE) then
+  if not SameValue(Value, Duration, Single.Epsilon) then
   begin
     FDuration := Max(0, Value);
     DoInternalChanged;

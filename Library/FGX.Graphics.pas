@@ -45,7 +45,7 @@ end;
 function RoundToPixel(const Source: Single; const AThickness: Single = 1): Single; overload;
 begin
   Result := Source;
-  if SameValue(Round(Source * Screen.Scale), Source * Screen.Scale, EPSILON_SINGLE) then
+  if SameValue(Round(Source * Screen.Scale), Source * Screen.Scale, Single.Epsilon) then
     Result := Source - AThickness / 2;
 end;
 

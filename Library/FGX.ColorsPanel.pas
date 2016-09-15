@@ -155,7 +155,7 @@ function TfgCustomColorsPanel.ColumnsCount: Integer;
 begin
   TfgAssert.IsNotNil(CellSize);
 
-  if not SameValue(CellSize.Width - 1, 0, EPSILON_SINGLE) then
+  if not SameValue(CellSize.Width - 1, 0, Single.Epsilon) then
     Result := Floor(Width / (CellSize.Width - 1))
   else
     Result := 0;
@@ -310,12 +310,12 @@ end;
 
 function TfgCustomColorsPanel.IsBorderRadiusStored: Boolean;
 begin
-  Result := not SameValue(BorderRadius, 0, EPSILON_SINGLE);
+  Result := not SameValue(BorderRadius, 0, Single.Epsilon);
 end;
 
 function TfgCustomColorsPanel.IsCellSizeStored: Boolean;
 begin
-  Result := not SameValue(FCellSize.Width, DefaultCellSize, EPSILON_SINGLE) or not SameValue(FCellSize.Height, DefaultCellSize, EPSILON_SINGLE);
+  Result := not SameValue(FCellSize.Width, DefaultCellSize, Single.Epsilon) or not SameValue(FCellSize.Height, DefaultCellSize, Single.Epsilon);
 end;
 
 procedure TfgCustomColorsPanel.MouseClick(Button: TMouseButton; Shift: TShiftState; X, Y: Single);
@@ -362,7 +362,7 @@ end;
 
 procedure TfgCustomColorsPanel.SetBorderRadius(const Value: Single);
 begin
-  if not SameValue(BorderRadius, Value, EPSILON_SINGLE) then
+  if not SameValue(BorderRadius, Value, Single.Epsilon) then
   begin
     FBorderRadius := Value;
     Repaint;

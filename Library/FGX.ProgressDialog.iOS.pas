@@ -20,7 +20,7 @@ uses
 const
   SHADOW_ALPHA       = 180;
   MESSAGE_FONT_SIZE  = 15;
-  MESSAGE_MARGINS     = 5;
+  MESSAGE_MARGINS    = 5;
   MESSAGE_HEIGHT     = 20;
   INDICATOR_MARGIN   = 5;
   PROGRESSBAR_WIDTH  = 200;
@@ -135,10 +135,10 @@ end;
 
 constructor TiOSNativeActivityDialog.Create(const AOwner: TObject);
 begin
-  AssertIsNotNil(MainScreen);
-  AssertIsNotNil(SharedApplication.keyWindow);
-  AssertIsNotNil(SharedApplication.keyWindow.rootViewController);
-  AssertIsNotNil(SharedApplication.keyWindow.rootViewController.view);
+  TfgAssert.IsNotNil(MainScreen);
+  TfgAssert.IsNotNil(SharedApplication.keyWindow);
+  TfgAssert.IsNotNil(SharedApplication.keyWindow.rootViewController);
+  TfgAssert.IsNotNil(SharedApplication.keyWindow.rootViewController.view);
 
   inherited Create(AOwner);
   FShadowColor := MakeColor(0, 0, 0, SHADOW_ALPHA);
@@ -208,7 +208,7 @@ end;
 
 procedure TiOSNativeActivityDialog.Hide;
 begin
-  AssertIsNotNil(FShadowView);
+  TfgAssert.IsNotNil(FShadowView);
 
   inherited;
 
@@ -218,7 +218,7 @@ end;
 
 procedure TiOSNativeActivityDialog.MessageChanged;
 begin
-  AssertIsNotNil(FMessageLabel);
+  TfgAssert.IsNotNil(FMessageLabel);
 
   FMessageLabel.setText(StrToNSStr(Message));
 
@@ -242,8 +242,8 @@ end;
 
 procedure TiOSNativeActivityDialog.Show;
 begin
-  AssertIsNotNil(FShadowView);
-  AssertIsNotNil(FMessageLabel);
+  TfgAssert.IsNotNil(FShadowView);
+  TfgAssert.IsNotNil(FMessageLabel);
 
   inherited;
 
@@ -274,6 +274,11 @@ begin
       FShadowColor := MakeColor(255, 255, 255, SHADOW_ALPHA);
       FMessageColor := TAlphaColorRec.Black;
     end;
+  else
+    begin
+      FShadowColor := MakeColor(0, 0, 0, SHADOW_ALPHA);
+      FMessageColor := TAlphaColorRec.White;
+    end;
   end;
 
   FShadowView.setBackgroundColor(TUIColor.MakeColor(FShadowColor));
@@ -284,10 +289,10 @@ end;
 
 constructor TiOSNativeProgressDialog.Create(const AOwner: TObject);
 begin
-  AssertIsNotNil(MainScreen);
-  AssertIsNotNil(SharedApplication.keyWindow);
-  AssertIsNotNil(SharedApplication.keyWindow.rootViewController);
-  AssertIsNotNil(SharedApplication.keyWindow.rootViewController.view);
+  TfgAssert.IsNotNil(MainScreen);
+  TfgAssert.IsNotNil(SharedApplication.keyWindow);
+  TfgAssert.IsNotNil(SharedApplication.keyWindow.rootViewController);
+  TfgAssert.IsNotNil(SharedApplication.keyWindow.rootViewController.view);
 
   inherited Create(AOwner);
   FShadowColor := MakeColor(0, 0, 0, SHADOW_ALPHA);
@@ -353,7 +358,7 @@ end;
 
 procedure TiOSNativeProgressDialog.Hide;
 begin
-  AssertIsNotNil(FShadowView);
+  TfgAssert.IsNotNil(FShadowView);
 
   inherited;
 
@@ -363,7 +368,7 @@ end;
 
 procedure TiOSNativeProgressDialog.MessageChanged;
 begin
-  AssertIsNotNil(FMessageLabel);
+  TfgAssert.IsNotNil(FMessageLabel);
 
   FMessageLabel.setText(StrToNSStr(Message));
 
@@ -374,8 +379,8 @@ end;
 
 procedure TiOSNativeProgressDialog.ProgressChanged;
 begin
-  AssertIsNotNil(FProgressView);
-  AssertInRange(Progress, 0, Max);
+  TfgAssert.IsNotNil(FProgressView);
+  TfgAssert.InRange(Progress, 0, Max);
 
   if Max > 0 then
     FProgressView.setProgress(Progress / Max, True)
@@ -403,7 +408,7 @@ end;
 
 procedure TiOSNativeProgressDialog.ResetProgress;
 begin
-  AssertIsNotNil(FProgressView);
+  TfgAssert.IsNotNil(FProgressView);
 
   inherited ResetProgress;
   FProgressView.setProgress(0);
@@ -411,7 +416,7 @@ end;
 
 procedure TiOSNativeProgressDialog.Show;
 begin
-  AssertIsNotNil(FShadowView);
+  TfgAssert.IsNotNil(FShadowView);
 
   inherited;
 
@@ -442,6 +447,11 @@ begin
       FShadowColor := MakeColor(255, 255, 255, SHADOW_ALPHA);
       FMessageColor := TAlphaColorRec.Black;
     end;
+  else
+    begin
+      FShadowColor := MakeColor(0, 0, 0, SHADOW_ALPHA);
+      FMessageColor := TAlphaColorRec.White;
+    end;
   end;
 
   FShadowView.setBackgroundColor(TUIColor.MakeColor(FShadowColor));
@@ -452,7 +462,7 @@ end;
 
 constructor TiOSDelegate.Create(const ADialog: TfgNativeDialog);
 begin
-  AssertIsNotNil(ADialog);
+  TfgAssert.IsNotNil(ADialog);
 
   inherited Create;
   FNativeDialog := ADialog;
@@ -465,13 +475,13 @@ end;
 
 procedure TiOSDelegate.tap;
 begin
-  AssertIsNotNil(FNativeDialog);
+  TfgAssert.IsNotNil(FNativeDialog);
 
   if FNativeDialog.Cancellable then
   begin
-    FNativeDialog.Hide;
     if Assigned(FNativeDialog.OnCancel) then
       FNativeDialog.OnCancel(FNativeDialog.Owner);
+    FNativeDialog.Hide;
   end;
 end;
 

@@ -1,3 +1,14 @@
+{*********************************************************************
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * Autor: Brovin Y.D.
+ * E-mail: y.brovin@gmail.com
+ *
+ ********************************************************************}
+
 unit MainFrm;
 
 interface
@@ -141,8 +152,12 @@ end;
 
 procedure TFormMain.MultiView1PresenterChanging(Sender: TObject; var PresenterClass: TMultiViewPresentationClass);
 begin
+{$IF Defined(Android) OR Defined(iOS)}
+  PresenterClass := TMultiViewDrawerOverlapPresentation;
+{$ELSE}
   if PresenterClass = TMultiViewNavigationPanePresentation then
     PresenterClass := TMultiViewDockedPanelPresentation;
+{$ENDIF}
 end;
 
 procedure TFormMain.nbSlideShowDurationChange(Sender: TObject);

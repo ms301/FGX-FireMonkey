@@ -90,6 +90,13 @@ uses
   System.Math, System.SysUtils, Androidapi.Helpers, FMX.Platform, FMX.Platform.Android, FMX.Types, FMX.Controls,
   FMX.Dialogs, FGX.Helpers.Android, FMX.Helpers.Android, FGX.Asserts;
 
+type
+
+  TfgActionSheetThemeHelper = record helper for TfgActionSheetTheme
+  public
+    function ToThemeID: Integer;
+  end;
+
 procedure RegisterService;
 begin
   if TOSVersion.Check(2, 0) then
@@ -214,16 +221,10 @@ begin
   FOwner := AParams.Owner;
 
   { Create Alert Dialog }
-  case AParams.Theme of
-    TfgActionSheetTheme.Auto:
-      ThemeID := GetNativeTheme;
-    TfgActionSheetTheme.Dark:
-      ThemeID := TJAlertDialog.JavaClass.THEME_HOLO_DARK;
-    TfgActionSheetTheme.Light:
-      ThemeID := TJAlertDialog.JavaClass.THEME_HOLO_LIGHT;
+  if (AParams.Theme = TfgActionSheetTheme.Custom) and (AParams.ThemeID <> TfgActionSheetQueryParams.UndefinedThemeID) then
+    ThemeID := AParams.ThemeID
   else
-    ThemeID := GetNativeTheme;
-  end;
+    ThemeID := AParams.Theme.ToThemeID;
   DialogBuilder := TJAlertDialog_Builder.JavaClass.init(TAndroidHelper.Context, ThemeID);
 
   { Forming  Action List }
@@ -284,6 +285,25 @@ procedure TfgActionSheetDialogCancelListener.onCancel(dialog: JDialogInterface);
 begin
   if Assigned(FOnCancel) then
     FOnCancel;
+end;
+
+{ TfgActionSheetThemeHelper }
+
+function TfgActionSheetThemeHelper.ToThemeID: Integer;
+var
+  ThemeID: Integer;
+begin
+  case Self of
+    TfgActionSheetTheme.Auto:
+      ThemeID := GetNativeTheme;
+    TfgActionSheetTheme.Dark:
+      ThemeID := TJAlertDialog.JavaClass.THEME_HOLO_DARK;
+    TfgActionSheetTheme.Light:
+      ThemeID := TJAlertDialog.JavaClass.THEME_HOLO_LIGHT;
+  else
+    ThemeID := GetNativeTheme;
+  end;
+  Result := ThemeID;
 end;
 
 end.

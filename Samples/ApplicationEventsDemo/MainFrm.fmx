@@ -3301,11 +3301,11 @@ object FormMain: TFormMain
     TabOrder = 5
     object PresentedScrollBox1: TPresentedScrollBox
       Align = Contents
-      Size.Width = 232.000000000000000000
+      Size.Width = 233.000000000000000000
       Size.Height = 603.000000000000000000
       Size.PlatformDefault = False
       TabOrder = 0
-      Viewport.Width = 216.000000000000000000
+      Viewport.Width = 217.000000000000000000
       Viewport.Height = 603.000000000000000000
       object GroupBox: TGroupBox
         Align = Top
@@ -3316,7 +3316,7 @@ object FormMain: TFormMain
         Margins.Bottom = 5.000000000000000000
         Position.X = 5.000000000000000000
         Position.Y = 377.000000000000000000
-        Size.Width = 206.000000000000000000
+        Size.Width = 207.000000000000000000
         Size.Height = 172.000000000000000000
         Size.PlatformDefault = False
         Text = 'Tracking:'
@@ -3387,7 +3387,7 @@ object FormMain: TFormMain
         Margins.Bottom = 5.000000000000000000
         Position.X = 5.000000000000000000
         Position.Y = 62.000000000000000000
-        Size.Width = 206.000000000000000000
+        Size.Width = 207.000000000000000000
         Size.Height = 305.000000000000000000
         Size.PlatformDefault = False
         Text = 'Forms:'
@@ -3552,7 +3552,7 @@ object FormMain: TFormMain
         Margins.Bottom = 10.000000000000000000
         Position.X = 5.000000000000000000
         Position.Y = 626.000000000000000000
-        Size.Width = 206.000000000000000000
+        Size.Width = 207.000000000000000000
         Size.Height = 48.000000000000000000
         Size.PlatformDefault = False
         StyleLookup = 'deletetoolbutton'
@@ -3569,7 +3569,7 @@ object FormMain: TFormMain
         Margins.Bottom = 5.000000000000000000
         Position.X = 5.000000000000000000
         Position.Y = 559.000000000000000000
-        Size.Width = 206.000000000000000000
+        Size.Width = 207.000000000000000000
         Size.Height = 62.000000000000000000
         Size.PlatformDefault = False
         Text = 'Android:'
@@ -3605,7 +3605,7 @@ object FormMain: TFormMain
         Margins.Bottom = 5.000000000000000000
         Position.X = 5.000000000000000000
         Position.Y = 5.000000000000000000
-        Size.Width = 206.000000000000000000
+        Size.Width = 207.000000000000000000
         Size.Height = 52.000000000000000000
         Size.PlatformDefault = False
         Text = 'Common'

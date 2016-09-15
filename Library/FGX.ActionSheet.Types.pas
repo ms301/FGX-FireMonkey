@@ -35,7 +35,7 @@ type
     function ToString: string;
   end;
 
-  TfgActionSheetTheme = (Auto, Dark, Light);
+  TfgActionSheetTheme = (Auto, Dark, Light, Custom);
 
   TfgActionCollectionItem = class;
 
@@ -108,12 +108,18 @@ type
 
   TfgActionSheetItemClickEvent = procedure (Sender: TObject; const AAction: TfgActionCollectionItem) of object;
 
+type
+
   TfgActionSheetQueryParams = record
+  public
+    const UndefinedThemeID = 0;
+  public
     Owner: TObject;
     Title: string;
     Actions: TfgActionsCollections;
     UseUIGuidline: Boolean;
     Theme: TfgActionSheetTheme;
+    ThemeID: Integer;
     ShowCallback: TNotifyEvent;
     HideCallback: TNotifyEvent;
     ItemClickCallback: TfgActionSheetItemClickEvent;

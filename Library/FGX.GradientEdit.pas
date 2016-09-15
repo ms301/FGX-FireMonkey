@@ -23,8 +23,7 @@ type
 
   TfgCustomGradientEdit = class;
 
-  TfgOnPointClick = procedure (AGradientEdit: TfgCustomGradientEdit; const AGradientPoint: TGradientPoint) of object;
-  TfgOnPointAdded = procedure (AGradientEdit: TfgCustomGradientEdit; const AGradientPoint: TGradientPoint) of object;
+  TfgGradientEditPointEvent = procedure (AGradientEdit: TObject; const AGradientPoint: TGradientPoint) of object;
 
   TfgCustomGradientEdit = class (TControl)
   public
@@ -40,9 +39,10 @@ type
     FIsPointMoving: Boolean;
     [weak] FSelectedPoint: TGradientPoint;
     { Events }
-    FOnPointClick: TfgOnPointClick;
-    FOnPointDblClick: TfgOnPointClick;
-    FOnPointAdded: TfgOnPointAdded;
+    FOnPointClick: TfgGradientEditPointEvent;
+    FOnPointDblClick: TfgGradientEditPointEvent;
+    FOnPointAdded: TfgGradientEditPointEvent;
+    FOnPointRemoved: TfgGradientEditPointEvent;
     FOnChangeTracking: TNotifyEvent;
     FOnChanged: TNotifyEvent;
     function IsPickerSizeStored: Boolean;
@@ -56,6 +56,7 @@ type
     { Control events }
     procedure DoGradientChanged(Sender: TObject); virtual;
     procedure DoPointAdded(AGradientPoint: TGradientPoint); virtual;
+    procedure DoPointRemoved(AGradientPoint: TGradientPoint); virtual;
     procedure DoPointClick(const AGradientPoint: TGradientPoint); virtual;
     procedure DoPointDblClick(const AGradientPoint: TGradientPoint); virtual;
     procedure DoChanged; virtual;
@@ -89,9 +90,10 @@ type
     property Gradient: TGradient read FGradient write SetGradient;
     property PickerSize: Single read FPickerSize write SetPickerSize stored IsPickerSizeStored;
     property SelectedPoint: TGradientPoint read FSelectedPoint;
-    property OnPointAdded: TfgOnPointAdded read FOnPointAdded write FOnPointAdded;
-    property OnPointClick: TfgOnPointClick read FOnPointClick write FOnPointClick;
-    property OnPointDblClick: TfgOnPointClick read FOnPointDblClick write FOnPointDblClick;
+    property OnPointAdded: TfgGradientEditPointEvent read FOnPointAdded write FOnPointAdded;
+    property OnPointRemoved: TfgGradientEditPointEvent read FOnPointRemoved write FOnPointRemoved;
+    property OnPointClick: TfgGradientEditPointEvent read FOnPointClick write FOnPointClick;
+    property OnPointDblClick: TfgGradientEditPointEvent read FOnPointDblClick write FOnPointDblClick;
     property OnChangeTracking: TNotifyEvent read FOnChangeTracking write FOnChangeTracking;
     property OnChanged: TNotifyEvent read FOnChanged write FOnChanged;
   end;
@@ -104,6 +106,7 @@ type
     property Gradient;
     property PickerSize;
     property OnPointAdded;
+    property OnPointRemoved;
     property OnPointClick;
     property OnPointDblClick;
     property OnChanged;
@@ -187,6 +190,14 @@ end;
 procedure TfgCustomGradientEdit.DoGradientChanged(Sender: TObject);
 begin
   Repaint;
+end;
+
+procedure TfgCustomGradientEdit.DoPointRemoved(AGradientPoint: TGradientPoint);
+begin
+  TfgAssert.IsNotNil(AGradientPoint);
+
+  if Assigned(FOnPointRemoved) then
+    FOnPointRemoved(Self, AGradientPoint);
 end;
 
 procedure TfgCustomGradientEdit.DoPointAdded(AGradientPoint: TGradientPoint);
@@ -322,12 +333,12 @@ end;
 
 function TfgCustomGradientEdit.IsBorderRadiusStored: Boolean;
 begin
-  Result := not SameValue(BorderRadius, DEFAULT_BORDER_RADIUS, EPSILON_SINGLE);
+  Result := not SameValue(BorderRadius, DEFAULT_BORDER_RADIUS, Single.Epsilon);
 end;
 
 function TfgCustomGradientEdit.IsPickerSizeStored: Boolean;
 begin
-  Result := not SameValue(PickerSize, DEFAULT_PICKER_SIZE, EPSILON_SINGLE);
+  Result := not SameValue(PickerSize, DEFAULT_PICKER_SIZE, Single.Epsilon);
 end;
 
 procedure TfgCustomGradientEdit.MouseDown(Button: TMouseButton; Shift: TShiftState; X, Y: Single);
@@ -425,6 +436,7 @@ begin
   // If we manualy remove selected point, we should dispose of memory
   if (FSelectedPoint <> nil) and (FSelectedPoint.Collection = nil) then
   begin
+    DoPointRemoved(FSelectedPoint);
     FSelectedPoint.Free;
     FSelectedPoint := nil;
   end;
@@ -479,7 +491,7 @@ end;
 
 procedure TfgCustomGradientEdit.SetBorderRadius(const Value: Single);
 begin
-  if not SameValue(BorderRadius, Value, EPSILON_SINGLE) then
+  if not SameValue(BorderRadius, Value, Single.Epsilon) then
   begin
     FBorderRadius := Value;
     Repaint;
@@ -494,7 +506,7 @@ end;
 
 procedure TfgCustomGradientEdit.SetPickerSize(const Value: Single);
 begin
-  if not SameValue(PickerSize, Value, EPSILON_SINGLE) then
+  if not SameValue(PickerSize, Value, Single.Epsilon) then
   begin
     FPickerSize := Value;
     Repaint;
