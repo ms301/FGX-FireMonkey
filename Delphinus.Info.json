@@ -3,9 +3,9 @@
     "name": "FGX Components for Delphi and C++",
     "picture": "1_fmx-logo_60x60.png",
     "license_type": "MPL-2.0",
-	"license_file": "License.md",
+    "license_file": "License.md",
     "platforms": "Win32;Win64;OSX32",
-    "first_version": "0.7.1.74-RX",
+    "first_version": "0.5.0.41",
     "package_compiler_min": 28,
     "package_compiler_max": 31,
     "compiler_min": 31
