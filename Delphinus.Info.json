@@ -5,7 +5,8 @@
     "license_type": "MPL-2.0",
 	"license_file": "License.md",
     "platforms": "Win32;Win64;OSX32",
-    "first_version": "0.7.1.74",
-    "package_compiler_min": 31,
+    "first_version": "0.7.1.74-RX",
+    "package_compiler_min": 28,
+    "package_compiler_max": 31
     "compiler_min": 31
 }
