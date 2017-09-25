@@ -1,4 +1,4 @@
-# AUTOR: [Y.B. Brovin](http://fire-monkey.ru/profile/1-brovin-yaroslav/)
+# AUTOR: [Brovin Y.D.](http://fire-monkey.ru/profile/1-brovin-yaroslav/)
 
 # FGX-FireMonkey
 Набор дополнительных компонентов для FireMonkey.
