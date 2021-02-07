@@ -1,0 +1,78 @@
+{*********************************************************************
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * Autor: Brovin Y.D.
+ * E-mail: y.brovin@gmail.com
+ ********************************************************************}
+
+package fmgx;
+
+{$R *.res}
+{$R *.dres}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'Extensions for FM (FireMonkey) - Runtime'}
+{$LIBSUFFIX AUTO}
+{$RUNONLY}
+{$IMPLICITBUILD ON}
+
+requires
+  rtl,
+  fmx;
+
+contains
+  FmGX.ActionSheet in 'FmGX.ActionSheet.pas',
+  FmGX.Consts in 'FmGX.Consts.pas',
+  FmGX.ActionSheet.Types in 'FmGX.ActionSheet.Types.pas',
+  FmGX.VirtualKeyboard in 'FmGX.VirtualKeyboard.pas',
+  FmGX.VirtualKeyboard.Types in 'FmGX.VirtualKeyboard.Types.pas',
+  FmGX.ProgressDialog in 'FmGX.ProgressDialog.pas',
+  FmGX.ProgressDialog.Types in 'FmGX.ProgressDialog.Types.pas',
+  FmGX.GradientEdit in 'FmGX.GradientEdit.pas',
+  FmGX.Graphics in 'FmGX.Graphics.pas',
+  FmGX.Helpers in 'FmGX.Helpers.pas',
+  FmGX.BitBtn in 'FmGX.BitBtn.pas',
+  FmGX.ToolBar in 'FmGX.ToolBar.pas',
+  FmGX.ColorsPanel in 'FmGX.ColorsPanel.pas',
+  FmGX.Colors.Presets in 'FmGX.Colors.Presets.pas',
+  FmGX.Types in 'FmGX.Types.pas',
+  FmGX.Items in 'FmGX.Items.pas',
+  FmGX.Asserts in 'FmGX.Asserts.pas',
+  FmGX.LinkedLabel in 'FmGX.LinkedLabel.pas',
+  FmGX.Images.Types in 'FmGX.Images.Types.pas',
+  FmGX.FlipView.Types in 'FmGX.FlipView.Types.pas',
+  FmGX.ApplicationEvents in 'FmGX.ApplicationEvents.pas',
+  FmGX.Animations in 'FmGX.Animations.pas',
+  FmGX.FlipView in 'FmGX.FlipView.pas',
+  FmGX.FlipView.Effect in 'FmGX.FlipView.Effect.pas',
+  FmGX.FlipView.Sliding in 'FmGX.FlipView.Sliding.pas',
+  FmGX.FlipView.Presentation in 'FmGX.FlipView.Presentation.pas',
+  FmGX.Toasts in 'FmGX.Toasts.pas',
+  FmGX.Types.StateValue in 'FmGX.Types.StateValue.pas';
+
+end.
+

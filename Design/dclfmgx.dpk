@@ -1,0 +1,57 @@
+{*********************************************************************
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+ *
+ * Autor: Brovin Y.D.
+ * E-mail: y.brovin@gmail.com
+ *
+ ********************************************************************}
+
+package dclfmgx;
+
+{$R *.res}
+{$R 'dclfmgx.dcr'}
+{$IFDEF IMPLICITBUILDING This IFDEF should not be used by users}
+{$ALIGN 8}
+{$ASSERTIONS ON}
+{$BOOLEVAL OFF}
+{$DEBUGINFO OFF}
+{$EXTENDEDSYNTAX ON}
+{$IMPORTEDDATA ON}
+{$IOCHECKS ON}
+{$LOCALSYMBOLS ON}
+{$LONGSTRINGS ON}
+{$OPENSTRINGS ON}
+{$OPTIMIZATION OFF}
+{$OVERFLOWCHECKS OFF}
+{$RANGECHECKS OFF}
+{$REFERENCEINFO ON}
+{$SAFEDIVIDE OFF}
+{$STACKFRAMES ON}
+{$TYPEDADDRESS OFF}
+{$VARSTRINGCHECKS ON}
+{$WRITEABLECONST OFF}
+{$MINENUMSIZE 1}
+{$IMAGEBASE $400000}
+{$DEFINE DEBUG}
+{$ENDIF IMPLICITBUILDING}
+{$DESCRIPTION 'Extensions for FM (FireMonkey) - Designtime'}
+{$LIBSUFFIX AUTO}
+{$DESIGNONLY}
+{$IMPLICITBUILD OFF}
+
+requires
+  rtl,
+  designide,
+  fmx;
+
+contains
+  FmGX.ComponentReg in 'FmGX.ComponentReg.pas',
+  FmGX.Designer.Items in 'Designers\FmGX.Designer.Items.pas' {fgFormItemsDesigner},
+  FmGX.Editor.Items in 'Editors\FmGX.Editor.Items.pas',
+  FmGX.StylesDataModule in 'FmGX.StylesDataModule.pas' {StyleDataModule: TDataModule},
+  FmGX.ItemsReg in 'FmGX.ItemsReg.pas';
+
+end.

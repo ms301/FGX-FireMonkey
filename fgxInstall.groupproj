@@ -3,11 +3,11 @@
         <ProjectGuid>{B0AF67C0-04D5-49A7-85A9-51E24D860AD4}</ProjectGuid>
     </PropertyGroup>
     <ItemGroup>
-        <Projects Include="Library\fgx.dproj">
+        <Projects Include="Library\fmgx.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="Design\dclfgx.dproj">
-            <Dependencies/>
+        <Projects Include="Design\dclfmgx.dproj">
+            <Dependencies>Library\fmgx.dproj</Dependencies>
         </Projects>
     </ItemGroup>
     <ProjectExtensions>
@@ -17,32 +17,32 @@
             <Default.Personality/>
         </BorlandProject>
     </ProjectExtensions>
-    <Target Name="fgx">
-        <MSBuild Projects="Library\fgx.dproj"/>
+    <Target Name="fmgx">
+        <MSBuild Projects="Library\fmgx.dproj"/>
     </Target>
-    <Target Name="fgx:Clean">
-        <MSBuild Projects="Library\fgx.dproj" Targets="Clean"/>
+    <Target Name="fmgx:Clean">
+        <MSBuild Projects="Library\fmgx.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="fgx:Make">
-        <MSBuild Projects="Library\fgx.dproj" Targets="Make"/>
+    <Target Name="fmgx:Make">
+        <MSBuild Projects="Library\fmgx.dproj" Targets="Make"/>
     </Target>
-    <Target Name="dclfgx">
-        <MSBuild Projects="Design\dclfgx.dproj"/>
+    <Target Name="dclfmgx" DependsOnTargets="fmgx">
+        <MSBuild Projects="Design\dclfmgx.dproj"/>
     </Target>
-    <Target Name="dclfgx:Clean">
-        <MSBuild Projects="Design\dclfgx.dproj" Targets="Clean"/>
+    <Target Name="dclfmgx:Clean" DependsOnTargets="fmgx:Clean">
+        <MSBuild Projects="Design\dclfmgx.dproj" Targets="Clean"/>
     </Target>
-    <Target Name="dclfgx:Make">
-        <MSBuild Projects="Design\dclfgx.dproj" Targets="Make"/>
+    <Target Name="dclfmgx:Make" DependsOnTargets="fmgx:Make">
+        <MSBuild Projects="Design\dclfmgx.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
-        <CallTarget Targets="fgx;dclfgx"/>
+        <CallTarget Targets="fmgx;dclfmgx"/>
     </Target>
     <Target Name="Clean">
-        <CallTarget Targets="fgx:Clean;dclfgx:Clean"/>
+        <CallTarget Targets="fmgx:Clean;dclfmgx:Clean"/>
     </Target>
     <Target Name="Make">
-        <CallTarget Targets="fgx:Make;dclfgx:Make"/>
+        <CallTarget Targets="fmgx:Make;dclfmgx:Make"/>
     </Target>
     <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
 </Project>
