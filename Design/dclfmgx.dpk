@@ -38,7 +38,7 @@ package dclfmgx;
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'Extensions for FM (FireMonkey) - Designtime'}
-{$LIBSUFFIX AUTO}
+{$LIBSUFFIX '240'}
 {$DESIGNONLY}
 {$IMPLICITBUILD OFF}
 

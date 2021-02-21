@@ -36,7 +36,7 @@ package fmgx;
 {$DEFINE DEBUG}
 {$ENDIF IMPLICITBUILDING}
 {$DESCRIPTION 'Extensions for FM (FireMonkey) - Runtime'}
-{$LIBSUFFIX AUTO}
+{$LIBSUFFIX '240'}
 {$RUNONLY}
 {$IMPLICITBUILD ON}
 

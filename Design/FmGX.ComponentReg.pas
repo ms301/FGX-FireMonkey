@@ -13,11 +13,13 @@ unit FmGX.ComponentReg;
 
 interface
 
+{$I 'jedi.inc'}
+
 resourcestring
   rsCategoryExtended = 'FGX: Extended FM Controls';
   rsAnimations = 'FGX: Animations';
 
-{$IF Defined(VER290) or Defined(VER300)}
+{$IF Defined(DELPHIXE8_UP)}
   rsStyleObjectsCommon = 'Style Objects: Common';
   rsStyleObjectsSwitch = 'Style Objects: Switch';
   rsStyleObjectsTabControl = 'Style Objects: TabControl';
@@ -65,7 +67,7 @@ begin
     TfgxBitmapLinkAnimation
     ]);
 
-{$IF Defined(VER290) or Defined(VER300)}
+{$IF Defined(DELPHIXE8_UP)}
   // Common
   RegisterComponents(rsStyleObjectsCommon, [TStyleObject, TActiveStyleObject, TMaskedImage, TActiveMaskedImage,
     TStyleTextObject, TActiveStyleTextObject, TActiveOpacityObject]);
