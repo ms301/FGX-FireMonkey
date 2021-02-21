@@ -1,0 +1,12 @@
+{
+    "name": "FGX-FireMonkey",
+    "description": "Set of additional components for FireMonkey",
+    "version": "0.7.1",
+    "homepage": "http://fire-monkey.ru/forum/177-fgx/",
+    "mainsrc": "./Library/",
+    "projects": [
+        "./Library/fmgx.dproj",
+        "./Design/dclfmgx.dproj"
+    ],
+    "dependencies": {}
+}
